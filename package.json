@@ -1,0 +1,21 @@
+{
+  "name": "one_cary",
+  "version": "1.0.0",
+  "description": "the alexa app for the town of cary",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "brian yarsawich",
+  "license": "ISC",
+  "dependencies": {
+    "alexa-app": "^2.4.0",
+    "alexa-app-server": "^2.3.1",
+    "chai": "^3.5.0",
+    "chai-as-promised": "^6.0.0",
+    "lodash": "^4.17.4",
+    "mocha": "^3.2.0",
+    "request": "^2.79.0",
+    "request-promise": "^4.1.1"
+  }
+}
