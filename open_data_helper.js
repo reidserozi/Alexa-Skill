@@ -15,7 +15,7 @@ OpenDataHelper.prototype.requestOpenGymTime = function(gym_date) {
 OpenDataHelper.prototype.getOpenGymTimes = function(gym_date) {
   var options = {
     method: 'GET',
-    uri: ENDPOINT + 'dataset=open-gym&q=open_gym_start==' + gym_date + '&facet=facility_title&facet=pass_type&facet=community_center&facet=open_gym&facet=group&facet=date_scanned',
+    uri: ENDPOINT + 'dataset=open-gym&q=open_gym_start==' + gym_date + '&facet=facility_title&facet=pass_type&facet=community_center&facet=open_gym&facet=group&facet=date_scanned&timezone=UTC',
     resolveWithFullResponse: true,
     json: true
   };
@@ -27,6 +27,8 @@ OpenDataHelper.prototype.formatGymTimes = function(gymTimes) {
   gymTimes.records.forEach(function buildtemplate(item,index){
     var startTime = new Date(item.fields.open_gym_start);
     var endTime = new Date(item.fields.open_gym_end);
+    console.log(item.fields.open_gym_start);
+    console.log('start time:' + startTime.toString());
     times += _.template(' ${startTime} to ${endTime} at ${location} for ${sport}.')({
       startTime: formatTimeString(startTime),
       endTime: formatTimeString(endTime),
@@ -53,8 +55,16 @@ function formatTimeString(date) {
   }
   function pad(s) { return ((''+s).length < 2 ? '0' : '') + s; }
   function fixHour(h) { return (h==0?'12':(h>12?h-12:h)); }
-  var h=date.getUTCHours(), m=date.getMinutes(), s=date.getSeconds()
+  var offset = new Date().getTimezoneOffset();
+  console.log(offset);
+  console.log(date.getTimezoneOffset());
+  if(date.getTimezoneOffset() == 0){
+    //date.setMinutes(date.getMinutes() - 300);
+  }
+  var h=date.getHours(), m=date.getMinutes(), s=date.getSeconds()
     , timeStr=[pad(fixHour(h)), pad(m), pad(s)].join(':');
+  console.log(date);
+  console.log(timeStr);
   return timeStr + ' ' + (h < 12 ? 'AM' : 'PM');
 }
 

@@ -86,7 +86,7 @@ describe('OpenDataHelper', function() {
       }
     context('with multiple gym times', function() {
       it('formats the status as expected', function() {
-        expect(subject.formatGymTimes(status)).to.eq('There are 2 open gym times on 2017-01-06. 08:30:00 PM to 10:30:00 PM at Bond Park Community Center for Basketball. 02:00:00 PM to 05:30:00 PM at Bond Park Community Center for Pickleball.');
+        expect(subject.formatGymTimes(status)).to.eq('There are 2 open gym times on 2017-01-06. 03:30:00 PM to 05:30:00 PM at Bond Park Community Center for Basketball. 09:00:00 AM to 12:30:00 PM at Bond Park Community Center for Pickleball.');
       });
     });
     context('with no gym times', function() {
