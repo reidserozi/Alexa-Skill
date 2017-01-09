@@ -28,6 +28,7 @@ OpenDataHelper.prototype.getOpenGymTimes = function(gym_date) {
 OpenDataHelper.prototype.formatGymTimes = function(gymTimes) {
   var times = '';
   gymTimes.records.forEach(function buildtemplate(item,index){
+    console.log(Date.parse(item.fields.open_gym_start).getLocalTimeString());
     times += _.template(' ${startTime} to ${endTime} at ${location} for ${sport}.')({
       startTime: item.fields.open_gym_start.substring(11,19),
       endTime: item.fields.open_gym_end.substring(11,19),
@@ -35,12 +36,16 @@ OpenDataHelper.prototype.formatGymTimes = function(gymTimes) {
       sport: item.fields.open_gym
     });
   });
-  if gymTimes.records.length > 0 then
-    var response = _.template('There are ${numTimes} open gym times today.${times}');
+  if(gymTimes.records.length > 0) {
+    var response = _.template('There are ${numTimes} open gym times on ${date}.${times}');
     return response({
       numTimes: gymTimes.records.length,
+      date: gymTimes.records[0].fields.date_scanned,
       times: times
     });
+  } else {
+    var response = 'There are no open gym times for that date.';
+    return response
   }
 };
 
