@@ -28,7 +28,11 @@ OpenDataHelper.prototype.getOpenGymTimes = function(gym_date) {
 OpenDataHelper.prototype.formatGymTimes = function(gymTimes) {
   var times = '';
   gymTimes.records.forEach(function buildtemplate(item,index){
-    console.log(Date.parse(item.fields.open_gym_start).getLocalTimeString());
+    var tmpDate = new Date(item.fields.open_gym_start);
+    var startTime = new Date(item.fields.open_gym_start);
+    var endTime = new Date(item.fields.open_gym_end);
+    console.log(tmpDate);
+    console.log(tmpDate.toLocaleTimeString());
     times += _.template(' ${startTime} to ${endTime} at ${location} for ${sport}.')({
       startTime: item.fields.open_gym_start.substring(11,19),
       endTime: item.fields.open_gym_end.substring(11,19),

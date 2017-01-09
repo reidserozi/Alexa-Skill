@@ -1,0 +1,9 @@
+opengymtimes	what are the open gym times for {Date}
+opengymtimes	what open gym times for {Date}
+opengymtimes	how many open gym times for {Date}
+opengymtimes	what are the open gym times are there {Date}
+opengymtimes	what open gym times are there {Date}
+opengymtimes	how many open gym times are there {Date}
+opengymtimes	what are the open gym times are there on {Date}
+opengymtimes	what open gym times are there on {Date}
+opengymtimes	how many open gym times are there on {Date}
