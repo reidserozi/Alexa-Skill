@@ -7,8 +7,6 @@ function OpenDataHelper() { }
 OpenDataHelper.prototype.requestOpenGymTime = function(gym_date) {
   return this.getOpenGymTimes(gym_date).then(
     function(response) {
-      console.log('success - received gym dates ' + gym_date);
-      console.log(response.body);
       return response.body;
     }
   );
@@ -21,21 +19,17 @@ OpenDataHelper.prototype.getOpenGymTimes = function(gym_date) {
     resolveWithFullResponse: true,
     json: true
   };
-  console.log(options);
   return rp(options);
 };
 
 OpenDataHelper.prototype.formatGymTimes = function(gymTimes) {
   var times = '';
   gymTimes.records.forEach(function buildtemplate(item,index){
-    var tmpDate = new Date(item.fields.open_gym_start);
     var startTime = new Date(item.fields.open_gym_start);
     var endTime = new Date(item.fields.open_gym_end);
-    console.log(tmpDate);
-    console.log(tmpDate.toLocaleTimeString());
     times += _.template(' ${startTime} to ${endTime} at ${location} for ${sport}.')({
-      startTime: item.fields.open_gym_start.substring(11,19),
-      endTime: item.fields.open_gym_end.substring(11,19),
+      startTime: formatTimeString(startTime),
+      endTime: formatTimeString(endTime),
       location: item.fields.facility_title,
       sport: item.fields.open_gym
     });
@@ -52,5 +46,16 @@ OpenDataHelper.prototype.formatGymTimes = function(gymTimes) {
     return response
   }
 };
+
+function formatTimeString(date) {
+  if ((typeof(date)!=='object') || (date.constructor!==Date)) {
+    throw new Error('argument must be a Date object');
+  }
+  function pad(s) { return ((''+s).length < 2 ? '0' : '') + s; }
+  function fixHour(h) { return (h==0?'12':(h>12?h-12:h)); }
+  var h=date.getUTCHours(), m=date.getMinutes(), s=date.getSeconds()
+    , timeStr=[pad(fixHour(h)), pad(m), pad(s)].join(':');
+  return timeStr + ' ' + (h < 12 ? 'AM' : 'PM');
+}
 
 module.exports = OpenDataHelper;

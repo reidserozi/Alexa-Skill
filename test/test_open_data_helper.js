@@ -13,7 +13,7 @@ describe('OpenDataHelper', function() {
   describe('#getOpenGymTimes', function() {
     context('with a date', function() {
       it('returns gym times on current date', function() {
-        today = new Date();
+        today = new Date('2017-01-09');
         open_gym_date = today.toISOString().substring(0,10);
         var value = subject.requestOpenGymTime(open_gym_date).then(function(obj) {
           return obj.records[0].fields.date_scanned;
@@ -86,7 +86,7 @@ describe('OpenDataHelper', function() {
       }
     context('with multiple gym times', function() {
       it('formats the status as expected', function() {
-        expect(subject.formatGymTimes(status)).to.eq('There are 2 open gym times on 2017-01-06. 20:30:00 to 22:30:00 at Bond Park Community Center for Basketball. 14:00:00 to 17:30:00 at Bond Park Community Center for Pickleball.');
+        expect(subject.formatGymTimes(status)).to.eq('There are 2 open gym times on 2017-01-06. 08:30:00 PM to 10:30:00 PM at Bond Park Community Center for Basketball. 02:00:00 PM to 05:30:00 PM at Bond Park Community Center for Pickleball.');
       });
     });
     context('with no gym times', function() {
