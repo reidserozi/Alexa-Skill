@@ -29,7 +29,7 @@ describe('EsriDataHelper', function() {
       });
     });
   });
-  describe('#FormatMyCouncilMember', function() {
+  describe('#formatMyCouncilMember', function() {
     var status = {
         "results": [
           {
@@ -54,42 +54,6 @@ describe('EsriDataHelper', function() {
               "Last Update Date": "Null",
               "Last Editor": "Null",
               "Shape": "Point"
-            }
-          },
-          {
-            "layerId": 1,
-            "layerName": "Voting Precincts",
-            "displayFieldName": "Precinct Name",
-            "value": "Cary 11",
-            "attributes": {
-              "OBJECTID": "4",
-              "Precinct ID": "04-11",
-              "Precinct Name": "Cary 11",
-              "County": "Null",
-              "Last Update Date": "Null",
-              "Last Editor": "Null",
-              "Council District": "B",
-              "Shape": "Polygon",
-              "Shape.STArea()": "25042331.891235",
-              "Shape.STLength()": "25751.119012"
-            }
-          },
-          {
-            "layerId": 1,
-            "layerName": "Voting Precincts",
-            "displayFieldName": "Precinct Name",
-            "value": "Cary 9",
-            "attributes": {
-              "OBJECTID": "6",
-              "Precinct ID": "04-20",
-              "Precinct Name": "Cary 9",
-              "County": "Null",
-              "Last Update Date": "Null",
-              "Last Editor": "Null",
-              "Council District": "B",
-              "Shape": "Polygon",
-              "Shape.STArea()": "38456839.77478",
-              "Shape.STLength()": "27216.292494"
             }
           },
           {
@@ -120,7 +84,7 @@ describe('EsriDataHelper', function() {
       };
     context('one council member', function() {
       it('formats the status as expected', function() {
-
+        expect(subject.formatMyCouncilMember(status)).to.eq('You belong to District B and your Council Member is Don Frantz');
       });
     });
   });
