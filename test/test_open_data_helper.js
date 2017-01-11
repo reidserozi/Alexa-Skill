@@ -10,6 +10,27 @@ describe('OpenDataHelper', function() {
   var subject = new OpenDataHelper();
   var open_gym_date;
   var today;
+  describe('#getMyCouncilInformation', function(){
+    var x = '-78.78019524861178';
+    var y = '35.789212829037126';
+    var address = '316 N Academy St';
+    context('with a geolocation', function(){
+      it('returns council representative and district from Lat Long', function(){
+        var value = subject.requestCouncilInformationLatLong(x,y).then(function(obj){
+          return obj.results[3].attributes["Representative Name"];
+        });
+        return expect(value).to.eventually.eq("Don Frantz");
+      });
+    });
+    context('with an address', function() {
+      it('gets geolocation from ESRI and then gets council information', function() {
+        var value = subject.requestCouncilInformationAddress(address).then(function(obj){
+          return obj.results[3].attributes["Representative Name"];
+        });
+        return expect(value).to.eventually.eq("Don Frantz");
+      });
+    });
+  });
   describe('#getOpenGymTimes', function() {
     context('with a date', function() {
       it('returns gym times on current date', function() {
