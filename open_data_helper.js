@@ -2,54 +2,7 @@
 var _ = require('lodash');
 var rp = require('request-promise');
 var OPENDATAENDPOINT = 'https://data.townofcary.org/api/records/1.0/search/?';
-var COUNCILENDPOINT = 'https://maps.townofcary.org/arcgis1/rest/services/Elections/Elections/MapServer/identify?'
-var GEOCODEENDPOINT  = 'http://maps.townofcary.org/arcgis/rest/services/Locators/Cary_Com_Locator/GeocodeServer/findAddressCandidates?'
 function OpenDataHelper() { }
-
-OpenDataHelper.prototype.requestCouncilInformationLatLong = function(x, y) {
-  return this.getCouncilInformationLatLong(x, y).then(
-    function(response) {
-      return response.body;
-    }, function (error) {
-        console.log('error in the promise');
-    }
-  ).catch(console.log.bind(console));
-};
-
-OpenDataHelper.prototype.requestCouncilInformationAddress = function(address) {
-  var self = this;
-  return this.getAddressGeolocation(address).then(
-    function(locObj) {
-        return self.getCouncilInformationLatLong(locObj.body.candidates[0].location.x, locObj.body.candidates[0].location.y).then(
-          function(response) {
-            return response.body;
-          }, function (error) {
-              console.log('error in the promise');
-          }
-        ).catch(console.log.bind(console));
-    }
-  ).catch(console.log.bind(console));
-}
-
-OpenDataHelper.prototype.getAddressGeolocation = function(address) {
-  var options = {
-    method: 'GET',
-    uri: GEOCODEENDPOINT + 'Street=' + address + '+St&City=&State=&ZIP=&SingleLine=&outFields=&maxLocations=&outSR=4326&searchExtent=&f=pjson',
-    resolveWithFullResponse: true,
-    json: true
-  };
-  return rp(options);
-};
-
-OpenDataHelper.prototype.getCouncilInformationLatLong = function(x, y) {
-  var options = {
-    method: 'GET',
-    uri: COUNCILENDPOINT + 'geometry=' + x + ',' + y + '&geometryType=esriGeometryPoint&sr=4326&layers=all&layerDefs=&time=&layerTimeOptions=&tolerance=2&mapExtent=-79.193%2C35.541%2C-78.63%2C35.989%09&imageDisplay=600%2C550%2C96&returnGeometry=false&maxAllowableOffset=&geometryPrecision=&dynamicLayers=&returnZ=false&returnM=false&gdbVersion=&f=pjson',
-    resolveWithFullResponse: true,
-    json: true
-  };
-  return rp(options);
-};
 
 OpenDataHelper.prototype.requestOpenGymTime = function(gym_date) {
   return this.getOpenGymTimes(gym_date).then(

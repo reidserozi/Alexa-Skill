@@ -1,0 +1,127 @@
+'use strict';
+var chai = require('chai');
+var chaiAsPromised = require('chai-as-promised');
+chai.use(chaiAsPromised);
+var expect = chai.expect;
+var EsriDataHelper = require('../esri_data_helper');
+chai.config.includeStack = true;
+
+describe('EsriDataHelper', function() {
+  var subject = new EsriDataHelper();
+  describe('#getMyCouncilInformation', function(){
+    var x = '-78.78019524861178';
+    var y = '35.789212829037126';
+    var address = '316 N Academy St';
+    context('with a geolocation', function(){
+      it('returns council representative and district from Lat Long', function(){
+        var value = subject.requestCouncilInformationLatLong(x,y).then(function(obj){
+          return obj.results[3].attributes["Representative Name"];
+        });
+        return expect(value).to.eventually.eq("Don Frantz");
+      });
+    });
+    context('with an address', function() {
+      it('gets geolocation from ESRI and then gets council information', function() {
+        var value = subject.requestCouncilInformationAddress(address).then(function(obj){
+          return obj.results[3].attributes["Representative Name"];
+        });
+        return expect(value).to.eventually.eq("Don Frantz");
+      });
+    });
+  });
+  describe('#FormatMyCouncilMember', function() {
+    var status = {
+        "results": [
+          {
+            "layerId": 0,
+            "layerName": "Polling Places",
+            "displayFieldName": "Polling Location",
+            "value": "Herbert C. Young Community Center",
+            "attributes": {
+              "OBJECTID": "17",
+              "Polling Location": "Herbert C. Young Community Center",
+              "Polling Place ID": "04-11",
+              "Full Site Address": "101 Wilkinson Ave",
+              "City": "Cary",
+              "State": "NC",
+              "Polling Hours": "Null",
+              "Handicap Accessible": "Yes",
+              "Next Election Date": "11/8/2016",
+              "Voter Registration Deadline": "Null",
+              "Contact Name": "Wake County Board of Elections",
+              "Phone": "919-856-6240",
+              "Email": "voter@wakegov.com",
+              "Last Update Date": "Null",
+              "Last Editor": "Null",
+              "Shape": "Point"
+            }
+          },
+          {
+            "layerId": 1,
+            "layerName": "Voting Precincts",
+            "displayFieldName": "Precinct Name",
+            "value": "Cary 11",
+            "attributes": {
+              "OBJECTID": "4",
+              "Precinct ID": "04-11",
+              "Precinct Name": "Cary 11",
+              "County": "Null",
+              "Last Update Date": "Null",
+              "Last Editor": "Null",
+              "Council District": "B",
+              "Shape": "Polygon",
+              "Shape.STArea()": "25042331.891235",
+              "Shape.STLength()": "25751.119012"
+            }
+          },
+          {
+            "layerId": 1,
+            "layerName": "Voting Precincts",
+            "displayFieldName": "Precinct Name",
+            "value": "Cary 9",
+            "attributes": {
+              "OBJECTID": "6",
+              "Precinct ID": "04-20",
+              "Precinct Name": "Cary 9",
+              "County": "Null",
+              "Last Update Date": "Null",
+              "Last Editor": "Null",
+              "Council District": "B",
+              "Shape": "Polygon",
+              "Shape.STArea()": "38456839.77478",
+              "Shape.STLength()": "27216.292494"
+            }
+          },
+          {
+            "layerId": 2,
+            "layerName": "Town of Cary Council",
+            "displayFieldName": "Council Distict",
+            "value": "B",
+            "attributes": {
+              "OBJECTID": "2861",
+              "District ID": "B",
+              "Council Distict": "B",
+              "Representative Name": "Don Frantz",
+              "Council Website": "http://www.townofcary.org/Town_Council/Cary_Town_Council.htm",
+              "Last Update Date": "Null",
+              "Last Editor": "Null",
+              "At Large Representative 1": "Lori Bush",
+              "At Large Representative 2": "Ed Yerha",
+              "Mayor": "Harold Weinbrecht",
+              "Wake Co BOA": "http://www.wakegov.com/elections/Pages/default.aspx",
+              "Chatham Co BOA": "http://www.chathamnc.org/Index.aspx?page=110",
+              "Board of Elections": "http://www.wakegov.com/elections/Pages/default.aspx",
+              "Shape": "Polygon",
+              "Shape.STArea()": "366025445.3125",
+              "Shape.STLength()": "314712.777278"
+            }
+          }
+        ]
+      };
+    context('one council member', function() {
+      it('formats the status as expected', function() {
+
+      });
+    });
+  });
+});

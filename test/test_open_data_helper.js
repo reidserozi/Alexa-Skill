@@ -10,27 +10,6 @@ describe('OpenDataHelper', function() {
   var subject = new OpenDataHelper();
   var open_gym_date;
   var today;
-  describe('#getMyCouncilInformation', function(){
-    var x = '-78.78019524861178';
-    var y = '35.789212829037126';
-    var address = '316 N Academy St';
-    context('with a geolocation', function(){
-      it('returns council representative and district from Lat Long', function(){
-        var value = subject.requestCouncilInformationLatLong(x,y).then(function(obj){
-          return obj.results[3].attributes["Representative Name"];
-        });
-        return expect(value).to.eventually.eq("Don Frantz");
-      });
-    });
-    context('with an address', function() {
-      it('gets geolocation from ESRI and then gets council information', function() {
-        var value = subject.requestCouncilInformationAddress(address).then(function(obj){
-          return obj.results[3].attributes["Representative Name"];
-        });
-        return expect(value).to.eventually.eq("Don Frantz");
-      });
-    });
-  });
   describe('#getOpenGymTimes', function() {
     context('with a date', function() {
       it('returns gym times on current date', function() {
@@ -104,7 +83,7 @@ describe('OpenDataHelper', function() {
           "record_timestamp": "2016-08-15T14:54:00+00:00"
           },
         ]
-      }
+      };
     context('with multiple gym times', function() {
       it('formats the status as expected', function() {
         expect(subject.formatGymTimes(status)).to.eq('There are 2 open gym times on 2017-01-06. 03:30:00 PM to 05:30:00 PM at Bond Park Community Center for Basketball. 09:00:00 AM to 12:30:00 PM at Bond Park Community Center for Pickleball.');

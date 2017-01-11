@@ -37,4 +37,16 @@ var handlers = {
       self.emit(':tell', prompt, reprompt);
     });
   }
+
+  'MyCouncilMemberIntent': function() {
+
+  }
+
+  'AllCouncilMembersIntent': function() {
+    
+  }
+
+  'MyMayorIntent': function() {
+
+  }
 }
