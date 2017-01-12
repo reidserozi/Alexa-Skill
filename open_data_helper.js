@@ -111,6 +111,27 @@ OpenDataHelper.prototype.formatAllCouncilMembers = function(cityInfo) {
   }
 };
 
+OpenDataHelper.prototype.formatAtLargeCouncilMembers = function(cityInfo) {
+  var response = '';
+  var atLarge = [];
+  cityInfo.facet_groups[0].facets.forEach(function(item){
+    atLarge.push(item.name);
+  });
+  if (atLarge.size == 0 ){
+    throw new Error('No at large representatives returned');
+  } else {
+    response += _.template('Your at large representatives are ${rep1} and ${rep2}.')({
+      rep1: atLarge[0],
+      rep2: atLarge[1]
+    });
+  }
+  if (response == '') {
+    throw new Error('No fields in results');
+  } else {
+    return response;
+  }
+};
+
 function formatTimeString(date) {
   if ((typeof(date)!=='object') || (date.constructor!==Date)) {
     throw new Error('argument must be a Date object');

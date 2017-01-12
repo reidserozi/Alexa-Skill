@@ -58,7 +58,18 @@ var handlers = {
   },
 
   'AtLargeCouncilMembersIntent': function() {
-
+    var prompt = '';
+    var self = this;
+    var openDataHelper = new OpenDataHelper();
+    openDataHelper.requestCityInformation().then(function(response) {
+       prompt = openDataHelper.formatAtLargeCouncilMembers(response);
+    }).then(function(){
+      self.emit(':tell', prompt);
+    }).catch(function(err) {
+      prompt = 'There seems to be a problem with the connection right now.  Please try again later';
+      self.emit(':tell', prompt);
+    });
+  }
   },
 
   'MyMayorIntent': function() {

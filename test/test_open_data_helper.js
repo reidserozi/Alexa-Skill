@@ -243,4 +243,12 @@ describe('OpenDataHelper', function() {
       });
     });
   });
+  describe('#formatAtLargeCouncilMembers', function() {
+    var responseText = 'Your at large representatives are Ed Yerha and Lori Bush.'
+    context('return call from open data', function() {
+      it('formats the status as expected', function() {
+        expect(subject.formatAtLargeCouncilMembers(cityInfo)).to.eq(responseText);
+      });
+    });
+  });
 });
