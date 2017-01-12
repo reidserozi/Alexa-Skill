@@ -1,0 +1,13 @@
+{
+  "intents": [
+    {
+      "intent": "opengymtimes",
+      "slots": [
+        {
+          "name": "Date",
+          "type": "AMAZON.DATE"
+        }
+      ]
+    }
+  ]
+}
