@@ -96,78 +96,150 @@ describe('OpenDataHelper', function() {
       });
     });
   });
-  describe('#getMayor', function() {
+  describe('#requestCityInformation', function() {
     context('normal call to function', function() {
       it('returns the name of the mayor', function() {
-        var value = subject.requestMayor().then(function(obj) {
+        var value = subject.requestCityInformation().then(function(obj) {
           return obj.records[0].fields.mayor;
         });
         return expect(value).to.eventually.eq("Harold Weinbrecht");
       });
     });
   });
-  describe('#formatGymTimes', function() {
-    var status = {
-      "nhits": 4,
-      "parameters": {
-        "dataset": [
-          "council-districts"
-        ],
-        "timezone": "UTC",
-        "q": "county==wake",
-        "rows": 10,
-        "sort": "name",
-        "format": "json",
-        "facet": [
-          "name",
-          "repname",
-          "at_large_representatives",
-          "districtcounty"
-        ]
-      },
-      "records": [
-        {
-          "datasetid": "council-districts",
-          "recordid": "f2f82d0a480b0a3d83ec20530ed9c5fb92388871",
-          "fields": {
-            "name": "A",
-            "repname": "Jennifer Robinson",
-            "districturl": "http://www.townofcary.org/Town_Council/Cary_Town_Council.htm",
-            "at_large_representatives": "Lori Bush,Ed Yerha",
-            "county": "wake",
-            "shape_stlength": 553309.7411049065,
-            "districtcounty": "Wake",
-            "boeurl": "http://www.wakegov.com/elections/Pages/default.aspx",
-            "squaremiles": 17.07883638623223,
-            "shape_starea": 476130632.3099365,
-            "mayor": "Harold Weinbrecht"
-          },
-          "record_timestamp": "2017-01-11T14:24:05+00:00"
-        },
-        {
-          "datasetid": "council-districts",
-          "recordid": "90ac3503fea437bacc5e3832d0421ac8ac55457e",
-          "fields": {
-            "name": "B",
-            "repname": "Don Frantz",
-            "districturl": "http://www.townofcary.org/Town_Council/Cary_Town_Council.htm",
-            "at_large_representatives": "Lori Bush,Ed Yerha",
-            "geo_point_2d": [],
-            "county": "wake",
-            "shape_stlength": 314712.7772780101,
-            "districtcounty": "Wake",
-            "boeurl": "http://www.wakegov.com/elections/Pages/default.aspx",
-            "squaremiles": 13.129356251165778,
-            "shape_starea": 366025445.3125,
-            "mayor": "Harold Weinbrecht"
-          },
-          "record_timestamp": "2017-01-11T14:24:05+00:00"
-        }
+  var cityInfo = {
+    "nhits": 4,
+    "parameters": {
+      "dataset": [
+        "council-districts"
+      ],
+      "timezone": "UTC",
+      "q": "county==wake",
+      "rows": 10,
+      "sort": "name",
+      "format": "json",
+      "facet": [
+        "at_large_representatives"
       ]
-    };
-    context('with multiple gym times', function() {
+    },
+    "records": [
+      {
+        "datasetid": "council-districts",
+        "recordid": "f2f82d0a480b0a3d83ec20530ed9c5fb92388871",
+        "fields": {
+          "name": "A",
+          "repname": "Jennifer Robinson",
+          "districturl": "http://www.townofcary.org/Town_Council/Cary_Town_Council.htm",
+          "at_large_representatives": "Lori Bush,Ed Yerha",
+          "geo_point_2d": [],
+          "county": "wake",
+          "shape_stlength": 553309.7411049065,
+          "districtcounty": "Wake",
+          "boeurl": "http://www.wakegov.com/elections/Pages/default.aspx",
+          "geo_shape": {},
+          "squaremiles": 17.07883638623223,
+          "shape_starea": 476130632.3099365,
+          "mayor": "Harold Weinbrecht"
+        },
+        "geometry": {},
+        "record_timestamp": "2017-01-11T14:24:05+00:00"
+      },
+      {
+        "datasetid": "council-districts",
+        "recordid": "90ac3503fea437bacc5e3832d0421ac8ac55457e",
+        "fields": {
+          "name": "B",
+          "repname": "Don Frantz",
+          "districturl": "http://www.townofcary.org/Town_Council/Cary_Town_Council.htm",
+          "at_large_representatives": "Lori Bush,Ed Yerha",
+          "geo_point_2d": [],
+          "county": "wake",
+          "shape_stlength": 314712.7772780101,
+          "districtcounty": "Wake",
+          "boeurl": "http://www.wakegov.com/elections/Pages/default.aspx",
+          "geo_shape": {},
+          "squaremiles": 13.129356251165778,
+          "shape_starea": 366025445.3125,
+          "mayor": "Harold Weinbrecht"
+        },
+        "geometry": {},
+        "record_timestamp": "2017-01-11T14:24:05+00:00"
+      },
+      {
+        "datasetid": "council-districts",
+        "recordid": "162e417851f4e50dfa8bb450817e63082d91d432",
+        "fields": {
+          "name": "C",
+          "repname": "Jack Smith",
+          "districturl": "http://www.townofcary.org/Town_Council/Cary_Town_Council.htm",
+          "at_large_representatives": "Lori Bush,Ed Yerha",
+          "geo_point_2d": [],
+          "county": "wake",
+          "shape_stlength": 348317.8036133578,
+          "districtcounty": "Wake",
+          "boeurl": "http://www.wakegov.com/elections/Pages/default.aspx",
+          "geo_shape": {},
+          "squaremiles": 17.563985942559466,
+          "shape_starea": 489655825.7010498,
+          "mayor": "Harold Weinbrecht"
+        },
+        "geometry": {},
+        "record_timestamp": "2017-01-11T14:24:05+00:00"
+      },
+      {
+        "datasetid": "council-districts",
+        "recordid": "d30fd7e1548a21bc7cdf54706425b20fc7973c3f",
+        "fields": {
+          "name": "D",
+          "repname": "Ken George",
+          "districturl": "http://www.townofcary.org/Town_Council/Cary_Town_Council.htm",
+          "at_large_representatives": "Lori Bush,Ed Yerha",
+          "geo_point_2d": [],
+          "county": "wake",
+          "shape_stlength": 143265.29463668674,
+          "districtcounty": "Wake",
+          "boeurl": "http://www.wakegov.com/elections/Pages/default.aspx",
+          "geo_shape": {},
+          "squaremiles": 9.904823089556698,
+          "shape_starea": 276130620.01989746,
+          "mayor": "Harold Weinbrecht"
+        },
+        "geometry": {},
+        "record_timestamp": "2017-01-11T14:24:05+00:00"
+      }
+    ],
+    "facet_groups": [
+      {
+        "name": "at_large_representatives",
+        "facets": [
+          {
+            "name": "Ed Yerha",
+            "path": "Ed Yerha",
+            "count": 4,
+            "state": "displayed"
+          },
+          {
+            "name": "Lori Bush",
+            "path": "Lori Bush",
+            "count": 4,
+            "state": "displayed"
+          }
+        ]
+      }
+    ]
+  };
+  describe('#formatMayor', function() {
+    context('return call from open data', function() {
       it('formats the status as expected', function() {
-        expect(subject.formatMayor(status)).to.eq('The mayor of Cary is Harold Weinbrecht.');
+        expect(subject.formatMayor(cityInfo)).to.eq('The mayor of Cary is Harold Weinbrecht.');
+      });
+    });
+  });
+  describe('#formatAllCouncilMembers', function() {
+    var responseText = 'The council member for district A is Jennifer Robinson. The council member for district B is Don Frantz. The council member for district C is Jack Smith. ' +
+        'The council member for district D is Ken George. The at large representatives are Ed Yerha and Lori Bush.'
+    context('return call from open data', function() {
+      it('formats the status as expected', function() {
+        expect(subject.formatAllCouncilMembers(cityInfo)).to.eq(responseText);
       });
     });
   });

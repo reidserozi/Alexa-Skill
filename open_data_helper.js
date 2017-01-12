@@ -49,8 +49,8 @@ OpenDataHelper.prototype.formatGymTimes = function(gymTimes) {
   }
 };
 
-OpenDataHelper.prototype.requestMayor = function() {
-  return this.getMayor().then(
+OpenDataHelper.prototype.requestCityInformation = function() {
+  return this.getCityInformation().then(
     function(response) {
       return response.body;
     }, function (error) {
@@ -60,23 +60,50 @@ OpenDataHelper.prototype.requestMayor = function() {
   ).catch(console.log.bind(console));
 };
 
-OpenDataHelper.prototype.getMayor = function(gym_date) {
+OpenDataHelper.prototype.getCityInformation = function(gym_date) {
   var options = {
     method: 'GET',
-    uri: OPENDATAENDPOINT + 'dataset=council-districts&q=county%3D%3Dwake&sort=name&facet=name&facet=repname&facet=at_large_representatives&facet=districtcounty',
+    uri: OPENDATAENDPOINT + 'dataset=council-districts&q=county%3D%3Dwake&sort=name&facet=at_large_representatives',
     resolveWithFullResponse: true,
     json: true
   };
   return rp(options);
 };
 
-OpenDataHelper.prototype.formatMayor = function(mayorInfo) {
+OpenDataHelper.prototype.formatMayor = function(cityInfo) {
   var response = '';
-  mayorInfo.records.forEach(function(item){
+  cityInfo.records.forEach(function(item){
     response = _.template('The mayor of Cary is ${mayor}.')({
       mayor: item.fields.mayor
     });
   });
+  if (response == '') {
+    throw new Error('No fields in results');
+  } else {
+    return response;
+  }
+};
+
+OpenDataHelper.prototype.formatAllCouncilMembers = function(cityInfo) {
+  var response = '';
+  cityInfo.records.forEach(function(item){
+    response += _.template('The council member for district ${district} is ${member}. ')({
+      district: item.fields.name,
+      member: item.fields.repname
+    });
+  });
+  var atLarge = [];
+  cityInfo.facet_groups[0].facets.forEach(function(item){
+    atLarge.push(item.name);
+  });
+  if (atLarge.size == 0 ){
+    throw new Error('No at large representatives returned');
+  } else {
+    response += _.template('The at large representatives are ${rep1} and ${rep2}.')({
+      rep1: atLarge[0],
+      rep2: atLarge[1]
+    });
+  }
   if (response == '') {
     throw new Error('No fields in results');
   } else {

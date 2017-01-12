@@ -44,6 +44,20 @@ var handlers = {
   },
 
   'AllCouncilMembersIntent': function() {
+    var prompt = '';
+    var self = this;
+    var openDataHelper = new OpenDataHelper();
+    openDataHelper.requestCityInformation().then(function(response) {
+       prompt = openDataHelper.formatAllCouncilMembers(response);
+    }).then(function(){
+      self.emit(':tell', prompt);
+    }).catch(function(err) {
+      prompt = 'There seems to be a problem with the connection right now.  Please try again later';
+      self.emit(':tell', prompt);
+    });
+  },
+
+  'AtLargeCouncilMembersIntent': function() {
 
   },
 
@@ -51,7 +65,7 @@ var handlers = {
     var prompt = '';
     var self = this;
     var openDataHelper = new OpenDataHelper();
-    openDataHelper.requestMayor().then(function(response) {
+    openDataHelper.requestCityInformation().then(function(response) {
        prompt = openDataHelper.formatMayor(response);
     }).then(function(){
       self.emit(':tell', prompt);
