@@ -49,6 +49,41 @@ OpenDataHelper.prototype.formatGymTimes = function(gymTimes) {
   }
 };
 
+OpenDataHelper.prototype.requestMayor = function() {
+  return this.getMayor().then(
+    function(response) {
+      return response.body;
+    }, function (error) {
+        console.log('error in the promise');
+        console.log(error);
+    }
+  ).catch(console.log.bind(console));
+};
+
+OpenDataHelper.prototype.getMayor = function(gym_date) {
+  var options = {
+    method: 'GET',
+    uri: OPENDATAENDPOINT + 'dataset=council-districts&q=county%3D%3Dwake&sort=name&facet=name&facet=repname&facet=at_large_representatives&facet=districtcounty',
+    resolveWithFullResponse: true,
+    json: true
+  };
+  return rp(options);
+};
+
+OpenDataHelper.prototype.formatMayor = function(mayorInfo) {
+  var response = '';
+  mayorInfo.records.forEach(function(item){
+    response = _.template('The mayor of Cary is ${mayor}.')({
+      mayor: item.fields.mayor
+    });
+  });
+  if (response == '') {
+    throw new Error('No fields in results');
+  } else {
+    return response;
+  }
+};
+
 function formatTimeString(date) {
   if ((typeof(date)!=='object') || (date.constructor!==Date)) {
     throw new Error('argument must be a Date object');

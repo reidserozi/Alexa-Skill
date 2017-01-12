@@ -49,8 +49,7 @@ EsriDataHelper.prototype.getCouncilInformationLatLong = function(x, y) {
   return rp(options);
 };
 
-EsriDataHelper.prototype.formatMyCouncilMember = function(councilInfo, mayor) {
-  if (typeof mayor === 'undefined') mayor = false;
+EsriDataHelper.prototype.formatMyCouncilMember = function(councilInfo) {
   var prompt = '';
   councilInfo.results.forEach(function(item){
     if (typeof item.attributes["Council Distict"] != 'undefined'){

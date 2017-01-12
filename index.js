@@ -23,12 +23,12 @@ var handlers = {
   'OpenGymTimesIntent': function () {
     var gymTimeDate = this.event.request.intent.slots.Date.value;
     var reprompt = 'For open gym times, ask me for open gym times.';
-    var openGymHelper = new OpenDataHelper();
+    var openDataHelper = new OpenDataHelper();
     var prompt = '';
     var noData = false;
     var self = this;
-    openGymHelper.requestOpenGymTime(gymTimeDate).then(function(gymTimeStatus) {
-       prompt = openGymHelper.formatGymTimes(gymTimeStatus);
+    openDataHelper.requestOpenGymTime(gymTimeDate).then(function(gymTimeStatus) {
+       prompt = openDataHelper.formatGymTimes(gymTimeStatus);
     }).then(function(){
       self.emit(':tell', prompt);
     }).catch(function(err) {
@@ -48,7 +48,17 @@ var handlers = {
   },
 
   'MyMayorIntent': function() {
-
+    var prompt = '';
+    var self = this;
+    var openDataHelper = new OpenDataHelper();
+    openDataHelper.requestMayor().then(function(response) {
+       prompt = openDataHelper.formatMayor(response);
+    }).then(function(){
+      self.emit(':tell', prompt);
+    }).catch(function(err) {
+      prompt = 'There seems to be a problem with the connection right now.  Please try again later';
+      self.emit(':tell', prompt);
+    });
   }
 };
 

@@ -24,29 +24,29 @@ describe('OpenDataHelper', function() {
   });
   describe('#formatGymTimes', function() {
     var status = {
-        "nhits": 4,
-        "parameters": {
+      "nhits": 4,
+      "parameters": {
         "dataset": [
-        "open-gym"
+          "open-gym"
         ],
         "timezone": "UTC",
         "q": "open_gym_start == '2017-01-06",
         "rows": 10,
         "format": "json",
         "facet": [
-        "facility_title",
-        "pass_type",
-        "community_center",
-        "open_gym",
-        "group",
-        "date_scanned"
+          "facility_title",
+          "pass_type",
+          "community_center",
+          "open_gym",
+          "group",
+          "date_scanned"
         ]
-        },
-        "records": [
-          {
-            "datasetid": "open-gym",
-            "recordid": "705ddb95b54abd49df7d7c1786013ea24d66bc99",
-            "fields": {
+      },
+      "records": [
+        {
+          "datasetid": "open-gym",
+          "recordid": "705ddb95b54abd49df7d7c1786013ea24d66bc99",
+          "fields": {
             "postal_code1": "27513",
             "open_gym_start": "2017-01-06T20:30:00+00:00",
             "group": "Youth/Teen",
@@ -62,11 +62,11 @@ describe('OpenDataHelper', function() {
             "pass_type": "Open Gym - Youth/Teen BB"
           },
           "record_timestamp": "2016-08-15T14:54:00+00:00"
-          },
-          {
-            "datasetid": "open-gym",
-            "recordid": "efa1b60dfa7d3560042afc2eed8f3e50b9551951",
-            "fields": {
+        },
+        {
+          "datasetid": "open-gym",
+          "recordid": "efa1b60dfa7d3560042afc2eed8f3e50b9551951",
+          "fields": {
             "postal_code1": "27513",
             "open_gym_start": "2017-01-06T14:00:00+00:00",
             "date_scanned": "2017-01-06",
@@ -81,9 +81,9 @@ describe('OpenDataHelper', function() {
             "pass_type": "Open Gym - Pickleball"
           },
           "record_timestamp": "2016-08-15T14:54:00+00:00"
-          },
-        ]
-      };
+        }
+      ]
+    };
     context('with multiple gym times', function() {
       it('formats the status as expected', function() {
         expect(subject.formatGymTimes(status)).to.eq('There are 2 open gym times on 2017-01-06. 03:30:00 PM to 05:30:00 PM at Bond Park Community Center for Basketball. 09:00:00 AM to 12:30:00 PM at Bond Park Community Center for Pickleball.');
@@ -95,5 +95,80 @@ describe('OpenDataHelper', function() {
         expect(subject.formatGymTimes(status)).to.eq('There are no open gym times for that date.');
       });
     });
- });
+  });
+  describe('#getMayor', function() {
+    context('normal call to function', function() {
+      it('returns the name of the mayor', function() {
+        var value = subject.requestMayor().then(function(obj) {
+          return obj.records[0].fields.mayor;
+        });
+        return expect(value).to.eventually.eq("Harold Weinbrecht");
+      });
+    });
+  });
+  describe('#formatGymTimes', function() {
+    var status = {
+      "nhits": 4,
+      "parameters": {
+        "dataset": [
+          "council-districts"
+        ],
+        "timezone": "UTC",
+        "q": "county==wake",
+        "rows": 10,
+        "sort": "name",
+        "format": "json",
+        "facet": [
+          "name",
+          "repname",
+          "at_large_representatives",
+          "districtcounty"
+        ]
+      },
+      "records": [
+        {
+          "datasetid": "council-districts",
+          "recordid": "f2f82d0a480b0a3d83ec20530ed9c5fb92388871",
+          "fields": {
+            "name": "A",
+            "repname": "Jennifer Robinson",
+            "districturl": "http://www.townofcary.org/Town_Council/Cary_Town_Council.htm",
+            "at_large_representatives": "Lori Bush,Ed Yerha",
+            "county": "wake",
+            "shape_stlength": 553309.7411049065,
+            "districtcounty": "Wake",
+            "boeurl": "http://www.wakegov.com/elections/Pages/default.aspx",
+            "squaremiles": 17.07883638623223,
+            "shape_starea": 476130632.3099365,
+            "mayor": "Harold Weinbrecht"
+          },
+          "record_timestamp": "2017-01-11T14:24:05+00:00"
+        },
+        {
+          "datasetid": "council-districts",
+          "recordid": "90ac3503fea437bacc5e3832d0421ac8ac55457e",
+          "fields": {
+            "name": "B",
+            "repname": "Don Frantz",
+            "districturl": "http://www.townofcary.org/Town_Council/Cary_Town_Council.htm",
+            "at_large_representatives": "Lori Bush,Ed Yerha",
+            "geo_point_2d": [],
+            "county": "wake",
+            "shape_stlength": 314712.7772780101,
+            "districtcounty": "Wake",
+            "boeurl": "http://www.wakegov.com/elections/Pages/default.aspx",
+            "squaremiles": 13.129356251165778,
+            "shape_starea": 366025445.3125,
+            "mayor": "Harold Weinbrecht"
+          },
+          "record_timestamp": "2017-01-11T14:24:05+00:00"
+        }
+      ]
+    };
+    context('with multiple gym times', function() {
+      it('formats the status as expected', function() {
+        expect(subject.formatMayor(status)).to.eq('The mayor of Cary is Harold Weinbrecht.');
+      });
+    });
+  });
 });
