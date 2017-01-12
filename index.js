@@ -69,7 +69,6 @@ var handlers = {
       prompt = 'There seems to be a problem with the connection right now.  Please try again later';
       self.emit(':tell', prompt);
     });
-  }
   },
 
   'MyMayorIntent': function() {
