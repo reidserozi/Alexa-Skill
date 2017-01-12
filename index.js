@@ -4,18 +4,17 @@ process.env.TZ = 'America/New_York';
 var _ = require('lodash');
 var Alexa = require('alexa-sdk');
 var OpenDataHelper = require('./open_data_helper');
+var EsriDataHelper = require('./esri_data_helper');
 var APP_ID = 'amzn1.ask.skill.5a5625bb-bf96-4cea-8998-abb79bf1967c';  // TODO replace with your app ID (OPTIONAL).
 var APP_STATES = {
-  TRIVIA: "_TRIVIAMODE", // Asking trivia questions.
-  START: "_STARTMODE", // Entry point, start the game.
-  HELP: "_HELPMODE" // The user is asking for help.
+  ADDRESS: "_ADDRESS" // Asking for users address
 };
 
 exports.handler = function(event, context, callback) {
   var alexa = Alexa.handler(event, context);
   alexa.appId = APP_ID;
 
-  alexa.registerHandlers(handlers);
+  alexa.registerHandlers(handlers, addressHandlers);
   alexa.execute();
 };
 
@@ -36,17 +35,40 @@ var handlers = {
       prompt = 'I didn\'t have data for gym times on ' + gymTimeDate;
       self.emit(':tell', prompt, reprompt);
     });
-  }
+  },
 
   'MyCouncilMemberIntent': function() {
-
-  }
+    this.handler.state = APP_STATES.ADDRESS;
+    var prompt = 'Please tell me your address so I can look up your council information';
+    this.emit(':ask', prompt, prompt);
+  },
 
   'AllCouncilMembersIntent': function() {
-    
-  }
+
+  },
 
   'MyMayorIntent': function() {
 
   }
-}
+};
+
+var addressHandlers = Alexa.CreateStateHandler(APP_STATES.ADDRESS, {
+
+  'GetCouncilByAddressIntent': function() {
+    var esriDataHelper = new EsriDataHelper();
+    var self = this;
+    var reprompt = 'Please tell me your address so I can look up your council information';
+    var address = this.event.request.intent.slots.address.value;
+    var prompt = '';
+    esriDataHelper.requestCouncilInformationAddress(address).then(function(response) {
+      prompt = esriDataHelper.formatMyCouncilMember(response);
+    }).then(function() {
+      self.emit(':tell', prompt);
+    }).catch(function(error){
+      prompt = 'I could not find any information for ' + address;
+      this.handler.state = APP_STATES.ADDRESS;
+      self.emit(':tell', prompt, reprompt);
+    });
+  }
+
+});
