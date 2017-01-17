@@ -86,6 +86,10 @@ var handlers = {
     });
   },
 
+  'AMAZON.RepeatIntent': function () {
+      this.emit(':ask', this.attributes['speechOutput'], this.attributes['repromptText']);
+  },
+
   'AMAZON.HelpIntent': function() {
       this.handler.state = APP_STATES.HELP;
       this.emitWithState('helpTheUser');
@@ -103,8 +107,14 @@ var handlers = {
 var helpStateHandlers = Alexa.CreateStateHandler(APP_STATES.HELP, {
   'helpTheUser': function() {
     this.handler.state = '';
-    this.emit(':ask', 'This is a help function', 'Please ask a question.')
+    var prompt = 'This is a help function, Please ask a question.';
+    this.emit(':ask', prompt, prompt);
   },
+
+  'AMAZON.RepeatIntent': function () {
+      this.emit(':ask', this.attributes['speechOutput'], this.attributes['repromptText']);
+  },
+
   'Unhandled': function () {
       var prompt = 'I\'m sorry.  I didn\'t catch that.  Can you please repeat the question.';
       this.emit(':ask', prompt, prompt);
@@ -133,13 +143,18 @@ var addressHandlers = Alexa.CreateStateHandler(APP_STATES.ADDRESS, {
       self.emit(':tell', prompt, reprompt);
     });
   },
+
+  'AMAZON.RepeatIntent': function () {
+      this.emit(':ask', this.attributes['speechOutput'], this.attributes['repromptText']);
+  },
+
   'AMAZON.HelpIntent': function() {
       var prompt = 'Please tell me your house number and street for me to look up your council information.'
       this.emit(':ask', prompt, prompt);
   },
+  
   'Unhandled': function () {
       var prompt = 'I\'m sorry.  I didn\'t catch that.  Can you please repeat the question.';
       this.emit(':ask', prompt, prompt);
   }
-
 });
