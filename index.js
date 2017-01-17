@@ -88,7 +88,7 @@ var handlers = {
 
   'AMAZON.HelpIntent': function() {
       this.handler.state = APP_STATES.HELP;
-      this.emitWithState("helpTheUser");
+      this.emitWithState('helpTheUser');
   },
 
   'AMAZON.StopIntent': function () {
@@ -132,6 +132,10 @@ var addressHandlers = Alexa.CreateStateHandler(APP_STATES.ADDRESS, {
       this.handler.state = APP_STATES.ADDRESS;
       self.emit(':tell', prompt, reprompt);
     });
+  },
+  'AMAZON.HelpIntent': function() {
+      var prompt = 'Please tell me your house number and street for me to look up your council information.'
+      this.emit(':ask', prompt, prompt);
   },
   'Unhandled': function () {
       var prompt = 'I\'m sorry.  I didn\'t catch that.  Can you please repeat the question.';
