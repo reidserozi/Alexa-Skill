@@ -7,14 +7,15 @@ var OpenDataHelper = require('./open_data_helper');
 var EsriDataHelper = require('./esri_data_helper');
 var APP_ID = 'amzn1.ask.skill.5a5625bb-bf96-4cea-8998-abb79bf1967c';  // TODO replace with your app ID (OPTIONAL).
 var APP_STATES = {
-  ADDRESS: "_ADDRESS" // Asking for users address
+  ADDRESS: '_ADDRESS', // Asking for users address
+  HELP: '_HELPMODE'
 };
 
 exports.handler = function(event, context, callback) {
   var alexa = Alexa.handler(event, context);
   alexa.appId = APP_ID;
 
-  alexa.registerHandlers(handlers, addressHandlers);
+  alexa.registerHandlers(handlers, addressHandlers, helpStateHandlers);
   alexa.execute();
 };
 
@@ -83,8 +84,23 @@ var handlers = {
       prompt = 'There seems to be a problem with the connection right now.  Please try again later';
       self.emit(':tell', prompt);
     });
+  },
+
+  'AMAZON.HelpIntent': function() {
+      this.handler.state = APP_STATES.HELP;
+      this.emitWithState("helpTheUser");
+  },
+
+  'AMAZON.StopIntent': function () {
+    this.emit(':tell', 'Goodbye');
   }
 };
+
+var helpStateHandlers = Alexa.CreateStateHandler(APP_STATES.HELP, {
+  'helpTheUser': function() {
+    this.emit(':ask', 'This is a help function', 'Please ask a question.')
+  }
+});
 
 var addressHandlers = Alexa.CreateStateHandler(APP_STATES.ADDRESS, {
 
@@ -92,9 +108,13 @@ var addressHandlers = Alexa.CreateStateHandler(APP_STATES.ADDRESS, {
     var esriDataHelper = new EsriDataHelper();
     var self = this;
     var reprompt = 'Please tell me your address so I can look up your council information';
-    var address = this.event.request.intent.slots.address.value;
+    var street_number = this.event.request.intent.slots.street_number.value;
+    var street = this.event.request.intent.slots.street.value;
+    var address = street_number + ' ' + street
     var prompt = '';
+    console.log(address);
     esriDataHelper.requestCouncilInformationAddress(address).then(function(response) {
+      console.log(response);
       prompt = esriDataHelper.formatMyCouncilMember(response);
     }).then(function() {
       self.emit(':tell', prompt);

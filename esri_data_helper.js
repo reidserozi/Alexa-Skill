@@ -42,7 +42,7 @@ EsriDataHelper.prototype.getAddressGeolocation = function(address) {
 EsriDataHelper.prototype.getCouncilInformationLatLong = function(x, y) {
   var options = {
     method: 'GET',
-    uri: ESRIENDPOINT + 'Elections/Elections/MapServer/identify?geometry=' + x + ',' + y + '&geometryType=esriGeometryPoint&sr=4326&layers=all&layerDefs=&time=&layerTimeOptions=&tolerance=2&mapExtent=-79.193%2C35.541%2C-78.63%2C35.989%09&imageDisplay=600%2C550%2C96&returnGeometry=false&maxAllowableOffset=&geometryPrecision=&dynamicLayers=&returnZ=false&returnM=false&gdbVersion=&f=pjson',
+    uri: ESRIENDPOINT + 'Elections/Elections/MapServer/identify?geometry=' + x + ',' + y + '&geometryType=esriGeometryPoint&sr=4326&layers=all&layerDefs=&time=&layerTimeOptions=&tolerance=2&mapExtent=-79.193%2C35.541%2C-78.63%2C35.989&imageDisplay=600+550+96&returnGeometry=false&maxAllowableOffset=&geometryPrecision=&dynamicLayers=&returnZ=false&returnM=false&gdbVersion=&f=pjson',
     resolveWithFullResponse: true,
     json: true
   };
@@ -53,13 +53,15 @@ EsriDataHelper.prototype.formatMyCouncilMember = function(councilInfo) {
   var prompt = '';
   councilInfo.results.forEach(function(item){
     if (typeof item.attributes["Council Distict"] != 'undefined'){
-      prompt = _.template('You belong to District ${district} and your Council Member is ${member}')({
+      prompt = _.template('You belong to District ${district}, and your Council Member is ${member}. Your at large council memebrs are ${atLarge1}, and ${atLarge2}.')({
         district: item.attributes["Council Distict"],
-        member: item.attributes["Representative Name"]
+        member: item.attributes["Representative Name"],
+        atLarge1: item.attributes["At Large Representative 1"],
+        atLarge2: item.attributes["At Large Representative 2"]
       });
     }
   });
-  return prompt
+  return prompt;
 }
 
 module.exports = EsriDataHelper;

@@ -235,8 +235,8 @@ describe('OpenDataHelper', function() {
     });
   });
   describe('#formatAllCouncilMembers', function() {
-    var responseText = 'The council member for district A is Jennifer Robinson. The council member for district B is Don Frantz. The council member for district C is Jack Smith. ' +
-        'The council member for district D is Ken George. The at large representatives are Ed Yerha and Lori Bush.'
+    var responseText = 'The council member for district A, is Jennifer Robinson. The council member for district B, is Don Frantz. The council member for district C, is Jack Smith. ' +
+        'The council member for district D, is Ken George. The at large representatives are Ed Yerha, and Lori Bush.'
     context('return call from open data', function() {
       it('formats the status as expected', function() {
         expect(subject.formatAllCouncilMembers(cityInfo)).to.eq(responseText);
@@ -244,7 +244,7 @@ describe('OpenDataHelper', function() {
     });
   });
   describe('#formatAtLargeCouncilMembers', function() {
-    var responseText = 'Your at large representatives are Ed Yerha and Lori Bush.'
+    var responseText = 'Your at large representatives are Ed Yerha, and Lori Bush.'
     context('return call from open data', function() {
       it('formats the status as expected', function() {
         expect(subject.formatAtLargeCouncilMembers(cityInfo)).to.eq(responseText);

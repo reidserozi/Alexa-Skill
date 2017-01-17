@@ -15,7 +15,7 @@ describe('EsriDataHelper', function() {
     context('with a geolocation', function(){
       it('returns council representative and district from Lat Long', function(){
         var value = subject.requestCouncilInformationLatLong(x,y).then(function(obj){
-          return obj.results[3].attributes["Representative Name"];
+          return obj.results[1].attributes["Representative Name"];
         });
         return expect(value).to.eventually.eq("Don Frantz");
       });
@@ -23,7 +23,7 @@ describe('EsriDataHelper', function() {
     context('with an address', function() {
       it('gets geolocation from ESRI and then gets council information', function() {
         var value = subject.requestCouncilInformationAddress(address).then(function(obj){
-          return obj.results[3].attributes["Representative Name"];
+          return obj.results[1].attributes["Representative Name"];
         });
         return expect(value).to.eventually.eq("Don Frantz");
       });
@@ -84,7 +84,7 @@ describe('EsriDataHelper', function() {
       };
     context('one council member', function() {
       it('formats the status as expected', function() {
-        expect(subject.formatMyCouncilMember(status)).to.eq('You belong to District B and your Council Member is Don Frantz');
+        expect(subject.formatMyCouncilMember(status)).to.eq('You belong to District B, and your Council Member is Don Frantz. Your at large council memebrs are Lori Bush, and Ed Yerha.');
       });
     });
   });

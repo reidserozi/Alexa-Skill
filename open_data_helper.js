@@ -87,7 +87,7 @@ OpenDataHelper.prototype.formatMayor = function(cityInfo) {
 OpenDataHelper.prototype.formatAllCouncilMembers = function(cityInfo) {
   var response = '';
   cityInfo.records.forEach(function(item){
-    response += _.template('The council member for district ${district} is ${member}. ')({
+    response += _.template('The council member for district ${district}, is ${member}. ')({
       district: item.fields.name,
       member: item.fields.repname
     });
@@ -99,7 +99,7 @@ OpenDataHelper.prototype.formatAllCouncilMembers = function(cityInfo) {
   if (atLarge.size == 0 ){
     throw new Error('No at large representatives returned');
   } else {
-    response += _.template('The at large representatives are ${rep1} and ${rep2}.')({
+    response += _.template('The at large representatives are ${rep1}, and ${rep2}.')({
       rep1: atLarge[0],
       rep2: atLarge[1]
     });
@@ -120,7 +120,7 @@ OpenDataHelper.prototype.formatAtLargeCouncilMembers = function(cityInfo) {
   if (atLarge.size == 0 ){
     throw new Error('No at large representatives returned');
   } else {
-    response += _.template('Your at large representatives are ${rep1} and ${rep2}.')({
+    response += _.template('Your at large representatives are ${rep1}, and ${rep2}.')({
       rep1: atLarge[0],
       rep2: atLarge[1]
     });
