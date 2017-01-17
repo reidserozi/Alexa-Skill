@@ -93,12 +93,21 @@ var handlers = {
 
   'AMAZON.StopIntent': function () {
     this.emit(':tell', 'Goodbye');
+  },
+  'Unhandled': function () {
+      var prompt = 'I\'m sorry.  I didn\'t catch that.  Can you please repeat the question.';
+      this.emit(':ask', prompt, prompt);
   }
 };
 
 var helpStateHandlers = Alexa.CreateStateHandler(APP_STATES.HELP, {
   'helpTheUser': function() {
+    this.handler.state = '';
     this.emit(':ask', 'This is a help function', 'Please ask a question.')
+  },
+  'Unhandled': function () {
+      var prompt = 'I\'m sorry.  I didn\'t catch that.  Can you please repeat the question.';
+      this.emit(':ask', prompt, prompt);
   }
 });
 
@@ -123,6 +132,10 @@ var addressHandlers = Alexa.CreateStateHandler(APP_STATES.ADDRESS, {
       this.handler.state = APP_STATES.ADDRESS;
       self.emit(':tell', prompt, reprompt);
     });
+  },
+  'Unhandled': function () {
+      var prompt = 'I\'m sorry.  I didn\'t catch that.  Can you please repeat the question.';
+      this.emit(':ask', prompt, prompt);
   }
 
 });
