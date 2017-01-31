@@ -29,20 +29,50 @@ EsriDataHelper.prototype.requestCouncilInformationAddress = function(address) {
   ).catch(console.log.bind(console));
 }
 
-EsriDataHelper.prototype.getAddressGeolocation = function(address) {
+EsriDataHelper.prototype.getCouncilInformationLatLong = function(x, y) {
   var options = {
     method: 'GET',
-    uri: ESRIENDPOINT + 'Locators/Cary_Com_Locator/GeocodeServer/findAddressCandidates?Street=' + address + '+St&City=&State=&ZIP=&SingleLine=&outFields=&maxLocations=&outSR=4326&searchExtent=&f=pjson',
+    uri: ESRIENDPOINT + 'Elections/Elections/MapServer/identify?geometry=' + x + ',' + y + '&geometryType=esriGeometryPoint&sr=4326&layers=all&layerDefs=&time=&layerTimeOptions=&tolerance=2&mapExtent=-79.193%2C35.541%2C-78.63%2C35.989&imageDisplay=600+550+96&returnGeometry=false&maxAllowableOffset=&geometryPrecision=&dynamicLayers=&returnZ=false&returnM=false&gdbVersion=&f=pjson',
     resolveWithFullResponse: true,
     json: true
   };
   return rp(options);
 };
 
-EsriDataHelper.prototype.getCouncilInformationLatLong = function(x, y) {
+EsriDataHelper.prototype.requestParkInformationLatLong = function(x, y) {
+  return this.getParkInformationLatLong(x, y).then(
+    function(response) {
+      return response.body;
+    }, function (error) {
+        console.log('error in the promise');
+    }
+  ).catch(console.log.bind(console));
+};
+
+EsriDataHelper.prototype.requestParkInformationAddress = function(address) {
+  var self = this;
+  return this.getAddressGeolocation(address).then(
+    function(locObj) {
+        return self.requestParkInformationLatLong(locObj.body.candidates[0].location.x, locObj.body.candidates[0].location.y).then(
+          function(response) {
+            return response.body;
+          }, function (error) {
+              console.log('error in the promise');
+          }
+        ).catch(console.log.bind(console));
+    }
+  ).catch(console.log.bind(console));
+}
+
+EsriDataHelper.prototype.getParkInformationLatLong = function(x, y) {
+  var distance = 1;
+  //distance is 1 mile and radius in radians is 1 mile divided by radius of earth
+  var radius = distance / 3959;
+  var coords = getCircleCoords(x,y,radius);
+  var uri = ESRIENDPOINT + 'ParksRec/Parks/FeatureServer/0/query?where=&objectIds=&time=&geometry={"rings":[[' + coords + ']]}&geometryType=esriGeometryPolygon&inSR=4326&spatialRel=esriSpatialRelContains&relationParam=&outFields=*&returnGeometry=true&maxAllowableOffset=&geometryPrecision=&outSR=4326&gdbVersion=&returnDistinctValues=false&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&f=pjson'
   var options = {
     method: 'GET',
-    uri: ESRIENDPOINT + 'Elections/Elections/MapServer/identify?geometry=' + x + ',' + y + '&geometryType=esriGeometryPoint&sr=4326&layers=all&layerDefs=&time=&layerTimeOptions=&tolerance=2&mapExtent=-79.193%2C35.541%2C-78.63%2C35.989&imageDisplay=600+550+96&returnGeometry=false&maxAllowableOffset=&geometryPrecision=&dynamicLayers=&returnZ=false&returnM=false&gdbVersion=&f=pjson',
+    uri: encodeURI(uri),
     resolveWithFullResponse: true,
     json: true
   };
@@ -62,6 +92,31 @@ EsriDataHelper.prototype.formatMyCouncilMember = function(councilInfo) {
     }
   });
   return prompt;
+}
+
+EsriDataHelper.prototype.getAddressGeolocation = function(address) {
+  var options = {
+    method: 'GET',
+    uri: ESRIENDPOINT + 'Locators/Cary_Com_Locator/GeocodeServer/findAddressCandidates?Street=' + address + '+St&City=&State=&ZIP=&SingleLine=&outFields=&maxLocations=&outSR=4326&searchExtent=&f=pjson',
+    resolveWithFullResponse: true,
+    json: true
+  };
+  return rp(options);
+};
+
+function getCircleCoords(x,y,d){
+  var tao = 2 * Math.PI;
+  var results = [];
+  //convert lat and long to radians
+  x = x * (Math.PI / 180);
+  y = y * (Math.PI / 180)
+  for(var i = 0;i <= 8; i ++){
+    var lat = Math.asin(Math.sin(y) * Math.cos(d) + Math.cos(y) * Math.sin(d) * Math.cos((i/8)*tao));
+    var long = ((x + Math.asin(Math.sin((i/8)*tao) * Math.sin(d) / Math.cos(lat)) + Math.PI) % (tao)) - Math.PI;
+    results.push("[" + (long / (Math.PI/180)).toString() + "," + (lat / (Math.PI/180)).toString() + "]");
+  }
+  console.log(results);
+  return results;
 }
 
 module.exports = EsriDataHelper;

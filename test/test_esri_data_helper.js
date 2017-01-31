@@ -29,6 +29,27 @@ describe('EsriDataHelper', function() {
       });
     });
   });
+  describe('#getNearbyParks', function(){
+    var x = '-78.78019524861178';
+    var y = '35.789212829037126';
+    var address = '316 N Academy St';
+    context('with a geolocation', function(){
+      it('returns all parks in 1 mile radius from Lat Long', function(){
+        var value = subject.requestParkInformationLatLong(x,y).then(function(obj){
+          return obj.features[0].attributes["Name"];
+        });
+        return expect(value).to.eventually.eq("Park Name");
+      });
+    });
+    context('with an address', function() {
+      it('gets geolocation from ESRI and then gets all parks in 1 mile radius', function() {
+        var value = subject.requestParkInformationAddress(address).then(function(obj){
+          return obj.features[0].attributes["Name"];
+        });
+        return expect(value).to.eventually.eq("Park Name");
+      });
+    });
+  });
   describe('#formatMyCouncilMember', function() {
     var status = {
         "results": [
