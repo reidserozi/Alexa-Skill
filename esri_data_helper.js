@@ -39,6 +39,21 @@ EsriDataHelper.prototype.getCouncilInformationLatLong = function(x, y) {
   return rp(options);
 };
 
+EsriDataHelper.prototype.formatMyCouncilMember = function(councilInfo) {
+  var prompt = '';
+  councilInfo.results.forEach(function(item){
+    if (typeof item.attributes["Council Distict"] != 'undefined'){
+      prompt = _.template('You belong to District ${district}, and your Council Member is ${member}. Your at large council members are ${atLarge1}, and ${atLarge2}.')({
+        district: item.attributes["Council Distict"],
+        member: item.attributes["Representative Name"],
+        atLarge1: item.attributes["At Large Representative 1"],
+        atLarge2: item.attributes["At Large Representative 2"]
+      });
+    }
+  });
+  return prompt;
+}
+
 EsriDataHelper.prototype.requestParkInformationLatLong = function(x, y) {
   return this.getParkInformationLatLong(x, y).then(
     function(response) {
@@ -53,7 +68,7 @@ EsriDataHelper.prototype.requestParkInformationAddress = function(address) {
   var self = this;
   return this.getAddressGeolocation(address).then(
     function(locObj) {
-        return self.requestParkInformationLatLong(locObj.body.candidates[0].location.x, locObj.body.candidates[0].location.y).then(
+        return self.getParkInformationLatLong(locObj.body.candidates[0].location.x, locObj.body.candidates[0].location.y).then(
           function(response) {
             return response.body;
           }, function (error) {
@@ -79,17 +94,13 @@ EsriDataHelper.prototype.getParkInformationLatLong = function(x, y) {
   return rp(options);
 };
 
-EsriDataHelper.prototype.formatMyCouncilMember = function(councilInfo) {
-  var prompt = '';
-  councilInfo.results.forEach(function(item){
-    if (typeof item.attributes["Council Distict"] != 'undefined'){
-      prompt = _.template('You belong to District ${district}, and your Council Member is ${member}. Your at large council members are ${atLarge1}, and ${atLarge2}.')({
-        district: item.attributes["Council Distict"],
-        member: item.attributes["Representative Name"],
-        atLarge1: item.attributes["At Large Representative 1"],
-        atLarge2: item.attributes["At Large Representative 2"]
-      });
-    }
+EsriDataHelper.prototype.formatNearbyParks = function(parkInfo) {
+  var prompt = 'There are ' + parkInfo.features.length + ' parks nearby including ';
+  parkInfo.features.forEach(function(item){
+    prompt += _.template('${parkName} located at ${address}, ')({
+      parkName: item.attributes["NAME"],
+      address: item.attributes["FULLADDR"]
+    });
   });
   return prompt;
 }
@@ -115,7 +126,6 @@ function getCircleCoords(x,y,d){
     var long = ((x + Math.asin(Math.sin((i/8)*tao) * Math.sin(d) / Math.cos(lat)) + Math.PI) % (tao)) - Math.PI;
     results.push("[" + (long / (Math.PI/180)).toString() + "," + (lat / (Math.PI/180)).toString() + "]");
   }
-  console.log(results);
   return results;
 }
 

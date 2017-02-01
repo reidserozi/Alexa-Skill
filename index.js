@@ -8,6 +8,7 @@ var EsriDataHelper = require('./esri_data_helper');
 var APP_ID = 'amzn1.ask.skill.5a5625bb-bf96-4cea-8998-abb79bf1967c';  // TODO replace with your app ID (OPTIONAL).
 var APP_STATES = {
   ADDRESS: '_ADDRESS', // Asking for users address
+  PARKS: '_PARKS',
   HELP: '_HELPMODE'
 };
 
@@ -15,7 +16,7 @@ exports.handler = function(event, context, callback) {
   var alexa = Alexa.handler(event, context);
   alexa.appId = APP_ID;
 
-  alexa.registerHandlers(handlers, addressHandlers, helpStateHandlers);
+  alexa.registerHandlers(handlers, addressHandlers, helpStateHandlers, parkHandlers);
   alexa.execute();
 };
 
@@ -41,6 +42,12 @@ var handlers = {
   'MyCouncilMemberIntent': function() {
     this.handler.state = APP_STATES.ADDRESS;
     var prompt = 'Please tell me your address so I can look up your council information';
+    this.emit(':ask', prompt, prompt);
+  },
+
+  'NearbyParksIntent': function() {
+    this.handler.state = APP_STATES.PARKS;
+    var prompt = 'Please tell me your address so I can look up nearby parks';
     this.emit(':ask', prompt, prompt);
   },
 
@@ -139,7 +146,7 @@ var addressHandlers = Alexa.CreateStateHandler(APP_STATES.ADDRESS, {
       self.emit(':tell', prompt);
     }).catch(function(error){
       prompt = 'I could not find any information for ' + address;
-      this.handler.state = APP_STATES.ADDRESS;
+      self.handler.state = APP_STATES.ADDRESS;
       self.emit(':tell', prompt, reprompt);
     });
   },
@@ -152,7 +159,45 @@ var addressHandlers = Alexa.CreateStateHandler(APP_STATES.ADDRESS, {
       var prompt = 'Please tell me your house number and street for me to look up your council information.'
       this.emit(':ask', prompt, prompt);
   },
-  
+
+  'Unhandled': function () {
+      var prompt = 'I\'m sorry.  I didn\'t catch that.  Can you please repeat the question.';
+      this.emit(':ask', prompt, prompt);
+  }
+});
+
+var parkHandlers = Alexa.CreateStateHandler(APP_STATES.PARKS, {
+
+  'GetNearbyParksByAddressIntent': function() {
+    var esriDataHelper = new EsriDataHelper();
+    var self = this;
+    var reprompt = 'Please tell me your address so I can look up your council information';
+    var street_number = this.event.request.intent.slots.street_number.value;
+    var street = this.event.request.intent.slots.street.value;
+    var address = street_number + ' ' + street
+    var prompt = '';
+    console.log(address);
+    esriDataHelper.requestParkInformationAddress(address).then(function(response) {
+      console.log(response);
+      prompt = esriDataHelper.formatNearbyParks(response);
+    }).then(function() {
+      self.emit(':tell', prompt);
+    }).catch(function(error){
+      prompt = 'I could not find any parks near for ' + address;
+      self.handler.state = APP_STATES.PARKS;
+      self.emit(':tell', prompt, reprompt);
+    });
+  },
+
+  'AMAZON.RepeatIntent': function () {
+      this.emit(':ask', this.attributes['speechOutput'], this.attributes['repromptText']);
+  },
+
+  'AMAZON.HelpIntent': function() {
+      var prompt = 'Please tell me your house number and street for me to look up your council information.'
+      this.emit(':ask', prompt, prompt);
+  },
+
   'Unhandled': function () {
       var prompt = 'I\'m sorry.  I didn\'t catch that.  Can you please repeat the question.';
       this.emit(':ask', prompt, prompt);

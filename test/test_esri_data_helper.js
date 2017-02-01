@@ -36,17 +36,17 @@ describe('EsriDataHelper', function() {
     context('with a geolocation', function(){
       it('returns all parks in 1 mile radius from Lat Long', function(){
         var value = subject.requestParkInformationLatLong(x,y).then(function(obj){
-          return obj.features[0].attributes["Name"];
+          return obj.features[0].attributes["NAME"];
         });
-        return expect(value).to.eventually.eq("Park Name");
+        return expect(value).to.eventually.eq("Heater Park");
       });
     });
     context('with an address', function() {
       it('gets geolocation from ESRI and then gets all parks in 1 mile radius', function() {
         var value = subject.requestParkInformationAddress(address).then(function(obj){
-          return obj.features[0].attributes["Name"];
+          return obj.features[0].attributes["NAME"];
         });
-        return expect(value).to.eventually.eq("Park Name");
+        return expect(value).to.eventually.eq("Heater Park");
       });
     });
   });
@@ -106,6 +106,122 @@ describe('EsriDataHelper', function() {
     context('one council member', function() {
       it('formats the status as expected', function() {
         expect(subject.formatMyCouncilMember(status)).to.eq('You belong to District B, and your Council Member is Don Frantz. Your at large council members are Lori Bush, and Ed Yerha.');
+      });
+    });
+  });
+  describe('#formatMyCouncilMember', function() {
+    var status = {
+      "objectIdFieldName": "OBJECTID",
+      "globalIdFieldName": "",
+      "geometryType": "esriGeometryPoint",
+      "spatialReference": {},
+      "fields": [],
+      "features": [
+        {
+          "attributes": {
+            "OBJECTID": 39,
+            "FACILITYID": "39",
+            "NAME": "Heater Park",
+            "SUBTYPEFIELD": 790,
+            "FEATURECODE": null,
+            "FULLADDR": "400 S. West Street Cary NC 27511",
+            "OPERDAYS": "Sun-Sat",
+            "OPERHOURS": "Sunrise to Sunset",
+            "PARKAREA": 1.49,
+            "PARKURL": "http://www.townofcary.org/recreation-enjoyment/parks-greenways-environment/parks/heater-park",
+            "NUMPARKING": -9999,
+            "RESTROOM": "No",
+            "ADACOMPLY": "No",
+            "CAMPING": null,
+            "SWIMMING": null,
+            "HIKING": null,
+            "FISHING": null,
+            "PICNIC": "No",
+            "BOATING": null,
+            "HUNTING": null,
+            "ROADCYCLE": null,
+            "MTBCYCLE": null,
+            "PLAYGROUND": "No",
+            "GOLF": null,
+            "SKI": null,
+            "SOCCER": "No",
+            "BASEBALL": "No",
+            "BASKETBALL": "No",
+            "SKATEPARK": "No",
+            "TENNISCOURT": "No",
+            "VOLLEYBALL": "No",
+            "FITNESSTRAIL": "No",
+            "NATURETRAIL": "No",
+            "TRAILHEAD": "No",
+            "OPENSPACE": "No",
+            "LAKE": "No",
+            "AMPITHEATER": "No",
+            "DOGPARK": "No",
+            "DISCGOLF": "No",
+            "CLIMBINGROCKS": "No",
+            "CLIMBINGROPES": "No",
+            "BATTINGCAGES": "No"
+          },
+          "geometry": {
+            "x": -78.78598197756895,
+            "y": 35.78260079150859
+          }
+        },
+        {
+          "attributes": {
+            "OBJECTID": 41,
+            "FACILITYID": "41",
+            "NAME": "Lexie Lane Park",
+            "SUBTYPEFIELD": 790,
+            "FEATURECODE": null,
+            "FULLADDR": "301 N. Dixon Avenue Cary NC 27513",
+            "OPERDAYS": "Sun-Sat",
+            "OPERHOURS": "Sunrise to Sunset",
+            "PARKAREA": 2.82,
+            "PARKURL": "http://www.townofcary.org/recreation-enjoyment/parks-greenways-environment/parks/lexie-lane-park",
+            "NUMPARKING": -9999,
+            "RESTROOM": "Yes",
+            "ADACOMPLY": "No",
+            "CAMPING": null,
+            "SWIMMING": null,
+            "HIKING": null,
+            "FISHING": null,
+            "PICNIC": "No",
+            "BOATING": null,
+            "HUNTING": null,
+            "ROADCYCLE": null,
+            "MTBCYCLE": null,
+            "PLAYGROUND": "Yes",
+            "GOLF": null,
+            "SKI": null,
+            "SOCCER": "No",
+            "BASEBALL": "Yes",
+            "BASKETBALL": "Yes",
+            "SKATEPARK": "No",
+            "TENNISCOURT": "No",
+            "VOLLEYBALL": "No",
+            "FITNESSTRAIL": "No",
+            "NATURETRAIL": "No",
+            "TRAILHEAD": "No",
+            "OPENSPACE": "No",
+            "LAKE": "No",
+            "AMPITHEATER": "No",
+            "DOGPARK": "No",
+            "DISCGOLF": "No",
+            "CLIMBINGROCKS": "No",
+            "CLIMBINGROPES": "No",
+            "BATTINGCAGES": "No"
+          },
+          "geometry": {
+            "x": -78.78938964654577,
+            "y": 35.78906936020467
+          }
+        }
+      ]
+    }
+    context('two parks', function() {
+      it('formats the status as expected', function() {
+        expect(subject.formatNearbyParks(status)).to.eq('There are 2 parks nearby including Heater Park located at 400 S. West Street Cary NC 27511, Lexie Lane Park located at 301 N. Dixon Avenue Cary NC 27513, ');
       });
     });
   });
