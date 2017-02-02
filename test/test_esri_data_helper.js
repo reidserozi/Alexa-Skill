@@ -50,6 +50,27 @@ describe('EsriDataHelper', function() {
       });
     });
   });
+  describe('#getNearbyPublicArt', function(){
+    var x = '-78.78019524861178';
+    var y = '35.789212829037126';
+    var address = '316 N Academy St';
+    context('with a geolocation', function(){
+      it('returns all public art in 1km radius from Lat Long', function(){
+        var value = subject.requestPublicArtInfoLatLong(x,y).then(function(obj){
+          return obj.features[0].attributes["Name"];
+        });
+        return expect(value).to.eventually.eq("Join the Parade");
+      });
+    });
+    context('with an address', function() {
+      it('gets geolocation from ESRI and then gets all public art in 1km radius', function() {
+        var value = subject.requestPublicArtInfoAddress(address).then(function(obj){
+          return obj.features[0].attributes["Name"];
+        });
+        return expect(value).to.eventually.eq("Join the Parade");
+      });
+    });
+  });
   describe('#formatMyCouncilMember', function() {
     var status = {
         "results": [
@@ -109,13 +130,8 @@ describe('EsriDataHelper', function() {
       });
     });
   });
-  describe('#formatMyCouncilMember', function() {
+  describe('#formatParkInfo', function() {
     var status = {
-      "objectIdFieldName": "OBJECTID",
-      "globalIdFieldName": "",
-      "geometryType": "esriGeometryPoint",
-      "spatialReference": {},
-      "fields": [],
       "features": [
         {
           "attributes": {
@@ -222,6 +238,74 @@ describe('EsriDataHelper', function() {
     context('two parks', function() {
       it('formats the status as expected', function() {
         expect(subject.formatNearbyParks(status)).to.eq('There are 2 parks nearby including Heater Park located at 400 S. West Street Cary NC 27511, Lexie Lane Park located at 301 N. Dixon Avenue Cary NC 27513, ');
+      });
+    });
+  });
+  describe('#formatPublicArtInfo', function() {
+    var status = {
+      "features": [
+        {
+          "attributes": {
+            "Name": "Join the Parade",
+            "Artist": "Jane A. Rankin",
+            "Location_Desc": "Town Hall Campus, North Academy Street",
+            "Address": "316 N Academy St, Cary, NC 27513 ",
+            "Caption": "This artwork by Jane A. Rankin commemorates the importance of Cary's Band in the history of the town. The first child with cymbals honors former Mayor Koka Booth, a long-time supporter of band activities.",
+            "Lat": 35.7911415,
+            "Long": -78.7790146,
+            "Icon_color": "r",
+            "URL": "http://img.groundspeak.com/waymarking/large/13a2d8c8-fdfe-4feb-ae2f-5aa4477debf5.jpg#isImage",
+            "Thumb_URL": "http://img.groundspeak.com/waymarking/large/13a2d8c8-fdfe-4feb-ae2f-5aa4477debf5.jpg",
+            "FID": 1
+          },
+          "geometry": {
+            "x": -78.78104378037548,
+            "y": 35.78960249307244
+          }
+        },
+        {
+          "attributes": {
+            "Name": "Messenger",
+            "Artist": "Gary Price",
+            "Location_Desc": "Cary Library, Downtown Cary",
+            "Address": "310 S Academy St, Cary, NC 27511",
+            "Caption": "This artwork by Gary Price commemorates a local scholarship program. It stands outside the downtown library on S. Academy Street.",
+            "Lat": 35.7842636,
+            "Long": -78.7819519,
+            "Icon_color": "R",
+            "URL": "http://services2.arcgis.com/l4TwMwwoiuEVRPw9/arcgis/rest/services/Art_in_Public_Places/FeatureServer/0/9/attachments/77",
+            "Thumb_URL": "http://services2.arcgis.com/l4TwMwwoiuEVRPw9/arcgis/rest/services/Art_in_Public_Places/FeatureServer/0/9/attachments/78",
+            "FID": 9
+          },
+          "geometry": {
+            "x": -78.78194598482561,
+            "y": 35.784248184587874
+          }
+        },
+        {
+          "attributes": {
+            "Name": "3 Whirligigs",
+            "Artist": null,
+            "Location_Desc": null,
+            "Address": null,
+            "Caption": "Artist: Vollis Simpson Location: Corner of Academy Street and Chapel Hill Road",
+            "Lat": null,
+            "Long": null,
+            "Icon_color": "r",
+            "URL": "http://services2.arcgis.com/l4TwMwwoiuEVRPw9/arcgis/rest/services/Art_in_Public_Places/FeatureServer/0/13/attachments/83",
+            "Thumb_URL": "http://services2.arcgis.com/l4TwMwwoiuEVRPw9/arcgis/rest/services/Art_in_Public_Places/FeatureServer/0/13/attachments/84",
+            "FID": 13
+          },
+          "geometry": {
+            "x": -78.78078238963992,
+            "y": 35.791090902573465
+          }
+        }
+      ]
+    }
+    context('two art', function() {
+      it('formats the status as expected', function() {
+        expect(subject.formatNearbyPublicArt(status)).to.eq('There are 2 pieces of public art nearby including Join the Parade located at 316 N Academy St, Cary, NC 27513 , Messenger located at 310 S Academy St, Cary, NC 27511, ');
       });
     });
   });

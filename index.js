@@ -138,9 +138,7 @@ var addressHandlers = Alexa.CreateStateHandler(APP_STATES.ADDRESS, {
     var street = this.event.request.intent.slots.street.value;
     var address = street_number + ' ' + street
     var prompt = '';
-    console.log(address);
     esriDataHelper.requestCouncilInformationAddress(address).then(function(response) {
-      console.log(response);
       prompt = esriDataHelper.formatMyCouncilMember(response);
     }).then(function() {
       self.emit(':tell', prompt);
@@ -176,9 +174,7 @@ var parkHandlers = Alexa.CreateStateHandler(APP_STATES.PARKS, {
     var street = this.event.request.intent.slots.street.value;
     var address = street_number + ' ' + street
     var prompt = '';
-    console.log(address);
     esriDataHelper.requestParkInformationAddress(address).then(function(response) {
-      console.log(response);
       prompt = esriDataHelper.formatNearbyParks(response);
     }).then(function() {
       self.emit(':tell', prompt);

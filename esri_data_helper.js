@@ -105,6 +105,61 @@ EsriDataHelper.prototype.formatNearbyParks = function(parkInfo) {
   return prompt;
 }
 
+EsriDataHelper.prototype.requestPublicArtInfoLatLong = function(x, y) {
+  return this.getPublicArtInfoLatLong(x, y).then(
+    function(response) {
+      return response.body;
+    }, function (error) {
+        console.log('error in the promise');
+    }
+  ).catch(console.log.bind(console));
+};
+
+EsriDataHelper.prototype.requestPublicArtInfoAddress = function(address) {
+  var self = this;
+  return this.getAddressGeolocation(address).then(
+    function(locObj) {
+        return self.getPublicArtInfoLatLong(locObj.body.candidates[0].location.x, locObj.body.candidates[0].location.y).then(
+          function(response) {
+            return response.body;
+          }, function (error) {
+              console.log('error in the promise');
+          }
+        ).catch(console.log.bind(console));
+    }
+  ).catch(console.log.bind(console));
+}
+
+EsriDataHelper.prototype.getPublicArtInfoLatLong = function(x, y) {
+  var uri = 'http://services2.arcgis.com/l4TwMwwoiuEVRPw9/ArcGIS/rest/services/Art_in_Public_Places/FeatureServer/0/query?where=&objectIds=&time=&geometry=' + x + ',' + y + '&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelContains&resultType=none&distance=1000&units=esriSRUnit_Meter&returnGeodetic=false&outFields=*&returnGeometry=true&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=4326&returnIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnDistinctValues=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&quantizationParameters=&sqlFormat=none&f=pjson'
+  var options = {
+    method: 'GET',
+    uri: encodeURI(uri),
+    resolveWithFullResponse: true,
+    json: true
+  };
+  return rp(options);
+};
+
+EsriDataHelper.prototype.formatNearbyPublicArt = function(artInfo) {
+  var prompt = '';
+  var numArt = artInfo.features.length;
+  artInfo.features.forEach(function(item){
+    if(item.attributes["Address"] != null){
+      prompt += _.template('${artName} located at ${address}, ')({
+        artName: item.attributes["Name"],
+        address: item.attributes["Address"]
+      });
+    } else {
+      numArt  = numArt - 1;
+    }
+  });
+  prompt = _.template('There are ${num} pieces of public art nearby including ')({
+    num: numArt
+  }) + prompt;
+  return prompt;
+}
+
 EsriDataHelper.prototype.getAddressGeolocation = function(address) {
   var options = {
     method: 'GET',
