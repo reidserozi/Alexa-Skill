@@ -9,7 +9,8 @@ var APP_ID = 'amzn1.ask.skill.5a5625bb-bf96-4cea-8998-abb79bf1967c';  // TODO re
 var APP_STATES = {
   ADDRESS: '_ADDRESS', // Asking for users address
   PARKS: '_PARKS',
-  HELP: '_HELPMODE'
+  HELP: '_HELPMODE',
+  ART: '_ART'
 };
 
 exports.handler = function(event, context, callback) {
@@ -48,6 +49,12 @@ var handlers = {
   'NearbyParksIntent': function() {
     this.handler.state = APP_STATES.PARKS;
     var prompt = 'Please tell me your address so I can look up nearby parks';
+    this.emit(':ask', prompt, prompt);
+  },
+
+  'NearbyPublicArtIntent': function() {
+    this.handler.state = APP_STATES.ART;
+    var prompt = 'Please tell me your address so I can look up nearby public art';
     this.emit(':ask', prompt, prompt);
   },
 
@@ -169,7 +176,7 @@ var parkHandlers = Alexa.CreateStateHandler(APP_STATES.PARKS, {
   'GetNearbyParksByAddressIntent': function() {
     var esriDataHelper = new EsriDataHelper();
     var self = this;
-    var reprompt = 'Please tell me your address so I can look up your council information';
+    var reprompt = 'Please tell me your address so I can look up nearby parks.';
     var street_number = this.event.request.intent.slots.street_number.value;
     var street = this.event.request.intent.slots.street.value;
     var address = street_number + ' ' + street
@@ -190,7 +197,43 @@ var parkHandlers = Alexa.CreateStateHandler(APP_STATES.PARKS, {
   },
 
   'AMAZON.HelpIntent': function() {
-      var prompt = 'Please tell me your house number and street for me to look up your council information.'
+      var prompt = 'Please tell me your house number and street for me to look up nearby parks.'
+      this.emit(':ask', prompt, prompt);
+  },
+
+  'Unhandled': function () {
+      var prompt = 'I\'m sorry.  I didn\'t catch that.  Can you please repeat the question.';
+      this.emit(':ask', prompt, prompt);
+  }
+});
+
+var parkHandlers = Alexa.CreateStateHandler(APP_STATES.ART, {
+
+  'GetNearbyPublicArtByAddressIntent': function() {
+    var esriDataHelper = new EsriDataHelper();
+    var self = this;
+    var reprompt = 'Please tell me your address so I can look up nearby public art.';
+    var street_number = this.event.request.intent.slots.street_number.value;
+    var street = this.event.request.intent.slots.street.value;
+    var address = street_number + ' ' + street
+    var prompt = '';
+    esriDataHelper.requestPublicArtInfoAddress(address).then(function(response) {
+      prompt = esriDataHelper.formatNearbyPublicArt(response);
+    }).then(function() {
+      self.emit(':tell', prompt);
+    }).catch(function(error){
+      prompt = 'I could not find any public art near ' + address;
+      self.handler.state = APP_STATES.PARKS;
+      self.emit(':tell', prompt, reprompt);
+    });
+  },
+
+  'AMAZON.RepeatIntent': function () {
+      this.emit(':ask', this.attributes['speechOutput'], this.attributes['repromptText']);
+  },
+
+  'AMAZON.HelpIntent': function() {
+      var prompt = 'Please tell me your house number and street for me to look up nearby public art.'
       this.emit(':ask', prompt, prompt);
   },
 
