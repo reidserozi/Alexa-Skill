@@ -227,7 +227,7 @@ var artHandlers = Alexa.CreateStateHandler(APP_STATES.ART, {
     var prompt = '';
     esriDataHelper.requestAddressInformation(address).then(function(response) {
         var uri = ARCGISENDPOINT + 'Art_in_Public_Places/FeatureServer/0/query?where=&objectIds=&time=&geometry=' + response.candidates[0].location.x + ',' + response.candidates[0].location.y + '&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelContains&resultType=none&distance=1000&units=esriSRUnit_Meter&returnGeodetic=false&outFields=*&returnGeometry=true&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=4326&returnIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnDistinctValues=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&quantizationParameters=&sqlFormat=none&f=pjson';
-      esriDataHelper.requestInfoLatLong(uri).then(function(response){
+      esriDataHelper.requestInformationLatLong(uri).then(function(response){
         prompt = esriDataHelper.formatNearbyPublicArt(response);
       }).then(function() {
         self.emit(':tell', prompt);
