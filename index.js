@@ -5,9 +5,12 @@ var _ = require('lodash');
 var Alexa = require('alexa-sdk');
 var OpenDataHelper = require('./open_data_helper');
 var EsriDataHelper = require('./esri_data_helper');
+var ESRIENDPOINT = 'https://maps.townofcary.org/arcgis1/rest/services/';
+var ARCGISENDPOINT = 'http://services2.arcgis.com/l4TwMwwoiuEVRPw9/ArcGIS/rest/services/';
+var DISTANCE = 1; //distance for radius search.  currently 1 mile can be adapted later.
 var APP_ID = 'amzn1.ask.skill.5a5625bb-bf96-4cea-8998-abb79bf1967c';  // TODO replace with your app ID (OPTIONAL).
 var APP_STATES = {
-  ADDRESS: '_ADDRESS', // Asking for users address
+  COUNCIL: '_COUNCIL', // Asking for users address
   PARKS: '_PARKS',
   HELP: '_HELPMODE',
   ART: '_ART'
@@ -17,7 +20,7 @@ exports.handler = function(event, context, callback) {
   var alexa = Alexa.handler(event, context);
   alexa.appId = APP_ID;
 
-  alexa.registerHandlers(handlers, addressHandlers, helpStateHandlers, parkHandlers);
+  alexa.registerHandlers(handlers, councilHandlers, helpStateHandlers, parkHandlers, artHandlers);
   alexa.execute();
 };
 
@@ -41,7 +44,7 @@ var handlers = {
   },
 
   'MyCouncilMemberIntent': function() {
-    this.handler.state = APP_STATES.ADDRESS;
+    this.handler.state = APP_STATES.COUNCIL;
     var prompt = 'Please tell me your address so I can look up your council information';
     this.emit(':ask', prompt, prompt);
   },
@@ -135,9 +138,9 @@ var helpStateHandlers = Alexa.CreateStateHandler(APP_STATES.HELP, {
   }
 });
 
-var addressHandlers = Alexa.CreateStateHandler(APP_STATES.ADDRESS, {
+var councilHandlers = Alexa.CreateStateHandler(APP_STATES.COUNCIL, {
 
-  'GetCouncilByAddressIntent': function() {
+  'GetByAddressIntent': function() {
     var esriDataHelper = new EsriDataHelper();
     var self = this;
     var reprompt = 'Please tell me your address so I can look up your council information';
@@ -145,14 +148,17 @@ var addressHandlers = Alexa.CreateStateHandler(APP_STATES.ADDRESS, {
     var street = this.event.request.intent.slots.street.value;
     var address = street_number + ' ' + street
     var prompt = '';
-    esriDataHelper.requestCouncilInformationAddress(address).then(function(response) {
-      prompt = esriDataHelper.formatMyCouncilMember(response);
-    }).then(function() {
-      self.emit(':tell', prompt);
-    }).catch(function(error){
-      prompt = 'I could not find any information for ' + address;
-      self.handler.state = APP_STATES.ADDRESS;
-      self.emit(':tell', prompt, reprompt);
+    esriDataHelper.requestAddressInformation(address).then(function(response) {
+      var uri = ESRIENDPOINT + 'Elections/Elections/MapServer/identify?geometry=' + response.candidates[0].location.x + ',' + response.candidates[0].location.y + '&geometryType=esriGeometryPoint&sr=4326&layers=all&layerDefs=&time=&layerTimeOptions=&tolerance=2&mapExtent=-79.193,35.541,-78.63,35.989&imageDisplay=600+550+96&returnGeometry=false&maxAllowableOffset=&geometryPrecision=&dynamicLayers=&returnZ=false&returnM=false&gdbVersion=&f=pjson'
+      esriDataHelper.requestInformationLatLong(uri).then(function(response){
+        prompt = esriDataHelper.formatMyCouncilMember(response);
+      }).then(function() {
+        self.emit(':tell', prompt);
+      }).catch(function(error){
+        prompt = 'I could not find any information for ' + address;
+        self.handler.state = APP_STATES.ADDRESS;
+        self.emit(':tell', prompt, reprompt);
+      });
     });
   },
 
@@ -173,7 +179,7 @@ var addressHandlers = Alexa.CreateStateHandler(APP_STATES.ADDRESS, {
 
 var parkHandlers = Alexa.CreateStateHandler(APP_STATES.PARKS, {
 
-  'GetNearbyParksByAddressIntent': function() {
+  'GetByAddressIntent': function() {
     var esriDataHelper = new EsriDataHelper();
     var self = this;
     var reprompt = 'Please tell me your address so I can look up nearby parks.';
@@ -181,14 +187,16 @@ var parkHandlers = Alexa.CreateStateHandler(APP_STATES.PARKS, {
     var street = this.event.request.intent.slots.street.value;
     var address = street_number + ' ' + street
     var prompt = '';
-    esriDataHelper.requestParkInformationAddress(address).then(function(response) {
-      prompt = esriDataHelper.formatNearbyParks(response);
-    }).then(function() {
-      self.emit(':tell', prompt);
-    }).catch(function(error){
-      prompt = 'I could not find any parks near for ' + address;
-      self.handler.state = APP_STATES.PARKS;
-      self.emit(':tell', prompt, reprompt);
+    esriDataHelper.requestAddressInformation(address).then(function(response) {
+      esriDataHelper.requestInformationByRadius(response.candidates[0].location.x, response.candidates[0].location.y, DISTANCE).then(function(response){
+        prompt = esriDataHelper.formatNearbyParks(response);
+      }).then(function() {
+        self.emit(':tell', prompt);
+      }).catch(function(error){
+        prompt = 'I could not find any parks near for ' + address;
+        self.handler.state = APP_STATES.PARKS;
+        self.emit(':tell', prompt, reprompt);
+      });
     });
   },
 
@@ -207,9 +215,9 @@ var parkHandlers = Alexa.CreateStateHandler(APP_STATES.PARKS, {
   }
 });
 
-var parkHandlers = Alexa.CreateStateHandler(APP_STATES.ART, {
+var artHandlers = Alexa.CreateStateHandler(APP_STATES.ART, {
 
-  'GetNearbyPublicArtByAddressIntent': function() {
+  'GetByAddressIntent': function() {
     var esriDataHelper = new EsriDataHelper();
     var self = this;
     var reprompt = 'Please tell me your address so I can look up nearby public art.';
@@ -217,14 +225,17 @@ var parkHandlers = Alexa.CreateStateHandler(APP_STATES.ART, {
     var street = this.event.request.intent.slots.street.value;
     var address = street_number + ' ' + street
     var prompt = '';
-    esriDataHelper.requestPublicArtInfoAddress(address).then(function(response) {
-      prompt = esriDataHelper.formatNearbyPublicArt(response);
-    }).then(function() {
-      self.emit(':tell', prompt);
-    }).catch(function(error){
-      prompt = 'I could not find any public art near ' + address;
-      self.handler.state = APP_STATES.PARKS;
-      self.emit(':tell', prompt, reprompt);
+    esriDataHelper.requestAddressInformation(address).then(function(response) {
+        var uri = ARCGISENDPOINT + 'Art_in_Public_Places/FeatureServer/0/query?where=&objectIds=&time=&geometry=' + response.candidates[0].location.x + ',' + response.candidates[0].location.y + '&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelContains&resultType=none&distance=1000&units=esriSRUnit_Meter&returnGeodetic=false&outFields=*&returnGeometry=true&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=4326&returnIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnDistinctValues=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&quantizationParameters=&sqlFormat=none&f=pjson';
+      esriDataHelper.requestInfoLatLong(uri).then(function(response){
+        prompt = esriDataHelper.formatNearbyPublicArt(response);
+      }).then(function() {
+        self.emit(':tell', prompt);
+      }).catch(function(error){
+        prompt = 'I could not find any public art near ' + address;
+        self.handler.state = APP_STATES.ART;
+        self.emit(':tell', prompt, reprompt);
+      });
     });
   },
 

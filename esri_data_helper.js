@@ -1,11 +1,34 @@
 'use strict';
 var _ = require('lodash');
 var rp = require('request-promise');
-var ESRIENDPOINT = 'https://maps.townofcary.org/arcgis1/rest/services/'
+var ESRIENDPOINT = 'https://maps.townofcary.org/arcgis1/rest/services/';
+var EARTHRADUIS = 3959;
 function EsriDataHelper() { }
 
-EsriDataHelper.prototype.requestCouncilInformationLatLong = function(x, y) {
-  return this.getCouncilInformationLatLong(x, y).then(
+EsriDataHelper.prototype.requestAddressInformation = function(address) {
+  var self = this;
+  return this.getAddressGeolocation(address).then(
+    function(response) {
+      return response.body;
+    }, function (error) {
+        console.log('error in the promise');
+    }
+  ).catch(console.log.bind(console));
+}
+
+EsriDataHelper.prototype.getAddressGeolocation = function(address) {
+  var uri = ESRIENDPOINT + 'Locators/Cary_Com_Locator/GeocodeServer/findAddressCandidates?Street=' + address + '+St&City=&State=&ZIP=&SingleLine=&outFields=&maxLocations=&outSR=4326&searchExtent=&f=pjson';
+  var options = {
+    method: 'GET',
+    uri: encodeURI(uri),
+    resolveWithFullResponse: true,
+    json: true
+  };
+  return rp(options);
+};
+
+EsriDataHelper.prototype.requestInformationLatLong = function(uri) {
+  return this.getInformationLatLong(uri).then(
     function(response) {
       return response.body;
     }, function (error) {
@@ -14,25 +37,34 @@ EsriDataHelper.prototype.requestCouncilInformationLatLong = function(x, y) {
   ).catch(console.log.bind(console));
 };
 
-EsriDataHelper.prototype.requestCouncilInformationAddress = function(address) {
-  var self = this;
-  return this.getAddressGeolocation(address).then(
-    function(locObj) {
-        return self.getCouncilInformationLatLong(locObj.body.candidates[0].location.x, locObj.body.candidates[0].location.y).then(
-          function(response) {
-            return response.body;
-          }, function (error) {
-              console.log('error in the promise');
-          }
-        ).catch(console.log.bind(console));
-    }
-  ).catch(console.log.bind(console));
-}
-
-EsriDataHelper.prototype.getCouncilInformationLatLong = function(x, y) {
+EsriDataHelper.prototype.getInformationLatLong = function(uri) {
   var options = {
     method: 'GET',
-    uri: ESRIENDPOINT + 'Elections/Elections/MapServer/identify?geometry=' + x + ',' + y + '&geometryType=esriGeometryPoint&sr=4326&layers=all&layerDefs=&time=&layerTimeOptions=&tolerance=2&mapExtent=-79.193%2C35.541%2C-78.63%2C35.989&imageDisplay=600+550+96&returnGeometry=false&maxAllowableOffset=&geometryPrecision=&dynamicLayers=&returnZ=false&returnM=false&gdbVersion=&f=pjson',
+    uri: encodeURI(uri),
+    resolveWithFullResponse: true,
+    json: true
+  };
+  return rp(options);
+};
+
+EsriDataHelper.prototype.requestInformationByRadius = function(x, y, distance) {
+  return this.getInformationByRadius(x, y, distance).then(
+    function(response) {
+      return response.body;
+    }, function (error) {
+        console.log('error in the promise');
+    }
+  ).catch(console.log.bind(console));
+};
+
+EsriDataHelper.prototype.getInformationByRadius = function(x, y, distance) {
+  //radius of earth is 3959 miles
+  var radius = distance / EARTHRADUIS;
+  var coords = getCircleCoords(x,y,radius);
+  var uri = ESRIENDPOINT + 'ParksRec/Parks/FeatureServer/0/query?where=&objectIds=&time=&geometry={"rings":[[' + coords + ']]}&geometryType=esriGeometryPolygon&inSR=4326&spatialRel=esriSpatialRelContains&relationParam=&outFields=*&returnGeometry=true&maxAllowableOffset=&geometryPrecision=&outSR=4326&gdbVersion=&returnDistinctValues=false&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&f=pjson'
+  var options = {
+    method: 'GET',
+    uri: encodeURI(uri),
     resolveWithFullResponse: true,
     json: true
   };
@@ -54,46 +86,6 @@ EsriDataHelper.prototype.formatMyCouncilMember = function(councilInfo) {
   return prompt;
 }
 
-EsriDataHelper.prototype.requestParkInformationLatLong = function(x, y) {
-  return this.getParkInformationLatLong(x, y).then(
-    function(response) {
-      return response.body;
-    }, function (error) {
-        console.log('error in the promise');
-    }
-  ).catch(console.log.bind(console));
-};
-
-EsriDataHelper.prototype.requestParkInformationAddress = function(address) {
-  var self = this;
-  return this.getAddressGeolocation(address).then(
-    function(locObj) {
-        return self.getParkInformationLatLong(locObj.body.candidates[0].location.x, locObj.body.candidates[0].location.y).then(
-          function(response) {
-            return response.body;
-          }, function (error) {
-              console.log('error in the promise');
-          }
-        ).catch(console.log.bind(console));
-    }
-  ).catch(console.log.bind(console));
-}
-
-EsriDataHelper.prototype.getParkInformationLatLong = function(x, y) {
-  var distance = 1;
-  //distance is 1 mile and radius in radians is 1 mile divided by radius of earth
-  var radius = distance / 3959;
-  var coords = getCircleCoords(x,y,radius);
-  var uri = ESRIENDPOINT + 'ParksRec/Parks/FeatureServer/0/query?where=&objectIds=&time=&geometry={"rings":[[' + coords + ']]}&geometryType=esriGeometryPolygon&inSR=4326&spatialRel=esriSpatialRelContains&relationParam=&outFields=*&returnGeometry=true&maxAllowableOffset=&geometryPrecision=&outSR=4326&gdbVersion=&returnDistinctValues=false&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&f=pjson'
-  var options = {
-    method: 'GET',
-    uri: encodeURI(uri),
-    resolveWithFullResponse: true,
-    json: true
-  };
-  return rp(options);
-};
-
 EsriDataHelper.prototype.formatNearbyParks = function(parkInfo) {
   var prompt = 'There are ' + parkInfo.features.length + ' parks nearby including ';
   parkInfo.features.forEach(function(item){
@@ -104,42 +96,6 @@ EsriDataHelper.prototype.formatNearbyParks = function(parkInfo) {
   });
   return prompt;
 }
-
-EsriDataHelper.prototype.requestPublicArtInfoLatLong = function(x, y) {
-  return this.getPublicArtInfoLatLong(x, y).then(
-    function(response) {
-      return response.body;
-    }, function (error) {
-        console.log('error in the promise');
-    }
-  ).catch(console.log.bind(console));
-};
-
-EsriDataHelper.prototype.requestPublicArtInfoAddress = function(address) {
-  var self = this;
-  return this.getAddressGeolocation(address).then(
-    function(locObj) {
-        return self.getPublicArtInfoLatLong(locObj.body.candidates[0].location.x, locObj.body.candidates[0].location.y).then(
-          function(response) {
-            return response.body;
-          }, function (error) {
-              console.log('error in the promise');
-          }
-        ).catch(console.log.bind(console));
-    }
-  ).catch(console.log.bind(console));
-}
-
-EsriDataHelper.prototype.getPublicArtInfoLatLong = function(x, y) {
-  var uri = 'http://services2.arcgis.com/l4TwMwwoiuEVRPw9/ArcGIS/rest/services/Art_in_Public_Places/FeatureServer/0/query?where=&objectIds=&time=&geometry=' + x + ',' + y + '&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelContains&resultType=none&distance=1000&units=esriSRUnit_Meter&returnGeodetic=false&outFields=*&returnGeometry=true&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=4326&returnIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnDistinctValues=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&quantizationParameters=&sqlFormat=none&f=pjson'
-  var options = {
-    method: 'GET',
-    uri: encodeURI(uri),
-    resolveWithFullResponse: true,
-    json: true
-  };
-  return rp(options);
-};
 
 EsriDataHelper.prototype.formatNearbyPublicArt = function(artInfo) {
   var prompt = '';
@@ -159,16 +115,6 @@ EsriDataHelper.prototype.formatNearbyPublicArt = function(artInfo) {
   }) + prompt;
   return prompt;
 }
-
-EsriDataHelper.prototype.getAddressGeolocation = function(address) {
-  var options = {
-    method: 'GET',
-    uri: ESRIENDPOINT + 'Locators/Cary_Com_Locator/GeocodeServer/findAddressCandidates?Street=' + address + '+St&City=&State=&ZIP=&SingleLine=&outFields=&maxLocations=&outSR=4326&searchExtent=&f=pjson',
-    resolveWithFullResponse: true,
-    json: true
-  };
-  return rp(options);
-};
 
 function getCircleCoords(x,y,d){
   var tao = 2 * Math.PI;

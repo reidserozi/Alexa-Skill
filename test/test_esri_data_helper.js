@@ -4,6 +4,8 @@ var chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 var expect = chai.expect;
 var EsriDataHelper = require('../esri_data_helper');
+var ESRIENDPOINT = 'https://maps.townofcary.org/arcgis1/rest/services/';
+var ARCGISENDPOINT = 'http://services2.arcgis.com/l4TwMwwoiuEVRPw9/ArcGIS/rest/services/';
 chai.config.includeStack = true;
 
 describe('EsriDataHelper', function() {
@@ -14,7 +16,8 @@ describe('EsriDataHelper', function() {
     var address = '316 N Academy St';
     context('with a geolocation', function(){
       it('returns council representative and district from Lat Long', function(){
-        var value = subject.requestCouncilInformationLatLong(x,y).then(function(obj){
+        var uri = ESRIENDPOINT + 'Elections/Elections/MapServer/identify?geometry=' + x + ',' + y + '&geometryType=esriGeometryPoint&sr=4326&layers=all&layerDefs=&time=&layerTimeOptions=&tolerance=2&mapExtent=-79.193,35.541,-78.63,35.989&imageDisplay=600+550+96&returnGeometry=false&maxAllowableOffset=&geometryPrecision=&dynamicLayers=&returnZ=false&returnM=false&gdbVersion=&f=pjson'
+        var value = subject.requestInformationLatLong(uri).then(function(obj){
           return obj.results[1].attributes["Representative Name"];
         });
         return expect(value).to.eventually.eq("Don Frantz");
@@ -22,8 +25,11 @@ describe('EsriDataHelper', function() {
     });
     context('with an address', function() {
       it('gets geolocation from ESRI and then gets council information', function() {
-        var value = subject.requestCouncilInformationAddress(address).then(function(obj){
-          return obj.results[1].attributes["Representative Name"];
+        var value = subject.requestAddressInformation(address).then(function(obj){
+          var uri = ESRIENDPOINT + 'Elections/Elections/MapServer/identify?geometry=' + obj.candidates[0].location.x + ',' + obj.candidates[0].location.y + '&geometryType=esriGeometryPoint&sr=4326&layers=all&layerDefs=&time=&layerTimeOptions=&tolerance=2&mapExtent=-79.193,35.541,-78.63,35.989&imageDisplay=600+550+96&returnGeometry=false&maxAllowableOffset=&geometryPrecision=&dynamicLayers=&returnZ=false&returnM=false&gdbVersion=&f=pjson'
+          return subject.requestInformationLatLong(uri).then(function(obj){
+            return obj.results[1].attributes["Representative Name"];
+          });
         });
         return expect(value).to.eventually.eq("Don Frantz");
       });
@@ -33,9 +39,10 @@ describe('EsriDataHelper', function() {
     var x = '-78.78019524861178';
     var y = '35.789212829037126';
     var address = '316 N Academy St';
+    var DISTANCE = 1;
     context('with a geolocation', function(){
       it('returns all parks in 1 mile radius from Lat Long', function(){
-        var value = subject.requestParkInformationLatLong(x,y).then(function(obj){
+        var value = subject.requestInformationByRadius(x,y, DISTANCE).then(function(obj){
           return obj.features[0].attributes["NAME"];
         });
         return expect(value).to.eventually.eq("Heater Park");
@@ -43,8 +50,10 @@ describe('EsriDataHelper', function() {
     });
     context('with an address', function() {
       it('gets geolocation from ESRI and then gets all parks in 1 mile radius', function() {
-        var value = subject.requestParkInformationAddress(address).then(function(obj){
-          return obj.features[0].attributes["NAME"];
+        var value = subject.requestAddressInformation(address).then(function(obj){
+          return subject.requestInformationByRadius(obj.candidates[0].location.x, obj.candidates[0].location.y, DISTANCE).then(function(obj){
+            return obj.features[0].attributes["NAME"];
+          });
         });
         return expect(value).to.eventually.eq("Heater Park");
       });
@@ -56,7 +65,8 @@ describe('EsriDataHelper', function() {
     var address = '316 N Academy St';
     context('with a geolocation', function(){
       it('returns all public art in 1km radius from Lat Long', function(){
-        var value = subject.requestPublicArtInfoLatLong(x,y).then(function(obj){
+        var uri = ARCGISENDPOINT + 'Art_in_Public_Places/FeatureServer/0/query?where=&objectIds=&time=&geometry=' + x + ',' + y + '&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelContains&resultType=none&distance=1000&units=esriSRUnit_Meter&returnGeodetic=false&outFields=*&returnGeometry=true&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=4326&returnIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnDistinctValues=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&quantizationParameters=&sqlFormat=none&f=pjson';
+        var value = subject.requestInformationLatLong(uri).then(function(obj){
           return obj.features[0].attributes["Name"];
         });
         return expect(value).to.eventually.eq("Join the Parade");
@@ -64,8 +74,11 @@ describe('EsriDataHelper', function() {
     });
     context('with an address', function() {
       it('gets geolocation from ESRI and then gets all public art in 1km radius', function() {
-        var value = subject.requestPublicArtInfoAddress(address).then(function(obj){
-          return obj.features[0].attributes["Name"];
+        var value = subject.requestAddressInformation(address).then(function(obj){
+          var uri = ARCGISENDPOINT + 'Art_in_Public_Places/FeatureServer/0/query?where=&objectIds=&time=&geometry=' + obj.candidates[0].location.x + ',' + obj.candidates[0].location.y + '&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelContains&resultType=none&distance=1000&units=esriSRUnit_Meter&returnGeodetic=false&outFields=*&returnGeometry=true&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=4326&returnIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnDistinctValues=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&quantizationParameters=&sqlFormat=none&f=pjson';
+          return subject.requestInformationLatLong(uri).then(function(obj){
+            return obj.features[0].attributes["Name"];
+          });
         });
         return expect(value).to.eventually.eq("Join the Parade");
       });

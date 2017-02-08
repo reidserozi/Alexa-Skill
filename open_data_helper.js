@@ -60,7 +60,7 @@ OpenDataHelper.prototype.requestCityInformation = function() {
   ).catch(console.log.bind(console));
 };
 
-OpenDataHelper.prototype.getCityInformation = function(gym_date) {
+OpenDataHelper.prototype.getCityInformation = function() {
   var options = {
     method: 'GET',
     uri: OPENDATAENDPOINT + 'dataset=council-districts&q=county%3D%3Dwake&sort=name&facet=at_large_representatives',
