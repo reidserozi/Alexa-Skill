@@ -1,11 +1,11 @@
 'use strict';
 var _ = require('lodash');
 var rp = require('request-promise');
-var OPENDATAENDPOINT = 'https://data.townofcary.org/api/records/1.0/search/?';
+
 function OpenDataHelper() { }
 
-OpenDataHelper.prototype.requestOpenGymTime = function(gym_date) {
-  return this.getOpenGymTimes(gym_date).then(
+OpenDataHelper.prototype.requestOpenData = function(uri) {
+  return this.getOpenData(uri).then(
     function(response) {
       return response.body;
     }, function (error) {
@@ -14,10 +14,10 @@ OpenDataHelper.prototype.requestOpenGymTime = function(gym_date) {
   ).catch(console.log.bind(console));
 };
 
-OpenDataHelper.prototype.getOpenGymTimes = function(gym_date) {
+OpenDataHelper.prototype.getOpenData = function(uri) {
   var options = {
     method: 'GET',
-    uri: OPENDATAENDPOINT + 'dataset=open-gym&q=open_gym_start==' + gym_date + '&facet=facility_title&facet=pass_type&facet=community_center&facet=open_gym&facet=group&facet=date_scanned&timezone=UTC',
+    uri: encodeURI(uri),
     resolveWithFullResponse: true,
     json: true
   };
@@ -47,27 +47,6 @@ OpenDataHelper.prototype.formatGymTimes = function(gymTimes) {
     var response = 'There are no open gym times for that date.';
     return response
   }
-};
-
-OpenDataHelper.prototype.requestCityInformation = function() {
-  return this.getCityInformation().then(
-    function(response) {
-      return response.body;
-    }, function (error) {
-        console.log('error in the promise');
-        console.log(error);
-    }
-  ).catch(console.log.bind(console));
-};
-
-OpenDataHelper.prototype.getCityInformation = function() {
-  var options = {
-    method: 'GET',
-    uri: OPENDATAENDPOINT + 'dataset=council-districts&q=county%3D%3Dwake&sort=name&facet=at_large_representatives',
-    resolveWithFullResponse: true,
-    json: true
-  };
-  return rp(options);
 };
 
 OpenDataHelper.prototype.formatMayor = function(cityInfo) {

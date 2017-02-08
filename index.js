@@ -7,6 +7,7 @@ var OpenDataHelper = require('./open_data_helper');
 var EsriDataHelper = require('./esri_data_helper');
 var ESRIENDPOINT = 'https://maps.townofcary.org/arcgis1/rest/services/';
 var ARCGISENDPOINT = 'http://services2.arcgis.com/l4TwMwwoiuEVRPw9/ArcGIS/rest/services/';
+var OPENDATAENDPOINT = 'https://data.townofcary.org/api/records/1.0/search/?';
 var DISTANCE = 1; //distance for radius search.  currently 1 mile can be adapted later.
 var APP_ID = 'amzn1.ask.skill.5a5625bb-bf96-4cea-8998-abb79bf1967c';  // TODO replace with your app ID (OPTIONAL).
 var APP_STATES = {
@@ -33,7 +34,8 @@ var handlers = {
     var prompt = '';
     var noData = false;
     var self = this;
-    openDataHelper.requestOpenGymTime(gymTimeDate).then(function(gymTimeStatus) {
+    var uri = OPENDATAENDPOINT + 'dataset=open-gym&q=open_gym_start==' + gymTimeDate + '&facet=facility_title&facet=pass_type&facet=community_center&facet=open_gym&facet=group&facet=date_scanned&timezone=UTC';
+    openDataHelper.requestOpenData(uri).then(function(gymTimeStatus) {
        prompt = openDataHelper.formatGymTimes(gymTimeStatus);
     }).then(function(){
       self.emit(':tell', prompt);
@@ -65,7 +67,8 @@ var handlers = {
     var prompt = '';
     var self = this;
     var openDataHelper = new OpenDataHelper();
-    openDataHelper.requestCityInformation().then(function(response) {
+    var uri = OPENDATAENDPOINT + 'dataset=council-districts&q=county==wake&sort=name&facet=at_large_representatives';
+    openDataHelper.requestOpenData(uri).then(function(response) {
        prompt = openDataHelper.formatAllCouncilMembers(response);
     }).then(function(){
       self.emit(':tell', prompt);
@@ -79,7 +82,8 @@ var handlers = {
     var prompt = '';
     var self = this;
     var openDataHelper = new OpenDataHelper();
-    openDataHelper.requestCityInformation().then(function(response) {
+    var uri = OPENDATAENDPOINT + 'dataset=council-districts&q=county==wake&sort=name&facet=at_large_representatives';
+    openDataHelper.requestOpenData().then(function(response) {
        prompt = openDataHelper.formatAtLargeCouncilMembers(response);
     }).then(function(){
       self.emit(':tell', prompt);
@@ -93,7 +97,8 @@ var handlers = {
     var prompt = '';
     var self = this;
     var openDataHelper = new OpenDataHelper();
-    openDataHelper.requestCityInformation().then(function(response) {
+    var uri = OPENDATAENDPOINT + 'dataset=council-districts&q=county==wake&sort=name&facet=at_large_representatives';
+    openDataHelper.requestOpenData().then(function(response) {
        prompt = openDataHelper.formatMayor(response);
     }).then(function(){
       self.emit(':tell', prompt);

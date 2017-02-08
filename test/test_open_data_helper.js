@@ -4,6 +4,7 @@ var chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 var expect = chai.expect;
 var OpenDataHelper = require('../open_data_helper');
+var OPENDATAENDPOINT = 'https://data.townofcary.org/api/records/1.0/search/?';
 chai.config.includeStack = true;
 
 describe('OpenDataHelper', function() {
@@ -15,7 +16,8 @@ describe('OpenDataHelper', function() {
       it('returns gym times on current date', function() {
         today = new Date('2017-01-09');
         open_gym_date = today.toISOString().substring(0,10);
-        var value = subject.requestOpenGymTime(open_gym_date).then(function(obj) {
+        var uri = OPENDATAENDPOINT + 'dataset=open-gym&q=open_gym_start==' + open_gym_date + '&facet=facility_title&facet=pass_type&facet=community_center&facet=open_gym&facet=group&facet=date_scanned&timezone=UTC'
+        var value = subject.requestOpenData(uri).then(function(obj) {
           return obj.records[0].fields.date_scanned;
         });
         return expect(value).to.eventually.eq(open_gym_date);
@@ -99,7 +101,8 @@ describe('OpenDataHelper', function() {
   describe('#requestCityInformation', function() {
     context('normal call to function', function() {
       it('returns the name of the mayor', function() {
-        var value = subject.requestCityInformation().then(function(obj) {
+        var uri = OPENDATAENDPOINT + 'dataset=council-districts&q=county==wake&sort=name&facet=at_large_representatives'
+        var value = subject.requestOpenData(uri).then(function(obj) {
           return obj.records[0].fields.mayor;
         });
         return expect(value).to.eventually.eq("Harold Weinbrecht");
