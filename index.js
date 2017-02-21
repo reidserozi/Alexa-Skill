@@ -6,6 +6,7 @@ var Alexa = require('alexa-sdk');
 var OpenDataHelper = require('./open_data_helper');
 var EsriDataHelper = require('./esri_data_helper');
 var SalesforceHelper = require('./salesforce_helper');
+var facts = require('./cary_facts');
 var ESRIENDPOINT = 'https://maps.townofcary.org/arcgis1/rest/services/';
 var ARCGISENDPOINT = 'http://services2.arcgis.com/l4TwMwwoiuEVRPw9/ArcGIS/rest/services/';
 var OPENDATAENDPOINT = 'https://data.townofcary.org/api/records/1.0/search/?';
@@ -48,6 +49,12 @@ var handlers = {
       prompt = 'I didn\'t have data for gym times on ' + gymTimeDate;
       self.emit(':tell', prompt, reprompt);
     });
+  },
+
+  'GetCaryFactsIntent': function () {
+    var index = Math.floor(Math.random() * facts['facts'].length);
+    var prompt = facts['facts'][index];
+    this.emit(':tell', prompt);
   },
 
   'GetUserAddressIntent': function() {
