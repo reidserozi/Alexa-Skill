@@ -36,7 +36,7 @@ SalesforceHelper.prototype.createCaseInSalesforce = function(userToken, caseType
     obj.RecordTypeId = recordType.Id;
     return conn.sobject("Case").create(obj);
 	}).then(function(results){
-    return conn.query("Select CaseNumber from Case where Id = '" + results.id + "'");
+    return conn.query("Select CaseNumber, Status, Expected_Completion_Date__c, LastModifiedDate, CaseIssue__r.Name from Case where Id = '" + results.id + "'");
 	}).then(function(results) {
     var speechOutput = '';
     var caseRecord = results.records[0];
@@ -57,7 +57,7 @@ SalesforceHelper.prototype.findLatestCaseStatus = function(userToken) {
 		return conn.query("Select ContactId from User where Id = '" + results.body.id + "'")
 	}).then(function(results){
 		var userContactId = results.records[0].ContactId;
-		return conn.query("Select Status, LastModifiedDate from Case where ContactId = '" + userContactId + "' order by createdDate DESC Limit 1");
+		return conn.query("Select Status, CaseNumber, Expected_Completion_Date__c, LastModifiedDate, CaseIssue__r.Name from Case where ContactId = '" + userContactId + "' order by createdDate DESC Limit 1");
 	}).then(function(results){
 			return results.records;
 	}).catch(function(err) {
@@ -71,7 +71,9 @@ SalesforceHelper.prototype.findCaseStatus = function(userToken, caseNumber) {
 		instanceUrl : INSTANCE_URL,
 		accessToken : userToken
 	});
-	return conn.query("Select Status, LastModifiedDate from Case where CaseNumber = '" + caseNumber + "' order by createdDate DESC Limit 1").then(function(results){
+	console.log('Case Number: ' + caseNumber);
+	return conn.query("Select Status, CaseNumber, Expected_Completion_Date__c, LastModifiedDate, CaseIssue__r.Name from Case where CaseNumber = '" + caseNumber + "' order by createdDate DESC Limit 1").then(function(results){
+			console.log(results.records);
 			return results.records;
 	}).catch(function(err) {
     console.log('Error in case lookup');
@@ -80,23 +82,40 @@ SalesforceHelper.prototype.findCaseStatus = function(userToken, caseNumber) {
 };
 
 SalesforceHelper.prototype.formatExistingCase = function(caseInfo) {
+	var response = {};
 	if (caseInfo.length > 0) {
-		var response = _.template('The status of your case is ${caseStatus}, and it was last modified on ${lastModifiedDate}.');
-	  return response({
-	    caseStatus: caseInfo[0].Status,
-	    lastModifiedDate: caseInfo[0].LastModifiedDate
-	  });
+		var prompt = _.template('The status of your case is ${caseStatus}, and it was last modified on ${lastModifiedDate}.');
+	  response.prompt = prompt({
+			caseStatus: caseInfo[0].Status,
+			lastModifiedDate: caseInfo[0].LastModifiedDate
+		});
+		var card = _.template('Your case for ${caseType} has a case number of ${caseNumber} an expected completion date of ${finishDate}');
+		response.card = card({
+			caseType: caseInfo[0].CaseIssue__r.Name,
+			caseNumber: caseInfo[0].CaseNumber,
+			finishDate: caseInfo[0].Expected_Completion_Date__c
+		});
 	} else {
-		return 'No previously created cases found for your contact.';
+		response.prompt = 'I\'m sorry, but I could not find any previous cases on your account';
+		response.card = 'I\'m sorry, but I could not find any previous cases on your account';
 	}
+	return response;
 };
 
 SalesforceHelper.prototype.formatNewCaseStatus = function(caseInfo, caseType) {
-  var response = _.template('I\'ve created a new case for ${caseType}.  The case number is ${caseNumber}. Please note it down for future reference.  Do you want me to repeat the case number?');
-  return response({
-    caseType: caseType,
-    caseNumber: caseInfo.CaseNumber
-  });
+	var response = {};
+  var prompt = _.template('I\'ve created a new case for ${caseType}.  The case number is ${caseNumber}. Please note it down for future reference.  Do you want me to repeat the case number?');
+	response.prompt = prompt({
+		caseType: caseType,
+		caseNumber: caseInfo.CaseNumber
+	});
+	var card = _.template('Your new case for ${caseType} has a case number of ${caseNumber} an expected completion date of ${finishDate}');
+	response.card = card({
+		caseType: caseType,
+		caseNumber: caseInfo.CaseNumber,
+		finishDate: caseInfo.Expected_Completion_Date__c
+	});
+	return response;
 };
 
 SalesforceHelper.prototype.getUserAddress = function(userToken) {

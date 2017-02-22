@@ -12,6 +12,7 @@ var ARCGISENDPOINT = 'http://services2.arcgis.com/l4TwMwwoiuEVRPw9/ArcGIS/rest/s
 var OPENDATAENDPOINT = 'https://data.townofcary.org/api/records/1.0/search/?';
 var DISTANCE = 1; //distance for radius search.  currently 1 mile can be adapted later.
 var APP_ID = 'amzn1.ask.skill.5a5625bb-bf96-4cea-8998-abb79bf1967c';  // TODO replace with your app ID (OPTIONAL).
+var CASENUMBERLENGTH = 8 //the current number of digits in a case number to add leading zeros
 //If false, it means that Account Linking isn't mandatory there fore we dont have accaes to the account of the community user so we will ask for the user's Phone Number.
 // IMPORTANT!! Make sure that the profile of the community user has the 'API Enabled' field marked as true.
 var ACCOUNT_LINKING_REQUIRED = true;
@@ -148,9 +149,9 @@ var handlers = {
     var openDataHelper = new OpenDataHelper();
     var uri = OPENDATAENDPOINT + 'dataset=council-districts&q=county==wake&sort=name&facet=at_large_representatives';
     openDataHelper.requestOpenData(uri).then(function(response) {
-       prompt = openDataHelper.formatAllCouncilMembers(response);
-    }).then(function(){
-      self.emit(':tell', prompt);
+       return openDataHelper.formatAllCouncilMembers(response);
+    }).then(function(response){
+      self.emit(':tell', response);
     }).catch(function(err) {
       prompt = 'There seems to be a problem with the connection right now.  Please try again later';
       self.emit(':tell', prompt);
@@ -163,9 +164,9 @@ var handlers = {
     var openDataHelper = new OpenDataHelper();
     var uri = OPENDATAENDPOINT + 'dataset=council-districts&q=county==wake&sort=name&facet=at_large_representatives';
     openDataHelper.requestOpenData(uri).then(function(response) {
-       prompt = openDataHelper.formatAtLargeCouncilMembers(response);
-    }).then(function(){
-      self.emit(':tell', prompt);
+       return openDataHelper.formatAtLargeCouncilMembers(response);
+    }).then(function(response){
+      self.emit(':tell', response);
     }).catch(function(err) {
       prompt = 'There seems to be a problem with the connection right now.  Please try again later';
       self.emit(':tell', prompt);
@@ -178,9 +179,9 @@ var handlers = {
     var openDataHelper = new OpenDataHelper();
     var uri = OPENDATAENDPOINT + 'dataset=council-districts&q=county==wake&sort=name&facet=at_large_representatives';
     openDataHelper.requestOpenData(uri).then(function(response) {
-       prompt = openDataHelper.formatMayor(response);
-    }).then(function(){
-      self.emit(':tell', prompt);
+       return openDataHelper.formatMayor(response);
+    }).then(function(response){
+      self.emit(':tell', response);
     }).catch(function(err) {
       prompt = 'There seems to be a problem with the connection right now.  Please try again later';
       console.log(err);
@@ -209,9 +210,9 @@ var handlers = {
       var prompt = '';
       var self = this;
       salesforceHelper.findLatestCaseStatus(userToken).then(function(response) {
-        prompt = salesforceHelper.formatExistingCase(response);
-      }).then(function() {
-        self.emit(':tell', prompt);
+        return salesforceHelper.formatExistingCase(response);
+      }).then(function(response) {
+        self.emit(':tellWithCard', response.prompt, 'Town of Cary Case', response.card);
       }).catch(function(err){
         prompt = 'There seems to be a problem with the connection right now.  Please try again later';
         console.log(err);
@@ -227,13 +228,16 @@ var handlers = {
   	} else {
       var salesforceHelper = new SalesforceHelper();
       var userToken = this.event.session.user.accessToken;
-      var caseNumber = this.event.request.intent.slots.CaseNumber.value;
+      var caseNumber = this.event.request.intent.slots.CaseNumber.value.toString();
+      if(caseNumber.length < 8){
+        caseNumber = addLeadZeros(caseNumber);
+      }
       var prompt = '';
       var self = this;
       salesforceHelper.findCaseStatus(userToken, caseNumber).then(function(response) {
-        prompt = salesforceHelper.formatExistingCase(response);
-      }).then(function() {
-        self.emit(':tell', prompt);
+        return salesforceHelper.formatExistingCase(response);
+      }).then(function(response) {
+        self.emit(':tellWithCard', response.prompt, 'Town of Cary Case', response.card);
       }).catch(function(err){
         prompt = 'There seems to be a problem with the connection right now.  Please try again later';
         console.log(err);
@@ -455,9 +459,9 @@ var caseHandlers = Alexa.CreateStateHandler(APP_STATES.CASE, {
     salesforceHelper.createCaseInSalesforce(userToken, caseType).then(function(response){
       self.attributes['caseType'] = caseType;
       self.attributes['case'] = response;
-      prompt = salesforceHelper.formatNewCaseStatus(response, caseType);
-    }).then(function(){
-      self.emit(':askWithCard', prompt, 'Salesforce', prompt);
+      return salesforceHelper.formatNewCaseStatus(response, caseType);
+    }).then(function(response){
+      self.emit(':askWithCard', response.prompt, response.prompt, 'Town of Cary Case', response.card);
     }).catch(function(err) {
       prompt = 'Darn, there was a Salesforce problem, sorry';
       console.log(err);
@@ -475,3 +479,9 @@ var caseHandlers = Alexa.CreateStateHandler(APP_STATES.CASE, {
     this.emit(':tell', 'Ok, Your case will be looked at shortly.');
   }
 });
+
+function addLeadZeros(caseNumber){
+  var filler = '0';
+  var results = filler.repeat(CASENUMBERLENGTH - caseNumber.length).concat(caseNumber);
+  return results.valueOf();
+}
