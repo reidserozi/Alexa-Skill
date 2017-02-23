@@ -4,6 +4,7 @@ var rp = require('request-promise');
 var jsforce = require('jsforce');
 var EsriDataHelper = require('./esri_data_helper');
 var ESRIENDPOINT = 'https://maps.townofcary.org/arcgis1/rest/services/';
+require('datejs');
 
 // the salesforce community Id (only needed when Account linking is required)
 // to get the ID go to Salesforce org -> Setup -> search for 'community' in the Quick Find section and click on the Communities->All Communities and hover over
@@ -17,9 +18,11 @@ function SalesforceHelper() { }
 
 SalesforceHelper.prototype.createCaseInSalesforce = function(userToken, caseType) {
 	var obj = {Subject: 'Alexa Case'};
+	obj.Origin = "Alexa";
 	var conn = new jsforce.Connection({
 		instanceUrl : INSTANCE_URL,
-		accessToken : userToken
+		accessToken : userToken,
+		version:'38.0'
 	});
   return getUserId(userToken).then(function(results){
     return conn.query("Select ContactId from User where Id = '" + results.body.id + "'");
@@ -51,13 +54,14 @@ SalesforceHelper.prototype.createCaseInSalesforce = function(userToken, caseType
 SalesforceHelper.prototype.findLatestCaseStatus = function(userToken) {
 	var conn = new jsforce.Connection({
 		instanceUrl : INSTANCE_URL,
-		accessToken : userToken
+		accessToken : userToken,
+		version:'38.0'
 	});
 	return getUserId(userToken).then(function(results){
 		return conn.query("Select ContactId from User where Id = '" + results.body.id + "'")
 	}).then(function(results){
 		var userContactId = results.records[0].ContactId;
-		return conn.query("Select Status, CaseNumber, Expected_Completion_Date__c, LastModifiedDate, CaseIssue__r.Name from Case where ContactId = '" + userContactId + "' order by createdDate DESC Limit 1");
+		return conn.query("Select Status, CaseNumber, Expected_Completion_Date__c, CreatedDate, ClosedDate, LastModifiedDate, CaseIssue__r.Name from Case where ContactId = '" + userContactId + "' order by createdDate DESC Limit 1");
 	}).then(function(results){
 			return results.records;
 	}).catch(function(err) {
@@ -69,10 +73,11 @@ SalesforceHelper.prototype.findLatestCaseStatus = function(userToken) {
 SalesforceHelper.prototype.findCaseStatus = function(userToken, caseNumber) {
 	var conn = new jsforce.Connection({
 		instanceUrl : INSTANCE_URL,
-		accessToken : userToken
+		accessToken : userToken,
+		version:'38.0'
 	});
 	console.log('Case Number: ' + caseNumber);
-	return conn.query("Select Status, CaseNumber, Expected_Completion_Date__c, LastModifiedDate, CaseIssue__r.Name from Case where CaseNumber = '" + caseNumber + "' order by createdDate DESC Limit 1").then(function(results){
+	return conn.query("Select Status, CaseNumber, ClosedDate, CreatedDate, Expected_Completion_Date__c, LastModifiedDate, CaseIssue__r.Name from Case where CaseNumber = '" + caseNumber + "' order by createdDate DESC Limit 1").then(function(results){
 			console.log(results.records);
 			return results.records;
 	}).catch(function(err) {
@@ -84,10 +89,11 @@ SalesforceHelper.prototype.findCaseStatus = function(userToken, caseNumber) {
 SalesforceHelper.prototype.formatExistingCase = function(caseInfo) {
 	var response = {};
 	if (caseInfo.length > 0) {
-		var prompt = _.template('The status of your case is ${caseStatus}, and it was last modified on ${lastModifiedDate}.');
+		var prompt = _.template('The status of your case is ${caseStatus},  and it was last modified on ${lastModifiedDate}.');
+		var lmDate = Date.parse(caseInfo[0].LastModifiedDate).toString();
 	  response.prompt = prompt({
 			caseStatus: caseInfo[0].Status,
-			lastModifiedDate: caseInfo[0].LastModifiedDate
+			lastModifiedDate: lmDate.slice(0, lmDate.indexOf('GMT'))
 		});
 		var card = _.template('Your case for ${caseType} has a case number of ${caseNumber} an expected completion date of ${finishDate}');
 		response.card = card({
@@ -161,6 +167,13 @@ function getUserId(userToken){
     }
   };
   return rp(options);
+}
+
+function parseSalesforceDate(sfDate){
+	var dateSliced = sfDate.slice(0,sfDate.indexOf('.'));
+	console.log(dateSliced);
+	console.log('date in new format ' + Date.parse(dateSliced));
+	return dateSliced;
 }
 
 module.exports = SalesforceHelper;
