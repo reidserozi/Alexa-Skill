@@ -16,20 +16,20 @@ var INSTANCE_URL = 'https://311test-onecary.cs44.force.com/OneCary';
 
 function SalesforceHelper() { }
 
-SalesforceHelper.prototype.createCaseInSalesforce = function(userToken, caseType) {
+SalesforceHelper.prototype.createCaseInSalesforce = function(userToken, caseIssue) {
 	var obj = {Subject: 'Alexa Case'};
-	obj.Origin = "Alexa";
+	obj.Origin = 'Alexa';
 	var conn = new jsforce.Connection({
 		instanceUrl : INSTANCE_URL,
 		accessToken : userToken,
-		version:'38.0'
+		version:'39.0'
 	});
   return getUserId(userToken).then(function(results){
     return conn.query("Select ContactId from User where Id = '" + results.body.id + "'");
 	}).then(function(results){
       var userRecord = results.records[0];
       obj.ContactId = userRecord.ContactId;
-      return conn.query("Select Id from Case_Issue__c where Name = '" + caseType + "'");
+      return conn.query("Select Id from Case_Issue__c where Name LIKE '%" + caseIssue + "%'");
 	}).then(function(results) {
 		var caseIssueRecord = results.records[0];
 		obj.CaseIssue__c = caseIssueRecord.Id;
@@ -37,14 +37,13 @@ SalesforceHelper.prototype.createCaseInSalesforce = function(userToken, caseType
 	}).then(function(results) {
     var recordType = results.records[0];
     obj.RecordTypeId = recordType.Id;
+		console.log(obj);
     return conn.sobject("Case").create(obj);
 	}).then(function(results){
-    return conn.query("Select CaseNumber, Status, Expected_Completion_Date__c, LastModifiedDate, CaseIssue__r.Name from Case where Id = '" + results.id + "'");
+    return conn.query("Select Id, CaseNumber, Status, Expected_Completion_Date__c, LastModifiedDate, CaseIssue__r.Name from Case where Id = '" + results.id + "'");
 	}).then(function(results) {
-    var speechOutput = '';
-    var caseRecord = results.records[0];
-    obj.CaseNumber = caseRecord.CaseNumber;
-    return obj;
+		console.log(results.records[0]);
+    return results.records[0];
   }).catch(function(err) {
     console.log('Error in case creation');
     console.log(err);
@@ -55,7 +54,7 @@ SalesforceHelper.prototype.findLatestCaseStatus = function(userToken) {
 	var conn = new jsforce.Connection({
 		instanceUrl : INSTANCE_URL,
 		accessToken : userToken,
-		version:'38.0'
+		version:'39.0'
 	});
 	return getUserId(userToken).then(function(results){
 		return conn.query("Select ContactId from User where Id = '" + results.body.id + "'")
@@ -74,7 +73,7 @@ SalesforceHelper.prototype.findCaseStatus = function(userToken, caseNumber) {
 	var conn = new jsforce.Connection({
 		instanceUrl : INSTANCE_URL,
 		accessToken : userToken,
-		version:'38.0'
+		version:'39.0'
 	});
 	console.log('Case Number: ' + caseNumber);
 	return conn.query("Select Status, CaseNumber, ClosedDate, CreatedDate, Expected_Completion_Date__c, LastModifiedDate, CaseIssue__r.Name from Case where CaseNumber = '" + caseNumber + "' order by createdDate DESC Limit 1").then(function(results){
@@ -95,9 +94,9 @@ SalesforceHelper.prototype.formatExistingCase = function(caseInfo) {
 			caseStatus: caseInfo[0].Status,
 			lastModifiedDate: lmDate.slice(0, lmDate.indexOf('GMT'))
 		});
-		var card = _.template('Your case for ${caseType} has a case number of ${caseNumber} an expected completion date of ${finishDate}');
+		var card = _.template('Your case for ${caseIssue} has a case number of ${caseNumber} an expected completion date of ${finishDate}');
 		response.card = card({
-			caseType: caseInfo[0].CaseIssue__r.Name,
+			caseIssue: caseInfo[0].CaseIssue__r.Name,
 			caseNumber: caseInfo[0].CaseNumber,
 			finishDate: caseInfo[0].Expected_Completion_Date__c
 		});
@@ -108,16 +107,16 @@ SalesforceHelper.prototype.formatExistingCase = function(caseInfo) {
 	return response;
 };
 
-SalesforceHelper.prototype.formatNewCaseStatus = function(caseInfo, caseType) {
+SalesforceHelper.prototype.formatNewCaseStatus = function(caseInfo) {
 	var response = {};
-  var prompt = _.template('I\'ve created a new case for ${caseType}.  The case number is ${caseNumber}. Please note it down for future reference.  Do you want me to repeat the case number?');
+  var prompt = _.template('I\'ve created a new case for ${caseIssue}.  The case number is ${caseNumber}. Please note it down for future reference.  Do you want me to repeat the case number?');
 	response.prompt = prompt({
-		caseType: caseType,
+		caseIssue: caseInfo.CaseIssue__r.Name,
 		caseNumber: caseInfo.CaseNumber
 	});
-	var card = _.template('Your new case for ${caseType} has a case number of ${caseNumber} an expected completion date of ${finishDate}');
+	var card = _.template('Your new case for ${caseIssue} has a case number of ${caseNumber} an expected completion date of ${finishDate}');
 	response.card = card({
-		caseType: caseType,
+		caseIssue: caseInfo.CaseIssue__r.Name,
 		caseNumber: caseInfo.CaseNumber,
 		finishDate: caseInfo.Expected_Completion_Date__c
 	});

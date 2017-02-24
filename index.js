@@ -24,19 +24,29 @@ var APP_STATES = {
   CASE: '_CASE'
 };
 
+var welcomeMessage = 'Welcome to the Town of Cary Alexa skill.  If you need help with your options please say help.  What can I do for you with today?';
+var welcomeReprompt = 'If you need help with your options please say help.  What can I do for you with today?';
+
+var helpMessage = 'Need a list of sample phrases for different skills and to build a website with full documentation.';
+var helpMessageReprompt = 'Same for the reprompt';
+
+var CASEISSUES = ['Broken Recycling', 'Broken Trash', 'Cardboard Collection', 'Leaf Collection', 'Missed Recycling', 'Missed Trash', 'Missed Yard Waste', 'Oil Collection', 'Upgrade Recycling', 'Upgrade Trash'];
+
 exports.handler = function(event, context, callback) {
   var alexa = Alexa.handler(event, context);
   alexa.appId = APP_ID;
 
-  alexa.registerHandlers(handlers, councilHandlers, helpStateHandlers, parkHandlers, artHandlers, caseHandlers);
+  alexa.registerHandlers(newSessionHandlers, councilHandlers, parkHandlers, artHandlers, caseHandlers);
   alexa.execute();
 };
 
-var handlers = {
+var newSessionHandlers = {
+  'LaunchRequest': function () {
+    this.emit(':ask', welcomeMessage, welcomeReprompt);
+  },
 
   'OpenGymTimesIntent': function () {
     var gymTimeDate = this.event.request.intent.slots.Date.value;
-    var reprompt = 'For open gym times, ask me for open gym times.';
     var openDataHelper = new OpenDataHelper();
     var prompt = '';
     var noData = false;
@@ -48,7 +58,8 @@ var handlers = {
       self.emit(':tell', prompt);
     }).catch(function(err) {
       prompt = 'I didn\'t have data for gym times on ' + gymTimeDate;
-      self.emit(':tell', prompt, reprompt);
+      console.log(err);
+      self.emit(':tell', prompt);
     });
   },
 
@@ -58,6 +69,7 @@ var handlers = {
     this.emit(':tell', prompt);
   },
 
+  //take this function out before going live, just for testing salesforce connection
   'GetUserAddressIntent': function() {
     var salesforceHelper = new SalesforceHelper();
     var accessToken = this.event.session.user.accessToken;
@@ -138,7 +150,7 @@ var handlers = {
       if(self.attributes["address"] == undefined || self.attributes["address"] == null){
         self.handler.state = APP_STATES.ART;
         var prompt = 'Please tell me your address so I can look up nearby public art';
-        self.emit(':ask', prompt);
+        self.emit(':ask', prompt, prompt);
       }
     });
   },
@@ -154,6 +166,7 @@ var handlers = {
       self.emit(':tell', response);
     }).catch(function(err) {
       prompt = 'There seems to be a problem with the connection right now.  Please try again later';
+      console.log(err);
       self.emit(':tell', prompt);
     });
   },
@@ -169,6 +182,7 @@ var handlers = {
       self.emit(':tell', response);
     }).catch(function(err) {
       prompt = 'There seems to be a problem with the connection right now.  Please try again later';
+      console.log(err);
       self.emit(':tell', prompt);
     });
   },
@@ -194,9 +208,26 @@ var handlers = {
   		var speechOutput = "You must link your account before accessing this skill.";
   		this.emit(':tellWithLinkAccountCard', speechOutput);
   	} else {
-      var speechOutput = "OK, let's create a new Case. Do you need help with a dead animal, graffiti, pothole or other?";
+      var prompt = "OK, let's create a new Case. What do you need help with?";
+      var reprompt = 'For a list of options please say help.  What do you need help with?';
       this.handler.state = APP_STATES.CASE;
-      this.emit(':ask', speechOutput);
+      this.emit(':ask', prompt, reprompt);
+    }
+  },
+
+  'CreateCaseIntent': function() {
+    if(ACCOUNT_LINKING_REQUIRED == true && this.event.session.user.accessToken == undefined) {
+  		var speechOutput = "You must link your account before accessing this skill.";
+  		this.emit(':tellWithLinkAccountCard', speechOutput);
+  	} else {
+      var caseSubject = this.event.request.intent.slots.caseSubject.value;
+      var caseAction = this.event.request.intent.slots.caseAction.value;
+      this.attributes['caseIssue'] = CASEISSUES.find(checkCaseIssue, {"caseSubject": caseSubject, "caseAction": caseAction});
+      console.log(caseSubject);
+      console.log(caseAction);
+      console.log(this.attributes['caseIssue']);
+      this.handler.state = APP_STATES.CASE;
+      this.emitWithState('CreateCaseIntent', true);
     }
   },
 
@@ -229,7 +260,7 @@ var handlers = {
       var salesforceHelper = new SalesforceHelper();
       var userToken = this.event.session.user.accessToken;
       var caseNumber = this.event.request.intent.slots.CaseNumber.value.toString();
-      if(caseNumber.length < 8){
+      if(caseNumber.length < CASENUMBERLENGTH){
         caseNumber = addLeadZeros(caseNumber);
       }
       var prompt = '';
@@ -251,8 +282,7 @@ var handlers = {
   },
 
   'AMAZON.HelpIntent': function() {
-      this.handler.state = APP_STATES.HELP;
-      this.emitWithState('helpTheUser');
+      this.emit(':ask', helpMessage, helpMessageReprompt);
   },
 
   'AMAZON.StopIntent': function () {
@@ -265,29 +295,11 @@ var handlers = {
   }
 };
 
-var helpStateHandlers = Alexa.CreateStateHandler(APP_STATES.HELP, {
-  'helpTheUser': function() {
-    this.handler.state = '';
-    var prompt = 'This is a help function, Please ask a question.';
-    this.emit(':ask', prompt, prompt);
-  },
-
-  'AMAZON.RepeatIntent': function () {
-      this.emit(':ask', this.attributes['speechOutput'], this.attributes['repromptText']);
-  },
-
-  'Unhandled': function () {
-      var prompt = 'I\'m sorry.  I didn\'t catch that.  Can you please repeat the question.';
-      this.emit(':ask', prompt, prompt);
-  }
-});
-
 var councilHandlers = Alexa.CreateStateHandler(APP_STATES.COUNCIL, {
 
   'GetByAddressIntent': function() {
     var esriDataHelper = new EsriDataHelper();
     var self = this;
-    var reprompt = 'Please tell me your address so I can look up your council information';
     var street_number = this.event.request.intent.slots.street_number.value;
     var street = this.event.request.intent.slots.street.value;
     var address = street_number + ' ' + street
@@ -301,7 +313,6 @@ var councilHandlers = Alexa.CreateStateHandler(APP_STATES.COUNCIL, {
       self.emit(':tell', response);
     }).catch(function(error){
       prompt = 'I could not find any information for ' + address;
-      self.handler.state = APP_STATES.ADDRESS;
       self.emit(':tell', prompt);
     });
   },
@@ -317,10 +328,20 @@ var councilHandlers = Alexa.CreateStateHandler(APP_STATES.COUNCIL, {
       self.emit(':tell', response);
     }).catch(function(error){
       console.log(error);
-      var prompt = 'I could not find any information for ' + address;
-      self.handler.state = APP_STATES.ADDRESS;
-      self.emit(':tell', prompt);
+      var prompt = 'I could not find any information at your location.  Would you like to try another address?';
+      var reprompt = 'Would you like to try searching at another address?';
+      self.emit(':ask', prompt, reprompt);
     });
+  },
+
+  'AMAZON.YesIntnet': function() {
+    var prompt = 'Please tell me an address so I can look up your council information';
+    this.emit(':ask', prompt, prompt);
+  },
+
+  'AMAZON.NoIntent': function() {
+    var prompt = 'OK, Have a nice day';
+    this.emit(':tell', prompt);
   },
 
   'AMAZON.RepeatIntent': function () {
@@ -333,7 +354,7 @@ var councilHandlers = Alexa.CreateStateHandler(APP_STATES.COUNCIL, {
   },
 
   'Unhandled': function () {
-      var prompt = 'I\'m sorry.  I didn\'t catch that.  Can you please repeat the question.';
+      var prompt = 'I\'m sorry.  I didn\'t catch that.  Can you please repeat that.';
       this.emit(':ask', prompt, prompt);
   }
 });
@@ -355,7 +376,7 @@ var parkHandlers = Alexa.CreateStateHandler(APP_STATES.PARKS, {
     }).then(function(responseresponse) {
       self.emit(':tell', response);
     }).catch(function(error){
-      prompt = 'I could not find any parks near for ' + address;
+      prompt = 'I could not find any parks near ' + address;
       self.handler.state = APP_STATES.PARKS;
       self.emit(':tell', prompt);
     });
@@ -372,10 +393,21 @@ var parkHandlers = Alexa.CreateStateHandler(APP_STATES.PARKS, {
     }).then(function(response) {
       self.emit(':tell', response);
     }).catch(function(error){
-      var prompt = 'I could not find any nearby parks';
-      self.handler.state = APP_STATES.PARKS;
-      self.emit(':tell', prompt);
+      console.log(error);
+      var prompt = 'I could not find any parks near your location.  Would you like to try another address?';
+      var reprompt = 'Would you like to try searching at another address?';
+      self.emit(':ask', prompt, reprompt);
     });
+  },
+
+  'AMAZON.YesIntnet': function() {
+    var prompt = 'Please tell me an address so I can look up nearby parks';
+    this.emit(':ask', prompt, prompt);
+  },
+
+  'AMAZON.NoIntent': function() {
+    var prompt = 'OK, Have a nice day';
+    this.emit(':tell', prompt);
   },
 
   'AMAZON.RepeatIntent': function () {
@@ -383,12 +415,12 @@ var parkHandlers = Alexa.CreateStateHandler(APP_STATES.PARKS, {
   },
 
   'AMAZON.HelpIntent': function() {
-      var prompt = 'Please tell me your house number and street for me to look up nearby parks.'
+      var prompt = 'Please tell me a house number and street for me to look up nearby parks.'
       this.emit(':ask', prompt, prompt);
   },
 
   'Unhandled': function () {
-      var prompt = 'I\'m sorry.  I didn\'t catch that.  Can you please repeat the question.';
+      var prompt = 'I\'m sorry.  I didn\'t catch that.  Can you please repeat that.';
       this.emit(':ask', prompt, prompt);
   }
 });
@@ -413,7 +445,7 @@ var artHandlers = Alexa.CreateStateHandler(APP_STATES.ART, {
     }).catch(function(error){
       prompt = 'I could not find any public art near ' + address;
       self.handler.state = APP_STATES.ART;
-      self.emit(':tell', prompt, reprompt);
+      self.emit(':tell', prompt);
     });
   },
 
@@ -428,10 +460,21 @@ var artHandlers = Alexa.CreateStateHandler(APP_STATES.ART, {
     }).then(function(response) {
       self.emit(':tell', response);
     }).catch(function(error){
-      prompt = 'I could not find any public art near ' + address;
-      self.handler.state = APP_STATES.ART;
-      self.emit(':tell', prompt, reprompt);
+      console.log(error);
+      var prompt = 'I could not find any public art near your location.  Would you like to try another address?';
+      var reprompt = 'Would you like to try searching at another address?';
+      self.emit(':ask', prompt, reprompt);
     });
+  },
+
+  'AMAZON.YesIntnet': function() {
+    var prompt = 'Please tell me an address so I can look up nearby public art';
+    this.emit(':ask', prompt, prompt);
+  },
+
+  'AMAZON.NoIntent': function() {
+    var prompt = 'OK, Have a nice day';
+    this.emit(':tell', prompt);
   },
 
   'AMAZON.RepeatIntent': function () {
@@ -453,13 +496,14 @@ var caseHandlers = Alexa.CreateStateHandler(APP_STATES.CASE, {
   'CreateCaseIntent': function () {
     var userToken = this.event.session.user.accessToken;
     var salesforceHelper = new SalesforceHelper();
-    var caseType = this.event.request.intent.slots.caseIssue.value;
+    var caseIssue =  this.attributes["caseIssue"] || this.event.request.intent.slots.caseIssue.value;
     var prompt = '';
     var self = this;
-    salesforceHelper.createCaseInSalesforce(userToken, caseType).then(function(response){
-      self.attributes['caseType'] = caseType;
+    salesforceHelper.createCaseInSalesforce(userToken, caseIssue).then(function(response){
       self.attributes['case'] = response;
-      return salesforceHelper.formatNewCaseStatus(response, caseType);
+      self.attributes['caseIssue'] = response.CaseIssue__r.Name;
+      console.log(response);
+      return salesforceHelper.formatNewCaseStatus(response);
     }).then(function(response){
       self.emit(':askWithCard', response.prompt, response.prompt, 'Town of Cary Case', response.card);
     }).catch(function(err) {
@@ -484,4 +528,8 @@ function addLeadZeros(caseNumber){
   var filler = '0';
   var results = filler.repeat(CASENUMBERLENGTH - caseNumber.length).concat(caseNumber);
   return results.valueOf();
+}
+
+function checkCaseIssue(caseIssue){
+  return (caseIssue.toUpperCase() == this.caseSubject.toUpperCase() + ' ' + this.caseAction.toUpperCase()) || (caseIssue.toUpperCase() == this.caseAction.toUpperCase() + ' ' + this.caseSubject.toUpperCase());
 }
