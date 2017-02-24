@@ -24,11 +24,12 @@ var APP_STATES = {
   CASE: '_CASE'
 };
 
-var welcomeMessage = 'Welcome to the Town of Cary Alexa skill.  If you need help with your options please say help.  What can I do for you with today?';
-var welcomeReprompt = 'If you need help with your options please say help.  What can I do for you with today?';
+var welcomeMessage = 'Welcome to the Town of Cary Alexa skill.  If you need help with your options please say help. What can I help you with today?';
+var welcomeReprompt = 'If you need help with your options please say help.  What can I do for you today?';
 
-var helpMessage = 'Need a list of sample phrases for different skills and to build a website with full documentation.';
-var helpMessageReprompt = 'Same for the reprompt';
+var helpMessage = 'To report a case to the town you can say something like I need help with leaf collection or I need help with missed trash.  For information you can ask for open gym times for a date, what parks are nearby, who is your council member or a fact about cary.  For a full list please check the card sent to your alexa app. What can I help you with today?';
+var helpMessageReprompt = 'What can I help you with today?';
+var helpMesssageCard = 'Sample questions:\nCases: What is my case status?\nWhat is the status of case {case number}?\nI need to create a case.\nI need help with {case issue}\nInformation: Tell me a fact about Cary.\nWho is my council member?\nWho is on the city council?\nWho is the mayor?\nWhat are the open gym times for {day}\nWhat parks are nearby?\nWhat public art is nearby?\nhttp://www.townofcary.org/';
 
 var CASEISSUES = ['Broken Recycling', 'Broken Trash', 'Cardboard Collection', 'Leaf Collection', 'Missed Recycling', 'Missed Trash', 'Missed Yard Waste', 'Oil Collection', 'Upgrade Recycling', 'Upgrade Trash'];
 
@@ -282,7 +283,7 @@ var newSessionHandlers = {
   },
 
   'AMAZON.HelpIntent': function() {
-      this.emit(':ask', helpMessage, helpMessageReprompt);
+      this.emit(':askWithCard', helpMessage, helpMessageReprompt, 'Town of Cary Help Index', helpMesssageCard);
   },
 
   'AMAZON.StopIntent': function () {
@@ -496,7 +497,7 @@ var caseHandlers = Alexa.CreateStateHandler(APP_STATES.CASE, {
   'CreateCaseIntent': function () {
     var userToken = this.event.session.user.accessToken;
     var salesforceHelper = new SalesforceHelper();
-    var caseIssue =  this.attributes["caseIssue"] || this.event.request.intent.slots.caseIssue.value;
+    var caseIssue =  this.attributes["caseIssue"] || CASEISSUES.find(checkCaseIssue, {"caseSubject": this.event.request.intent.slots.caseSubject.value, "caseAction": this.event.request.intent.slots.caseAction.value});
     var prompt = '';
     var self = this;
     salesforceHelper.createCaseInSalesforce(userToken, caseIssue).then(function(response){
