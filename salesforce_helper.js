@@ -29,7 +29,7 @@ SalesforceHelper.prototype.createCaseInSalesforce = function(userToken, caseIssu
 	}).then(function(results){
       var userRecord = results.records[0];
       obj.ContactId = userRecord.ContactId;
-      return conn.query("Select Id from Case_Issue__c where Name = '" + caseIssue + "'");
+      return conn.query("Select Id from Case_Issue__c where Name LIKE '%" + caseIssue + "%'");
 	}).then(function(results) {
 		var caseIssueRecord = results.records[0];
 		obj.CaseIssue__c = caseIssueRecord.Id;
@@ -40,12 +40,10 @@ SalesforceHelper.prototype.createCaseInSalesforce = function(userToken, caseIssu
 		console.log(obj);
     return conn.sobject("Case").create(obj);
 	}).then(function(results){
-    return conn.query("Select CaseNumber, Status, Expected_Completion_Date__c, LastModifiedDate, CaseIssue__r.Name from Case where Id = '" + results.id + "'");
+    return conn.query("Select Id, CaseNumber, Status, Expected_Completion_Date__c, LastModifiedDate, CaseIssue__r.Name from Case where Id = '" + results.id + "'");
 	}).then(function(results) {
-    var speechOutput = '';
-    var caseRecord = results.records[0];
-    obj.CaseNumber = caseRecord.CaseNumber;
-    return obj;
+		console.log(results.records[0]);
+    return results.records[0];
   }).catch(function(err) {
     console.log('Error in case creation');
     console.log(err);
@@ -109,16 +107,16 @@ SalesforceHelper.prototype.formatExistingCase = function(caseInfo) {
 	return response;
 };
 
-SalesforceHelper.prototype.formatNewCaseStatus = function(caseInfo, caseIssue) {
+SalesforceHelper.prototype.formatNewCaseStatus = function(caseInfo) {
 	var response = {};
   var prompt = _.template('I\'ve created a new case for ${caseIssue}.  The case number is ${caseNumber}. Please note it down for future reference.  Do you want me to repeat the case number?');
 	response.prompt = prompt({
-		caseIssue: caseIssue,
+		caseIssue: caseInfo.CaseIssue__r.Name,
 		caseNumber: caseInfo.CaseNumber
 	});
 	var card = _.template('Your new case for ${caseIssue} has a case number of ${caseNumber} an expected completion date of ${finishDate}');
 	response.card = card({
-		caseIssue: caseIssue,
+		caseIssue: caseInfo.CaseIssue__r.Name,
 		caseNumber: caseInfo.CaseNumber,
 		finishDate: caseInfo.Expected_Completion_Date__c
 	});

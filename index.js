@@ -30,6 +30,8 @@ var welcomeReprompt = 'If you need help with your options please say help.  What
 var helpMessage = 'Need a list of sample phrases for different skills and to build a website with full documentation.';
 var helpMessageReprompt = 'Same for the reprompt';
 
+var CASEISSUES = ['Broken Recycling', 'Broken Trash', 'Cardboard Collection', 'Leaf Collection', 'Missed Recycling', 'Missed Trash', 'Missed Yard Waste', 'Oil Collection', 'Upgrade Recycling', 'Upgrade Trash'];
+
 exports.handler = function(event, context, callback) {
   var alexa = Alexa.handler(event, context);
   alexa.appId = APP_ID;
@@ -218,7 +220,12 @@ var newSessionHandlers = {
   		var speechOutput = "You must link your account before accessing this skill.";
   		this.emit(':tellWithLinkAccountCard', speechOutput);
   	} else {
-      this.attributes['caseIssue'] = this.event.request.intent.slots.caseIssue.value;
+      var caseSubject = this.event.request.intent.slots.caseSubject.value;
+      var caseAction = this.event.request.intent.slots.caseAction.value;
+      this.attributes['caseIssue'] = CASEISSUES.find(checkCaseIssue, {"caseSubject": caseSubject, "caseAction": caseAction});
+      console.log(caseSubject);
+      console.log(caseAction);
+      console.log(this.attributes['caseIssue']);
       this.handler.state = APP_STATES.CASE;
       this.emitWithState('CreateCaseIntent', true);
     }
@@ -489,14 +496,14 @@ var caseHandlers = Alexa.CreateStateHandler(APP_STATES.CASE, {
   'CreateCaseIntent': function () {
     var userToken = this.event.session.user.accessToken;
     var salesforceHelper = new SalesforceHelper();
-    console.log(this.event.request.intent.slots.caseIssue.value);
-    var caseIssue = this.event.request.intent.slots.caseIssue.value || this.attributes["caseIssue"];
+    var caseIssue =  this.attributes["caseIssue"] || this.event.request.intent.slots.caseIssue.value;
     var prompt = '';
     var self = this;
     salesforceHelper.createCaseInSalesforce(userToken, caseIssue).then(function(response){
-      self.attributes['caseIssue'] = caseIssue;
       self.attributes['case'] = response;
-      return salesforceHelper.formatNewCaseStatus(response, caseIssue);
+      self.attributes['caseIssue'] = response.CaseIssue__r.Name;
+      console.log(response);
+      return salesforceHelper.formatNewCaseStatus(response);
     }).then(function(response){
       self.emit(':askWithCard', response.prompt, response.prompt, 'Town of Cary Case', response.card);
     }).catch(function(err) {
@@ -521,4 +528,8 @@ function addLeadZeros(caseNumber){
   var filler = '0';
   var results = filler.repeat(CASENUMBERLENGTH - caseNumber.length).concat(caseNumber);
   return results.valueOf();
+}
+
+function checkCaseIssue(caseIssue){
+  return (caseIssue.toUpperCase() == this.caseSubject.toUpperCase() + ' ' + this.caseAction.toUpperCase()) || (caseIssue.toUpperCase() == this.caseAction.toUpperCase() + ' ' + this.caseSubject.toUpperCase());
 }
