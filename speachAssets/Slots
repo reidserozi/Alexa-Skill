@@ -1,0 +1,14 @@
+CASE_ACTION:
+pickup
+upgrade
+collection
+broken
+missed
+
+CASE_SUBJECT:
+trash
+recycling
+oil
+cardboard
+leaf
+yard waste

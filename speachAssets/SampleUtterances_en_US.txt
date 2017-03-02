@@ -1,9 +1,39 @@
-opengymtimes	what are the open gym times for {Date}
-opengymtimes	what open gym times for {Date}
-opengymtimes	how many open gym times for {Date}
-opengymtimes	what are the open gym times are there {Date}
-opengymtimes	what open gym times are there {Date}
-opengymtimes	how many open gym times are there {Date}
-opengymtimes	what are the open gym times are there on {Date}
-opengymtimes	what open gym times are there on {Date}
-opengymtimes	how many open gym times are there on {Date}
+OpenGymTimesIntent	what are the open gym times for {Date}
+OpenGymTimesIntent	what open gym times for {Date}
+OpenGymTimesIntent	how many open gym times for {Date}
+OpenGymTimesIntent	what are the open gym times are there {Date}
+OpenGymTimesIntent	what open gym times are there {Date}
+OpenGymTimesIntent	how many open gym times are there {Date}
+OpenGymTimesIntent	what are the open gym times are there on {Date}
+OpenGymTimesIntent	what open gym times are there on {Date}
+OpenGymTimesIntent	how many open gym times are there on {Date}
+
+MyCouncilMemberIntent who is my council member
+
+GetByAddressIntent my address is {street_number} {street}
+
+MyMayorIntent who is the mayor
+
+AllCouncilMembersIntent who is on the city council
+
+AtLargeCouncilMembersIntent who are the at large council members
+
+NearbyParksIntent what parks are nearby
+
+NearbyPublicArtIntent what public art is nearby
+
+CaseStartIntent to create a case
+CaseStartIntent to create a new case
+
+CreateCaseIntent i need help with a {caseAction} {caseSubject}
+CreateCaseIntent i need help with a {caseSubject} {caseAction}
+CreateCaseIntent i need help with {caseAction} {caseSubject}
+CreateCaseIntent i need help with {caseSubject} {caseAction}
+
+MyCaseStatusIntent what is my case status
+
+CaseStatusIntent what is the status of the case number {CaseNumber}
+
+GetUserAddressIntent what is the user address
+
+GetCaryFactsIntent tell me a fact about cary

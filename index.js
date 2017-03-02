@@ -8,10 +8,10 @@ var EsriDataHelper = require('./esri_data_helper');
 var SalesforceHelper = require('./salesforce_helper');
 var facts = require('./cary_facts');
 var ESRIENDPOINT = 'https://maps.townofcary.org/arcgis1/rest/services/';
-var ARCGISENDPOINT = 'http://services2.arcgis.com/l4TwMwwoiuEVRPw9/ArcGIS/rest/services/';
+var ARCGISENDPOINT = 'https://services2.arcgis.com/l4TwMwwoiuEVRPw9/ArcGIS/rest/services/';
 var OPENDATAENDPOINT = 'https://data.townofcary.org/api/records/1.0/search/?';
 var DISTANCE = 1; //distance for radius search.  currently 1 mile can be adapted later.
-var APP_ID = 'amzn1.ask.skill.5a5625bb-bf96-4cea-8998-abb79bf1967c';  // TODO replace with your app ID (OPTIONAL).
+var APP_ID = 'amzn1.ask.skill.c50db383-27e7-4631-a60b-644afbd1e134';  // TODO replace with your app ID (OPTIONAL).
 var CASENUMBERLENGTH = 8 //the current number of digits in a case number to add leading zeros
 //If false, it means that Account Linking isn't mandatory there fore we dont have accaes to the account of the community user so we will ask for the user's Phone Number.
 // IMPORTANT!! Make sure that the profile of the community user has the 'API Enabled' field marked as true.

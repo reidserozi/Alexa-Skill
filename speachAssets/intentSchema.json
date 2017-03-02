@@ -1,13 +1,95 @@
 {
   "intents": [
     {
-      "intent": "opengymtimes",
+      "intent": "OpenGymTimesIntent",
       "slots": [
         {
           "name": "Date",
           "type": "AMAZON.DATE"
         }
       ]
+    },
+    {
+    	"intent": "MyCouncilMemberIntent",
+      	"slots": []
+    },
+    {
+     	"intent": "GetByAddressIntent",
+     	"slots": [
+          {
+            "name": "street_number",
+            "type": "AMAZON.NUMBER"
+          },
+          {
+     		"name": "street",
+          	"type": "CARY_STREET"
+          }
+     	]
+    },
+    {
+    	"intent": "AllCouncilMembersIntent",
+      	"slots": []
+    },
+    {
+    	"intent": "MyMayorIntent",
+      	"slots": []
+    },
+    {
+    	"intent": "AtLargeCouncilMembersIntent",
+      	"slots": []
+    },
+    {
+    	"intent": "NearbyParksIntent",
+      	"slots": []
+    },
+    {
+    	"intent": "NearbyPublicArtIntent",
+      	"slots": []
+    },
+    {
+      "intent": "CaseStartIntent",
+      "slots": []
+    },
+    {
+      "intent": "MyCaseStatusIntent",
+      "slots": []
+    },
+    {
+      "intent": "GetUserAddressIntent",
+      "slots": []
+    },
+    {
+      "intent": "GetCouncilInfoIntent",
+      "slots": []
+    },
+    {
+      "intent": "CaseStatusIntent",
+      "slots": [
+        {
+          "name": "CaseNumber",
+          "type": "AMAZON.NUMBER"
+        }
+      ]
+    },
+    {
+     "intent": "CreateCaseIntent",
+     "slots":[
+        {
+          "name": "caseSubject",
+          "type": "CASE_SUBJECT"
+        },
+       {
+          "name": "caseAction",
+          "type": "CASE_ACTION"
+        }
+      ]
+    },
+    {
+      "intent": "GetCaryFactsIntent",
+      "slots": []
+    },
+    {
+      "intent": "AMAZON.HelpIntent"
     }
   ]
 }
