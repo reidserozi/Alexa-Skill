@@ -21,7 +21,8 @@ var APP_STATES = {
   PARKS: '_PARKS',
   HELP: '_HELPMODE',
   ART: '_ART',
-  CASE: '_CASE'
+  CASE: '_CASE',
+  TRASH: '_TRASH'
 };
 
 var welcomeMessage = 'Welcome to the Town of Cary Alexa skill.  If you need help with your options please say help. What can I help you with today?';
@@ -111,26 +112,7 @@ var newSessionHandlers = {
   },
 
   'NearbyParksIntent': function() {
-    var salesforceHelper = new SalesforceHelper();
-    var accessToken = this.event.session.user.accessToken;
-    var self = this;
-    salesforceHelper.getUserAddress(accessToken).then(function(results){
-      self.attributes["address"] = results;
-      console.log(results);
-      console.log(self.attributes["address"]);
-      if(results.x != null && results.y != null) {
-        self.handler.state = APP_STATES.PARKS;
-        self.emitWithState('GetParkInfoIntent', true);
-      }
-    }).catch(function(err) {
-      console.log(err);
-    }).finally(function(){
-      if(self.attributes["address"] == undefined || self.attributes["address"] == null){
-        self.handler.state = APP_STATES.PARKS;
-        var prompt = 'Please tell me your address so I can look up nearby parks';
-        self.emit(':ask', prompt, prompt);
-      }
-    });
+    getUserAddress(this.event.session.user.accessToken, APP_STATES.PARKS, 'GetParkInfoIntent', this);
   },
 
   'NearbyPublicArtIntent': function() {
@@ -298,6 +280,11 @@ var newSessionHandlers = {
         self.emit(':tell', prompt);
       });
     }
+  },
+
+
+  'TrashDayIntent': function(){
+    getUserAddress(this.event.session.user.accessToken, APP_STATES.TRASH, 'GetTrashDayIntent', this);
   },
 
   'AMAZON.RepeatIntent': function () {
@@ -546,6 +533,28 @@ var caseHandlers = Alexa.CreateStateHandler(APP_STATES.CASE, {
     this.emit(':tell', 'Ok, Your case will be looked at shortly.');
   }
 });
+
+
+function getUserAddress(userToken, state, intent, self){
+  var salesforceHelper = new SalesforceHelper();
+  salesforceHelper.getUserAddress(userToken).then(function(results){
+    self.attributes["address"] = results;
+    console.log(results);
+    console.log(self.attributes["address"]);
+    if(results.x != null && results.y != null) {
+      self.handler.state = state;
+      self.emitWithState(intent, true);
+    }
+  }).catch(function(err) {
+    console.log(err);
+  }).finally(function(){
+    if(self.attributes["address"] == undefined || self.attributes["address"] == null){
+      self.handler.state = state;
+      var prompt = 'Please tell me your address so I can look up nearby public art';
+      self.emit(':ask', prompt, prompt);
+    }
+  });
+}
 
 function addLeadZeros(caseNumber){
   var filler = '0';

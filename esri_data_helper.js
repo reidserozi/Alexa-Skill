@@ -4,12 +4,12 @@ var rp = require('request-promise');
 var ESRIENDPOINT = 'https://maps.townofcary.org/arcgis1/rest/services/';
 var EARTHRADUIS = 3959;
 var RECYCLEYELLOWSTART = '2017-01-01';
-var DAYS = {
+/*var DAYS = {
   Tue: 'Tuesday',
   Wed: 'Wednesday',
   Thu: 'Thursday',
   Fri: 'Friday'
-}
+}*/
 function EsriDataHelper() { }
 
 EsriDataHelper.prototype.requestAddressInformation = function(address) {
@@ -111,7 +111,7 @@ EsriDataHelper.prototype.formatMyCouncilMember = function(councilInfo) {
     }
   });
   return prompt;
-}
+};
 
 EsriDataHelper.prototype.formatNearbyParks = function(parkInfo) {
   var prompt = 'There are ' + parkInfo.features.length + ' parks nearby including ';
@@ -122,7 +122,7 @@ EsriDataHelper.prototype.formatNearbyParks = function(parkInfo) {
     });
   });
   return prompt;
-}
+};
 
 EsriDataHelper.prototype.formatNearbyPublicArt = function(artInfo) {
   var prompt = '';
@@ -141,9 +141,9 @@ EsriDataHelper.prototype.formatNearbyPublicArt = function(artInfo) {
     num: numArt
   }) + prompt;
   return prompt;
-}
+};
 
-EsriDataHelper.prototype.formatMyCouncilMember = function(councilInfo) {
+EsriDataHelper.prototype.formatMyTrashDay = function(trashInfo) {
   var prompt = '';
   councilInfo.results.forEach(function(item){
     if (typeof item.attributes["Council Distict"] != 'undefined'){
@@ -156,6 +156,10 @@ EsriDataHelper.prototype.formatMyCouncilMember = function(councilInfo) {
     }
   });
   return prompt;
+}
+
+function getRecycleDay(cycle){
+
 }
 
 function getCircleCoords(x,y,d){
