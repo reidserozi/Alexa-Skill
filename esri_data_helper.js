@@ -3,6 +3,13 @@ var _ = require('lodash');
 var rp = require('request-promise');
 var ESRIENDPOINT = 'https://maps.townofcary.org/arcgis1/rest/services/';
 var EARTHRADUIS = 3959;
+var RECYCLEYELLOWSTART = '2017-01-01';
+var DAYS = {
+  Tue: 'Tuesday',
+  Wed: 'Wednesday',
+  Thu: 'Thursday',
+  Fri: 'Friday'
+}
 function EsriDataHelper() { }
 
 EsriDataHelper.prototype.requestAddressInformation = function(address) {
@@ -38,6 +45,26 @@ EsriDataHelper.prototype.requestInformationLatLong = function(uri) {
 };
 
 EsriDataHelper.prototype.getInformationLatLong = function(uri) {
+  var options = {
+    method: 'GET',
+    uri: encodeURI(uri),
+    resolveWithFullResponse: true,
+    json: true
+  };
+  return rp(options);
+};
+
+EsriDataHelper.prototype.requestTrashDay = function(uri) {
+  return this.getInformationLatLong(uri).then(
+    function(response) {
+      return response.body;
+    }, function (error) {
+        console.log('error in the promise');
+    }
+  ).catch(console.log.bind(console));
+};
+
+EsriDataHelper.prototype.getTrashDay = function(uri) {
   var options = {
     method: 'GET',
     uri: encodeURI(uri),
@@ -116,15 +143,31 @@ EsriDataHelper.prototype.formatNearbyPublicArt = function(artInfo) {
   return prompt;
 }
 
+EsriDataHelper.prototype.formatMyCouncilMember = function(councilInfo) {
+  var prompt = '';
+  councilInfo.results.forEach(function(item){
+    if (typeof item.attributes["Council Distict"] != 'undefined'){
+      prompt = _.template('You belong to District ${district}, and your Council Member is ${member}. Your at large council members are ${atLarge1}, and ${atLarge2}.')({
+        district: item.attributes["Council Distict"],
+        member: item.attributes["Representative Name"],
+        atLarge1: item.attributes["At Large Representative 1"],
+        atLarge2: item.attributes["At Large Representative 2"]
+      });
+    }
+  });
+  return prompt;
+}
+
 function getCircleCoords(x,y,d){
   var tao = 2 * Math.PI;
   var results = [];
+  var pointsInCircle = 8
   //convert lat and long to radians
   x = x * (Math.PI / 180);
-  y = y * (Math.PI / 180)
-  for(var i = 0;i <= 8; i ++){
-    var lat = Math.asin(Math.sin(y) * Math.cos(d) + Math.cos(y) * Math.sin(d) * Math.cos((i/8)*tao));
-    var long = ((x + Math.asin(Math.sin((i/8)*tao) * Math.sin(d) / Math.cos(lat)) + Math.PI) % (tao)) - Math.PI;
+  y = y * (Math.PI / 180);
+  for(var i = 0;i <= pointsInCircle; i ++){
+    var lat = Math.asin(Math.sin(y) * Math.cos(d) + Math.cos(y) * Math.sin(d) * Math.cos((i/pointsInCircle)*tao));
+    var long = ((x + Math.asin(Math.sin((i/pointsInCircle)*tao) * Math.sin(d) / Math.cos(lat)) + Math.PI) % (tao)) - Math.PI;
     results.push("[" + (long / (Math.PI/180)).toString() + "," + (lat / (Math.PI/180)).toString() + "]");
   }
   return results;

@@ -59,6 +59,7 @@ describe('EsriDataHelper', function() {
       });
     });
   });
+  /*data set has gone missing for now.
   describe('#getNearbyPublicArt', function(){
     var x = '-78.78019524861178';
     var y = '35.789212829037126';
@@ -81,6 +82,31 @@ describe('EsriDataHelper', function() {
           });
         });
         return expect(value).to.eventually.eq("Join the Parade");
+      });
+    });
+  });*/
+  describe('#getTrashCollectionInfo', function(){
+    var x = '-78.78005';
+    var y = '35.78225';
+    var address = '413 Kildaire Farm Rd';
+    context('with a geolocation', function(){
+      it('returns next trash and recycle day', function(){
+        var uri = ESRIENDPOINT + 'PublicWorks/Public_Works_Operations/MapServer/0/query?where=&text=&objectIds=&time=&geometry=' + x + ',' + y + '&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=*&returnGeometry=false&returnTrueCurves=false&maxAllowableOffset=&geometryPrecision=&outSR=4326&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&returnDistinctValues=false&resultOffset=&resultRecordCount=&f=pjson'
+        var value = subject.requestTrashDay(uri).then(function(obj){
+          return obj.features[0].attributes["Day"];
+        });
+        return expect(value).to.eventually.eq("Wed");
+      });
+    });
+    context('with an address', function() {
+      it('gets geolocation from ESRI and then gets next trash and recycle day', function() {
+        var value = subject.requestAddressInformation(address).then(function(obj){
+          var uri = ESRIENDPOINT + 'PublicWorks/Public_Works_Operations/MapServer/0/query?where=&geometry=' + obj.candidates[0].location.x + ',' + obj.candidates[0].location.y + '&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=*&returnGeometry=false&returnTrueCurves=false&maxAllowableOffset=&geometryPrecision=&outSR=4326&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&returnDistinctValues=false&resultOffset=&resultRecordCount=&f=pjson'
+          return subject.requestTrashDay(uri)
+        }).then(function(obj){
+          return obj.features[0].attributes["Day"];
+        });
+        return expect(value).to.eventually.eq("Wed");
       });
     });
   });

@@ -11,7 +11,7 @@ var ESRIENDPOINT = 'https://maps.townofcary.org/arcgis1/rest/services/';
 var ARCGISENDPOINT = 'https://services2.arcgis.com/l4TwMwwoiuEVRPw9/ArcGIS/rest/services/';
 var OPENDATAENDPOINT = 'https://data.townofcary.org/api/records/1.0/search/?';
 var DISTANCE = 1; //distance for radius search.  currently 1 mile can be adapted later.
-var APP_ID = 'amzn1.ask.skill.c50db383-27e7-4631-a60b-644afbd1e134';  // TODO replace with your app ID (OPTIONAL).
+var APP_ID = process.env.ALEXAAPPID;  // TODO replace with your app ID (OPTIONAL).
 var CASENUMBERLENGTH = 8 //the current number of digits in a case number to add leading zeros
 //If false, it means that Account Linking isn't mandatory there fore we dont have accaes to the account of the community user so we will ask for the user's Phone Number.
 // IMPORTANT!! Make sure that the profile of the community user has the 'API Enabled' field marked as true.
@@ -270,6 +270,28 @@ var newSessionHandlers = {
         return salesforceHelper.formatExistingCase(response);
       }).then(function(response) {
         self.emit(':tellWithCard', response.prompt, 'Town of Cary Case', response.card);
+      }).catch(function(err){
+        prompt = 'There seems to be a problem with the connection right now.  Please try again later';
+        console.log(err);
+        self.emit(':tell', prompt);
+      });
+    }
+  },
+
+  'TownHallHoursIntent': function(){
+    var slots = this.event.request.intent.slots;
+    if(slots.length <= 0){
+      prompt = 'The normal opperating hours for the Town of Cary are Monday through Friday 8 am to 5pm.';
+      this.emit(':tell', prompt);
+    } else {
+      var userToken = this.event.session.user.accessToken;
+      var salesforceHelper = new SalesforceHelper();
+      var date = this.event.request.intent.slots.Date.value;
+      var self = this;
+      salesforceHelper.getTownHallHours(userToken, date).then(function(response){
+        return salesforceHelper.formatTownHallHours(response, date);
+      }).then(function(response){
+        self.emit(':tell', response);
       }).catch(function(err){
         prompt = 'There seems to be a problem with the connection right now.  Please try again later';
         console.log(err);

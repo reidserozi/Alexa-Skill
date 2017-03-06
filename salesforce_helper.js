@@ -37,12 +37,10 @@ SalesforceHelper.prototype.createCaseInSalesforce = function(userToken, caseIssu
 	}).then(function(results) {
     var recordType = results.records[0];
     obj.RecordTypeId = recordType.Id;
-		console.log(obj);
     return conn.sobject("Case").create(obj);
 	}).then(function(results){
     return conn.query("Select Id, CaseNumber, Status, Expected_Completion_Date__c, LastModifiedDate, CaseIssue__r.Name from Case where Id = '" + results.id + "'");
 	}).then(function(results) {
-		console.log(results.records[0]);
     return results.records[0];
   }).catch(function(err) {
     console.log('Error in case creation');
@@ -75,9 +73,7 @@ SalesforceHelper.prototype.findCaseStatus = function(userToken, caseNumber) {
 		accessToken : userToken,
 		version:'39.0'
 	});
-	console.log('Case Number: ' + caseNumber);
 	return conn.query("Select Status, CaseNumber, ClosedDate, CreatedDate, Expected_Completion_Date__c, LastModifiedDate, CaseIssue__r.Name from Case where CaseNumber = '" + caseNumber + "' order by createdDate DESC Limit 1").then(function(results){
-			console.log(results.records);
 			return results.records;
 	}).catch(function(err) {
     console.log('Error in case lookup');
@@ -124,19 +120,15 @@ SalesforceHelper.prototype.formatNewCaseStatus = function(caseInfo) {
 };
 
 SalesforceHelper.prototype.getUserAddress = function(userToken) {
-	console.log('in get address function');
 	var conn = new jsforce.Connection({
 		instanceUrl : INSTANCE_URL,
 		accessToken : userToken
 	});
 	return getUserId(userToken).then(function(results){
-		console.log('cot contact id');
 		return conn.query("Select ContactId from User where Id = '" + results.body.id + "'");
 	}).then(function(results){
-		console.log('got user ID');
 		return conn.query("Select MailingStreet, MailingLatitude, MailingLongitude From Contact Where Id = '" + results.records[0].ContactId +"'" );
 	}).then(function(results){
-		console.log('got mailing address');
 		if(results.records[0].MailingLatitude == null || results.records[0].MailingLongitude == null){
 			var esriDataHelper = new EsriDataHelper();
 			return esriDataHelper.requestAddressInformation(results.records[0].MailingStreet).then(function(response) {
@@ -152,6 +144,49 @@ SalesforceHelper.prototype.getUserAddress = function(userToken) {
 		console.log('Error in retrieving address');
     console.log(err);
 	});
+};
+
+SalesforceHelper.prototype.getTownHallHours = function(userToken, date) {
+	var conn = new jsforce.Connection({
+		instanceUrl : INSTANCE_URL,
+		accessToken : userToken,
+		version: '39.0'
+	});
+	console.log(date);
+	console.log(Date.parse(date).is().weekday());
+
+	return conn.query('Select ActivityDate from Holiday').then(function(response) {
+		if(!Date.parse(date).is().weekday()){
+			return {closed: true};
+		} else {
+			for(var i = 0; i < response.records.length; i++){
+				if(response.records[i].ActivityDate == date){
+					return {closed: true};
+				}
+			}
+			return {closed: false, start: "8 am", close: "5 pm"};
+		}
+	}).catch(function(err){
+		console.log('error here somehow');
+		console.log(err);
+	});
+};
+
+SalesforceHelper.prototype.formatTownHallHours = function(timeInfo, date) {
+	var prompt = '';
+	console.log(Date.parse(date));
+	if(timeInfo.closed){
+		prompt = _.template('The Town Hall is closed on ${closedDate}')({
+			closedDate: date
+		});
+	} else {
+		prompt = _.template('The Town Hall is open from ${startTime} until ${endTime} on ${date}')({
+			startTime: timeInfo.start,
+			endTime: timeInfo.close,
+			date: date
+		});
+	}
+	return prompt;
 };
 
 function getUserId(userToken){
@@ -170,8 +205,6 @@ function getUserId(userToken){
 
 function parseSalesforceDate(sfDate){
 	var dateSliced = sfDate.slice(0,sfDate.indexOf('.'));
-	console.log(dateSliced);
-	console.log('date in new format ' + Date.parse(dateSliced));
 	return dateSliced;
 }
 
