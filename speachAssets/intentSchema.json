@@ -90,6 +90,22 @@
     },
     {
       "intent": "AMAZON.HelpIntent"
+    },
+    {
+      "intent": "AMAZON.YesIntent"
+    },
+    {
+      "intent": "TownHallHoursIntent",
+      "slots": [
+         {
+          "name": "Date",
+          "type": "AMAZON.DATE"
+        }
+      ]
+    },
+    {
+      "intent": "TrashDayIntent",
+      "slots": []
     }
   ]
 }

@@ -11,7 +11,7 @@ var ESRIENDPOINT = 'https://maps.townofcary.org/arcgis1/rest/services/';
 var ARCGISENDPOINT = 'https://services2.arcgis.com/l4TwMwwoiuEVRPw9/ArcGIS/rest/services/';
 var OPENDATAENDPOINT = 'https://data.townofcary.org/api/records/1.0/search/?';
 var DISTANCE = 1; //distance for radius search.  currently 1 mile can be adapted later.
-var APP_ID = process.env.ALEXAAPPID;  // TODO replace with your app ID (OPTIONAL).
+var APP_ID = 'amzn1.ask.skill.c50db383-27e7-4631-a60b-644afbd1e134';//process.env.ALEXAAPPID;  // TODO replace with your app ID (OPTIONAL).
 var CASENUMBERLENGTH = 8 //the current number of digits in a case number to add leading zeros
 //If false, it means that Account Linking isn't mandatory there fore we dont have accaes to the account of the community user so we will ask for the user's Phone Number.
 // IMPORTANT!! Make sure that the profile of the community user has the 'API Enabled' field marked as true.
@@ -30,7 +30,7 @@ var welcomeReprompt = 'If you need help with your options please say help.  What
 
 var helpMessage = 'To report a case to the town you can say something like I need help with leaf collection or I need help with missed trash.  For information you can ask for open gym times for a date, what parks are nearby, who is your council member or a fact about cary.  For a full list please check the card sent to your alexa app. What can I help you with today?';
 var helpMessageReprompt = 'What can I help you with today?';
-var helpMesssageCard = 'Sample questions:\nCases: What is my case status?\nWhat is the status of case {case number}?\nI need to create a case.\nI need help with {case issue}\nInformation: Tell me a fact about Cary.\nWho is my council member?\nWho is on the city council?\nWho is the mayor?\nWhat are the open gym times for {day}\nWhat parks are nearby?\nWhat public art is nearby?\nhttp://www.townofcary.org/';
+var helpMesssageCard = 'Sample questions:\nCases: What is my case status?\nWhat is the status of case {case number}?\nI need to create a case.\nI need help with {case issue}\nInformation: Tell me a fact about Cary.\nWho is my council member?\nWho is on the city council?\nWho is the mayor?\nWhat are the open gym times for {day}\nWhat parks are nearby?\nWhat public art is nearby?';
 
 var CASEISSUES = ['Broken Recycling', 'Broken Trash', 'Cardboard Collection', 'Leaf Collection', 'Missed Recycling', 'Missed Trash', 'Missed Yard Waste', 'Oil Collection', 'Upgrade Recycling', 'Upgrade Trash'];
 
@@ -38,7 +38,7 @@ exports.handler = function(event, context, callback) {
   var alexa = Alexa.handler(event, context);
   alexa.appId = APP_ID;
 
-  alexa.registerHandlers(newSessionHandlers, councilHandlers, parkHandlers, artHandlers, caseHandlers);
+  alexa.registerHandlers(newSessionHandlers, councilHandlers, parkHandlers, artHandlers, caseHandlers, trashHandlers);
   alexa.execute();
 };
 
@@ -89,26 +89,7 @@ var newSessionHandlers = {
   },
 
   'MyCouncilMemberIntent': function() {
-    var salesforceHelper = new SalesforceHelper();
-    var accessToken = this.event.session.user.accessToken;
-    var self = this;
-    salesforceHelper.getUserAddress(accessToken).then(function(results){
-      self.attributes["address"] = results;
-      console.log(results);
-      console.log(self.attributes["address"]);
-      if(results.x != null && results.y != null) {
-        self.handler.state = APP_STATES.COUNCIL;
-        self.emitWithState('GetCouncilInfoIntent', true);
-      }
-    }).catch(function(err) {
-      console.log(err);
-    }).finally(function(){
-      if(self.attributes["address"] == undefined || self.attributes["address"] == null){
-        self.handler.state = APP_STATES.COUNCIL;
-        var prompt = 'Please tell me your address so I can look up your council information';
-        self.emit(':ask', prompt, prompt);
-      }
-    });
+    getUserAddress(this.event.session.user.accessToken, APP_STATES.COUNCIL, 'GetCouncilInfoIntent', this);
   },
 
   'NearbyParksIntent': function() {
@@ -116,26 +97,11 @@ var newSessionHandlers = {
   },
 
   'NearbyPublicArtIntent': function() {
-    var salesforceHelper = new SalesforceHelper();
-    var accessToken = this.event.session.user.accessToken;
-    var self = this;
-    salesforceHelper.getUserAddress(accessToken).then(function(results){
-      self.attributes["address"] = results;
-      console.log(results);
-      console.log(self.attributes["address"]);
-      if(results.x != null && results.y != null) {
-        self.handler.state = APP_STATES.ART;
-        self.emitWithState('GetPublicArtInfoIntent', true);
-      }
-    }).catch(function(err) {
-      console.log(err);
-    }).finally(function(){
-      if(self.attributes["address"] == undefined || self.attributes["address"] == null){
-        self.handler.state = APP_STATES.ART;
-        var prompt = 'Please tell me your address so I can look up nearby public art';
-        self.emit(':ask', prompt, prompt);
-      }
-    });
+    getUserAddress(this.event.session.user.accessToken, APP_STATES.ART, 'GetPublicArtInfoIntent', this);
+  },
+
+  'TrashDayIntent': function(){
+    getUserAddress(this.event.session.user.accessToken, APP_STATES.TRASH, 'GetTrashDayIntent', this);
   },
 
   'AllCouncilMembersIntent': function() {
@@ -280,11 +246,6 @@ var newSessionHandlers = {
         self.emit(':tell', prompt);
       });
     }
-  },
-
-
-  'TrashDayIntent': function(){
-    getUserAddress(this.event.session.user.accessToken, APP_STATES.TRASH, 'GetTrashDayIntent', this);
   },
 
   'AMAZON.RepeatIntent': function () {
@@ -534,6 +495,73 @@ var caseHandlers = Alexa.CreateStateHandler(APP_STATES.CASE, {
   }
 });
 
+var trashHandlers = Alexa.CreateStateHandler(APP_STATES.TRASH, {
+
+  'GetByAddressIntent': function() {
+    var esriDataHelper = new EsriDataHelper();
+    var self = this;
+    var reprompt = 'Please tell me your address so I can look up nearby public art.';
+    var street_number = this.event.request.intent.slots.street_number.value;
+    var street = this.event.request.intent.slots.street.value;
+    var address = street_number + ' ' + street
+    esriDataHelper.requestAddressInformation(address).then(function(response) {
+        var uri = ESRIENDPOINT + 'PublicWorks/Public_Works_Operations/MapServer/0/query?where=&text=&objectIds=&time=&geometry=' + response.candidates[0].location.x + ',' + response.candidates[0].location.y + '&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=*&returnGeometry=false&returnTrueCurves=false&maxAllowableOffset=&geometryPrecision=&outSR=4326&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&returnDistinctValues=false&resultOffset=&resultRecordCount=&f=pjson'
+      return esriDataHelper.requestTrashDay(uri);
+    }).then(function(response){
+      return esriDataHelper.formatMyTrashDay(response);
+    }).then(function(response) {
+      self.emit(':tell', response);
+    }).catch(function(error){
+      var prompt = 'I could not find any information for ' + address;
+      self.emit(':tell', prompt);
+    });
+  },
+
+  'GetTrashDayIntent': function() {
+    console.log('in trash intent');
+    console.log(this.attributes);
+    var esriDataHelper = new EsriDataHelper();
+    var self = this;
+    var address = this.attributes['address'];
+    var uri = ESRIENDPOINT + 'PublicWorks/Public_Works_Operations/MapServer/0/query?where=&text=&objectIds=&time=&geometry=' + address.x + ',' + address.y + '&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=*&returnGeometry=false&returnTrueCurves=false&maxAllowableOffset=&geometryPrecision=&outSR=4326&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&returnDistinctValues=false&resultOffset=&resultRecordCount=&f=pjson'
+    esriDataHelper.requestTrashDay(uri).then(function(response){
+      console.log(response);
+      return esriDataHelper.formatMyTrashDay(response);
+    }).then(function(response) {
+      console.log(response);
+      self.emit(':tell', response);
+    }).catch(function(error){
+      console.log(error);
+      var prompt = 'I could not find any information about your location.  Would you like to try another address?';
+      var reprompt = 'Would you like to try searching at another address?';
+      self.emit(':ask', prompt, reprompt);
+    });
+  },
+
+  'AMAZON.YesIntnet': function() {
+    var prompt = 'Please tell me an address so I can look up nearby public art';
+    this.emit(':ask', prompt, prompt);
+  },
+
+  'AMAZON.NoIntent': function() {
+    var prompt = 'OK, Have a nice day';
+    this.emit(':tell', prompt);
+  },
+
+  'AMAZON.RepeatIntent': function () {
+      this.emit(':ask', this.attributes['speechOutput'], this.attributes['repromptText']);
+  },
+
+  'AMAZON.HelpIntent': function() {
+      var prompt = 'Please tell me your house number and street for me to look up nearby public art.'
+      this.emit(':ask', prompt, prompt);
+  },
+
+  'Unhandled': function () {
+      var prompt = 'I\'m sorry.  I didn\'t catch that.  Can you please repeat the question.';
+      this.emit(':ask', prompt, prompt);
+  }
+});
 
 function getUserAddress(userToken, state, intent, self){
   var salesforceHelper = new SalesforceHelper();
@@ -542,6 +570,9 @@ function getUserAddress(userToken, state, intent, self){
     console.log(results);
     console.log(self.attributes["address"]);
     if(results.x != null && results.y != null) {
+      console.log('about to launch state');
+      console.log(state);
+      console.log(intent);
       self.handler.state = state;
       self.emitWithState(intent, true);
     }

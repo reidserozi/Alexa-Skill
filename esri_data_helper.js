@@ -1,15 +1,18 @@
 'use strict';
 var _ = require('lodash');
 var rp = require('request-promise');
+require('./jsDate.js')();
+require('datejs');
 var ESRIENDPOINT = 'https://maps.townofcary.org/arcgis1/rest/services/';
 var EARTHRADUIS = 3959;
 var RECYCLEYELLOWSTART = '2017-01-01';
-/*var DAYS = {
-  Tue: 'Tuesday',
-  Wed: 'Wednesday',
-  Thu: 'Thursday',
-  Fri: 'Friday'
-}*/
+var RECYCLEBLUESTART = '2017-01-08';
+var DAYS = {
+  TUE: 'Tuesday',
+  WED: 'Wednesday',
+  THU: 'Thursday',
+  FRI: 'Friday'
+}
 function EsriDataHelper() { }
 
 EsriDataHelper.prototype.requestAddressInformation = function(address) {
@@ -144,22 +147,43 @@ EsriDataHelper.prototype.formatNearbyPublicArt = function(artInfo) {
 };
 
 EsriDataHelper.prototype.formatMyTrashDay = function(trashInfo) {
-  var prompt = '';
-  councilInfo.results.forEach(function(item){
-    if (typeof item.attributes["Council Distict"] != 'undefined'){
-      prompt = _.template('You belong to District ${district}, and your Council Member is ${member}. Your at large council members are ${atLarge1}, and ${atLarge2}.')({
-        district: item.attributes["Council Distict"],
-        member: item.attributes["Representative Name"],
-        atLarge1: item.attributes["At Large Representative 1"],
-        atLarge2: item.attributes["At Large Representative 2"]
-      });
-    }
-  });
+  var trashDay =  DAYS[trashInfo.features[0].attributes.Day.toUpperCase()];
+  var cycle = trashInfo.features[0].attributes.Cycle.toUpperCase();
+  var nextTrash;
+  //If trash day equals today
+  if(Date.parse(trashDay).equals(Date.today())){
+    nextTrash = formatDate(Date.parse(Date.today()));
+  } else {
+    nextTrash = formatDate(Date.parse('next ' + trashDay));
+  }
+  var nextRecycle = getRecycleDay(cycle, trashDay);
+  var prompt = _.template('Your next trash day is ${nextTrash} and your next recycle date is ${nextRecycle}')({
+    nextTrash: nextTrash,
+    nextRecycle: nextRecycle
+  })
   return prompt;
 }
 
-function getRecycleDay(cycle){
+function getRecycleDay(cycle, trashDay){
+  var diff;
+  if(cycle == 'BLUE'){
+    diff = Date.DateDiff('d', RECYCLEBLUESTART, Date.today()) % 14;
+  } else {
+    diff = Date.DateDiff('d', RECYCLEYELLOWSTART, Date.today()) % 14;
+  }
+  console.log(diff);
+  console.log(Date.parse(trashDay).compareTo(Date.today()));
+  if(diff < 7 && Date.parse(trashDay).compareTo(Date.today()) == 0){
+    return formatDate(Date.parse(Date.today()));
+  } else if((diff < 7 && (Date.parse(trashDay).compareTo(Date.today()) <= -1) || (diff >= 7 && Date.parse(trashDay).compareTo(Date.today()) >= 1))){
+    return formatDate(Date.parse('next ' + trashDay).next().week());
+  } else{
+    return formatDate(Date.parse('next ' + trashDay));
+  }
+}
 
+function formatDate(date){
+  return date.toString().slice(0,date.toString().indexOf('00:') - 1);
 }
 
 function getCircleCoords(x,y,d){

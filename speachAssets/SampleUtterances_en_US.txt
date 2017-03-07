@@ -37,3 +37,8 @@ CaseStatusIntent what is the status of the case number {CaseNumber}
 GetUserAddressIntent what is the user address
 
 GetCaryFactsIntent tell me a fact about cary
+
+TownHallHoursIntent what are the hours for town hall on {Date}
+TownHallHoursIntent what are the town hall hours
+
+TrashDayIntent when is my next trash day
