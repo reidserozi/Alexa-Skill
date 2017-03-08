@@ -196,6 +196,7 @@ function getUserId(userToken){
     method: 'GET', //Specify the method
     resolveWithFullResponse: true,
     json: true,
+    timeout: 3000,
     headers: { //We can define headers too
       'Authorization': 'Bearer ' + userToken
     }

@@ -32,7 +32,8 @@ EsriDataHelper.prototype.getAddressGeolocation = function(address) {
     method: 'GET',
     uri: encodeURI(uri),
     resolveWithFullResponse: true,
-    json: true
+    json: true,
+    timeout: 3000
   };
   return rp(options);
 };
@@ -52,7 +53,8 @@ EsriDataHelper.prototype.getInformationLatLong = function(uri) {
     method: 'GET',
     uri: encodeURI(uri),
     resolveWithFullResponse: true,
-    json: true
+    json: true,
+    timeout: 3000
   };
   return rp(options);
 };
@@ -72,7 +74,8 @@ EsriDataHelper.prototype.getTrashDay = function(uri) {
     method: 'GET',
     uri: encodeURI(uri),
     resolveWithFullResponse: true,
-    json: true
+    json: true,
+    timeout: 3000
   };
   return rp(options);
 };
@@ -96,7 +99,8 @@ EsriDataHelper.prototype.getInformationByRadius = function(x, y, distance) {
     method: 'GET',
     uri: encodeURI(uri),
     resolveWithFullResponse: true,
-    json: true
+    json: true,
+    timeout: 3000
   };
   return rp(options);
 };

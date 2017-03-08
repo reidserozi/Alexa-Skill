@@ -71,23 +71,6 @@ var newSessionHandlers = {
     this.emit(':tell', prompt);
   },
 
-  //take this function out before going live, just for testing salesforce connection
-  'GetUserAddressIntent': function() {
-    var salesforceHelper = new SalesforceHelper();
-    var accessToken = this.event.session.user.accessToken;
-    var prompt = '';
-    var self = this;
-    salesforceHelper.getUserAddress(accessToken).then(function(results){
-      prompt = 'Address is ' + results.MailingStreet;
-    }).then(function(){
-      self.emit(':tell', prompt);
-    }).catch(function(err){
-      console.log(err);
-      prompt = 'Error in connecting to salesforce';
-      self.emit(':tell', prompt);
-    });
-  },
-
   'MyCouncilMemberIntent': function() {
     getUserAddress(this.event.session.user.accessToken, APP_STATES.COUNCIL, 'GetCouncilInfoIntent', this);
   },
@@ -492,6 +475,11 @@ var caseHandlers = Alexa.CreateStateHandler(APP_STATES.CASE, {
 
   'AMAZON.NoIntent': function() {
     this.emit(':tell', 'Ok, Your case will be looked at shortly.');
+  },
+
+  'Unhandled': function () {
+      var prompt = 'I\'m sorry.  I didn\'t catch that.  Can you please repeat your problem.';
+      this.emit(':ask', prompt, prompt);
   }
 });
 
@@ -539,7 +527,7 @@ var trashHandlers = Alexa.CreateStateHandler(APP_STATES.TRASH, {
   },
 
   'AMAZON.YesIntnet': function() {
-    var prompt = 'Please tell me an address so I can look up nearby public art';
+    var prompt = 'Please tell me an address so I can look up your next trash and recycle day.';
     this.emit(':ask', prompt, prompt);
   },
 
@@ -553,7 +541,7 @@ var trashHandlers = Alexa.CreateStateHandler(APP_STATES.TRASH, {
   },
 
   'AMAZON.HelpIntent': function() {
-      var prompt = 'Please tell me your house number and street for me to look up nearby public art.'
+      var prompt = 'Please tell me your house number and street for me to look your next trash and recycle day.'
       this.emit(':ask', prompt, prompt);
   },
 

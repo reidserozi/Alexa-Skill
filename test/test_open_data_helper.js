@@ -239,7 +239,7 @@ describe('OpenDataHelper', function() {
   });
   describe('#formatAllCouncilMembers', function() {
     var responseText = 'The council member for district A, is Jennifer Robinson. The council member for district B, is Don Frantz. The council member for district C, is Jack Smith. ' +
-        'The council member for district D, is Ken George. The at large representatives are Ed Yerha, and Lori Bush.'
+        'The council member for district D, is Ken George. The at large representatives are Ed Yerha, and Lori Bush and the mayor is Harold Weinbrecht.'
     context('return call from open data', function() {
       it('formats the status as expected', function() {
         expect(subject.formatAllCouncilMembers(cityInfo)).to.eq(responseText);

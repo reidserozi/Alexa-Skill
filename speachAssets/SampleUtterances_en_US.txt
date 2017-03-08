@@ -8,9 +8,18 @@ OpenGymTimesIntent	what are the open gym times are there on {Date}
 OpenGymTimesIntent	what open gym times are there on {Date}
 OpenGymTimesIntent	how many open gym times are there on {Date}
 
-MyCouncilMemberIntent who is my council member
+MyCouncilMemberIntent	who is my council
+MyCouncilMemberIntent	who represents me in council
+MyCouncilMemberIntent	who is my council member
+MyCouncilMemberIntent	who represents me in council member
+MyCouncilMemberIntent	who is my council representative
+MyCouncilMemberIntent	who represents me in council representative
+MyCouncilMemberIntent	who represents my district
+MyCouncilMemberIntent	who represents my district in council
 
 GetByAddressIntent my address is {street_number} {street}
+GetByAddressIntent {street_number} {street}
+GetByAddressIntent I live at {street_number} {street}
 
 MyMayorIntent who is the mayor
 
@@ -30,15 +39,44 @@ CreateCaseIntent i need help with a {caseSubject} {caseAction}
 CreateCaseIntent i need help with {caseAction} {caseSubject}
 CreateCaseIntent i need help with {caseSubject} {caseAction}
 
-MyCaseStatusIntent what is my case status
+MyCaseStatusIntent	what is my problem
+MyCaseStatusIntent	what is my case
+MyCaseStatusIntent	what is my problem status
+MyCaseStatusIntent	what is my case status
+MyCaseStatusIntent	what is the status of my case
+MyCaseStatusIntent	what is the status of my problem
+MyCaseStatusIntent	what is the status of {caseAction} {caseSubject}
+MyCaseStatusIntent	what is the status of my {caseAction} {caseSubject}
+MyCaseStatusIntent	what is the status of {caseSubject} {caseAction}
+MyCaseStatusIntent	what is the status of my {caseSubject} {caseAction}
+MyCaseStatusIntent	what is my {caseAction} {caseSubject}
+MyCaseStatusIntent	what is my {caseSubject} {caseAction}
+MyCaseStatusIntent	what is my {caseAction} {caseSubject} status
+MyCaseStatusIntent	what is my {caseSubject} {caseAction} status
 
 CaseStatusIntent what is the status of the case number {CaseNumber}
 
-GetUserAddressIntent what is the user address
-
-GetCaryFactsIntent tell me a fact about cary
+GetCaryFactsIntent	tell me a fact about cary
+GetCaryFactsIntent	what is a fact about cary
+GetCaryFactsIntent	tell me a cary fact
+GetCaryFactsIntent	what is a cary fact
+GetCaryFactsIntent	about cary
+GetCaryFactsIntent	about cary facts
 
 TownHallHoursIntent what are the hours for town hall on {Date}
 TownHallHoursIntent what are the town hall hours
 
-TrashDayIntent when is my next trash day
+TrashDayIntent	when is my trash day
+TrashDayIntent	when is my next trash day
+TrashDayIntent	when is my recycle day
+TrashDayIntent	when is my next recycle day
+TrashDayIntent	when is my trash pickup
+TrashDayIntent	when is my next trash pickup
+TrashDayIntent	when is my recycle pickup
+TrashDayIntent	when is my next recycle pickup
+TrashDayIntent	what day is my trash pickup
+TrashDayIntent	what day is my next trash pickup
+TrashDayIntent	what day is my recycle pickup
+TrashDayIntent	what day is my next recycle pickup
+TrashDayIntent	is my recycle pickup this week
+TrashDayIntent	is my recycle day this week

@@ -19,7 +19,8 @@ OpenDataHelper.prototype.getOpenData = function(uri) {
     method: 'GET',
     uri: encodeURI(uri),
     resolveWithFullResponse: true,
-    json: true
+    json: true,
+    timeout: 3000
   };
   return rp(options);
 };
@@ -65,11 +66,13 @@ OpenDataHelper.prototype.formatMayor = function(cityInfo) {
 
 OpenDataHelper.prototype.formatAllCouncilMembers = function(cityInfo) {
   var response = '';
+  var mayor = '';
   cityInfo.records.forEach(function(item){
     response += _.template('The council member for district ${district}, is ${member}. ')({
       district: item.fields.name,
       member: item.fields.repname
     });
+    mayor = item.fields.mayor;
   });
   var atLarge = [];
   cityInfo.facet_groups[0].facets.forEach(function(item){
@@ -78,9 +81,10 @@ OpenDataHelper.prototype.formatAllCouncilMembers = function(cityInfo) {
   if (atLarge.size == 0 ){
     throw new Error('No at large representatives returned');
   } else {
-    response += _.template('The at large representatives are ${rep1}, and ${rep2}.')({
+    response += _.template('The at large representatives are ${rep1}, and ${rep2} and the mayor is ${mayor}.')({
       rep1: atLarge[0],
-      rep2: atLarge[1]
+      rep2: atLarge[1],
+      mayor: mayor
     });
   }
   if (response == '') {

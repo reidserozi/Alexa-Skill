@@ -1,6 +1,21 @@
 {
   "intents": [
     {
+      "intent": "AMAZON.HelpIntent"
+    },
+    {
+      "intent": "AMAZON.YesIntent"
+    },
+    {
+      "intent": "AMAZON.NoIntent"
+    },
+    {
+      "intent": "AMAZON.StopIntent"
+    },
+    {
+      "intent": "AMAZON.RepeatIntent"
+    },
+    {
       "intent": "OpenGymTimesIntent",
       "slots": [
         {
@@ -52,11 +67,16 @@
     },
     {
       "intent": "MyCaseStatusIntent",
-      "slots": []
-    },
-    {
-      "intent": "GetUserAddressIntent",
-      "slots": []
+      "slots": [
+        {
+          "name": "caseSubject",
+          "type": "CASE_SUBJECT"
+        },
+        {
+          "name": "caseAction",
+          "type": "CASE_ACTION"
+        }
+      ]
     },
     {
       "intent": "GetCouncilInfoIntent",
@@ -87,12 +107,6 @@
     {
       "intent": "GetCaryFactsIntent",
       "slots": []
-    },
-    {
-      "intent": "AMAZON.HelpIntent"
-    },
-    {
-      "intent": "AMAZON.YesIntent"
     },
     {
       "intent": "TownHallHoursIntent",
