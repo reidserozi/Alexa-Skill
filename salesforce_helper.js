@@ -3,6 +3,7 @@ var _ = require('lodash');
 var rp = require('request-promise');
 var jsforce = require('jsforce');
 var EsriDataHelper = require('./esri_data_helper');
+var HelperClass = require('./helper_functions.js');
 var ESRIENDPOINT = 'https://maps.townofcary.org/arcgis1/rest/services/';
 require('datejs');
 
@@ -88,13 +89,13 @@ SalesforceHelper.prototype.formatExistingCase = function(caseInfo) {
 		var lmDate = Date.parse(caseInfo[0].LastModifiedDate).toString();
 	  response.prompt = prompt({
 			caseStatus: caseInfo[0].Status,
-			lastModifiedDate: lmDate.slice(0, lmDate.indexOf('GMT'))
+			lastModifiedDate: HelperClass.formatDateTime(lmDate.slice(0, lmDate.indexOf('GMT')))
 		});
 		var card = _.template('Your case for ${caseIssue} has a case number of ${caseNumber} an expected completion date of ${finishDate}');
 		response.card = card({
 			caseIssue: caseInfo[0].CaseIssue__r.Name,
 			caseNumber: caseInfo[0].CaseNumber,
-			finishDate: caseInfo[0].Expected_Completion_Date__c
+			finishDate: HelperClass.formatDateTime(caseInfo[0].Expected_Completion_Date__c)
 		});
 	} else {
 		response.prompt = 'I\'m sorry, but I could not find any previous cases on your account';
@@ -114,7 +115,7 @@ SalesforceHelper.prototype.formatNewCaseStatus = function(caseInfo) {
 	response.card = card({
 		caseIssue: caseInfo.CaseIssue__r.Name,
 		caseNumber: caseInfo.CaseNumber,
-		finishDate: caseInfo.Expected_Completion_Date__c
+		finishDate: HelperClass.formatDateTime(caseInfo.Expected_Completion_Date__c)
 	});
 	return response;
 };
@@ -202,11 +203,6 @@ function getUserId(userToken){
     }
   };
   return rp(options);
-}
-
-function parseSalesforceDate(sfDate){
-	var dateSliced = sfDate.slice(0,sfDate.indexOf('.'));
-	return dateSliced;
 }
 
 module.exports = SalesforceHelper;

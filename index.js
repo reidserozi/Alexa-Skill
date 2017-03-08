@@ -12,7 +12,6 @@ var ARCGISENDPOINT = 'https://services2.arcgis.com/l4TwMwwoiuEVRPw9/ArcGIS/rest/
 var OPENDATAENDPOINT = 'https://data.townofcary.org/api/records/1.0/search/?';
 var DISTANCE = 1; //distance for radius search.  currently 1 mile can be adapted later.
 var APP_ID = 'amzn1.ask.skill.c50db383-27e7-4631-a60b-644afbd1e134';//process.env.ALEXAAPPID;  // TODO replace with your app ID (OPTIONAL).
-var CASENUMBERLENGTH = 8 //the current number of digits in a case number to add leading zeros
 //If false, it means that Account Linking isn't mandatory there fore we dont have accaes to the account of the community user so we will ask for the user's Phone Number.
 // IMPORTANT!! Make sure that the profile of the community user has the 'API Enabled' field marked as true.
 var ACCOUNT_LINKING_REQUIRED = true;
@@ -189,11 +188,12 @@ var newSessionHandlers = {
   		var speechOutput = "You must link your account before accessing this skill.";
   		this.emit(':tellWithLinkAccountCard', speechOutput);
   	} else {
+      var helperClass = new HelperClass();
       var salesforceHelper = new SalesforceHelper();
       var userToken = this.event.session.user.accessToken;
       var caseNumber = this.event.request.intent.slots.CaseNumber.value.toString();
       if(caseNumber.length < CASENUMBERLENGTH){
-        caseNumber = addLeadZeros(caseNumber);
+        caseNumber = helperClass.addLeadZeros(caseNumber);
       }
       var prompt = '';
       var self = this;
@@ -573,12 +573,6 @@ function getUserAddress(userToken, state, intent, self){
       self.emit(':ask', prompt, prompt);
     }
   });
-}
-
-function addLeadZeros(caseNumber){
-  var filler = '0';
-  var results = filler.repeat(CASENUMBERLENGTH - caseNumber.length).concat(caseNumber);
-  return results.valueOf();
 }
 
 function checkCaseIssue(caseIssue){

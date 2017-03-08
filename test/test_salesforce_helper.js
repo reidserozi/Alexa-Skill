@@ -4,6 +4,7 @@ var chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 var expect = chai.expect;
 var SalesforceHelper = require('../salesforce_helper');
+require('../salesforce_helper.js');
 chai.config.includeStack = true;
 
 describe('SalesforceHelper', function() {
