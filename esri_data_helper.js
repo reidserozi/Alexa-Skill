@@ -39,8 +39,8 @@ EsriDataHelper.prototype.getAddressGeolocation = function(address) {
   return rp(options);
 };
 
-EsriDataHelper.prototype.requestInformationLatLong = function(uri) {
-  return this.getInformationLatLong(uri).then(
+EsriDataHelper.prototype.requestESRIInformation = function(uri) {
+  return this.getESRIInformation(uri).then(
     function(response) {
       return response.body;
     }, function (error) {
@@ -49,28 +49,7 @@ EsriDataHelper.prototype.requestInformationLatLong = function(uri) {
   ).catch(console.log.bind(console));
 };
 
-EsriDataHelper.prototype.getInformationLatLong = function(uri) {
-  var options = {
-    method: 'GET',
-    uri: encodeURI(uri),
-    resolveWithFullResponse: true,
-    json: true,
-    timeout: 3000
-  };
-  return rp(options);
-};
-
-EsriDataHelper.prototype.requestTrashDay = function(uri) {
-  return this.getInformationLatLong(uri).then(
-    function(response) {
-      return response.body;
-    }, function (error) {
-        console.log('error in the promise');
-    }
-  ).catch(console.log.bind(console));
-};
-
-EsriDataHelper.prototype.getTrashDay = function(uri) {
+EsriDataHelper.prototype.getESRIInformation = function(uri) {
   var options = {
     method: 'GET',
     uri: encodeURI(uri),

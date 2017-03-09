@@ -11,7 +11,7 @@ var ESRIENDPOINT = 'https://maps.townofcary.org/arcgis1/rest/services/';
 var ARCGISENDPOINT = 'https://services2.arcgis.com/l4TwMwwoiuEVRPw9/ArcGIS/rest/services/';
 var OPENDATAENDPOINT = 'https://data.townofcary.org/api/records/1.0/search/?';
 var DISTANCE = 1; //distance for radius search.  currently 1 mile can be adapted later.
-var APP_ID = 'amzn1.ask.skill.c50db383-27e7-4631-a60b-644afbd1e134';//process.env.ALEXAAPPID;  // TODO replace with your app ID (OPTIONAL).
+var APP_ID = process.env.ALEXAAPPID;  // TODO replace with your app ID (OPTIONAL).
 //If false, it means that Account Linking isn't mandatory there fore we dont have accaes to the account of the community user so we will ask for the user's Phone Number.
 // IMPORTANT!! Make sure that the profile of the community user has the 'API Enabled' field marked as true.
 var ACCOUNT_LINKING_REQUIRED = true;
@@ -260,7 +260,7 @@ var councilHandlers = Alexa.CreateStateHandler(APP_STATES.COUNCIL, {
     var prompt = '';
     esriDataHelper.requestAddressInformation(address).then(function(response) {
       var uri = ESRIENDPOINT + 'Elections/Elections/MapServer/identify?geometry=' + response.candidates[0].location.x + ',' + response.candidates[0].location.y + '&geometryType=esriGeometryPoint&sr=4326&layers=all&layerDefs=&time=&layerTimeOptions=&tolerance=2&mapExtent=-79.193,35.541,-78.63,35.989&imageDisplay=600+550+96&returnGeometry=false&maxAllowableOffset=&geometryPrecision=&dynamicLayers=&returnZ=false&returnM=false&gdbVersion=&f=pjson';
-      return esriDataHelper.requestInformationLatLong(uri);
+      return esriDataHelper.requestESRIInformation(uri);
     }).then(function(response){
       return esriDataHelper.formatMyCouncilMember(response);
     }).then(function(response) {
@@ -276,7 +276,7 @@ var councilHandlers = Alexa.CreateStateHandler(APP_STATES.COUNCIL, {
     var self = this;
     var address = this.attributes['address'];
     var uri = ESRIENDPOINT + 'Elections/Elections/MapServer/identify?geometry=' + address.x + ',' + address.y + '&geometryType=esriGeometryPoint&sr=4326&layers=all&layerDefs=&time=&layerTimeOptions=&tolerance=2&mapExtent=-79.193,35.541,-78.63,35.989&imageDisplay=600+550+96&returnGeometry=false&maxAllowableOffset=&geometryPrecision=&dynamicLayers=&returnZ=false&returnM=false&gdbVersion=&f=pjson';
-    esriDataHelper.requestInformationLatLong(uri).then(function(response){
+    esriDataHelper.requestESRIInformation(uri).then(function(response){
       return esriDataHelper.formatMyCouncilMember(response);
     }).then(function(response) {
       self.emit(':tell', response);
@@ -391,7 +391,7 @@ var artHandlers = Alexa.CreateStateHandler(APP_STATES.ART, {
     var prompt = '';
     esriDataHelper.requestAddressInformation(address).then(function(response) {
         var uri = ARCGISENDPOINT + 'Art_in_Public_Places/FeatureServer/0/query?where=&objectIds=&time=&geometry=' + response.candidates[0].location.x + ',' + response.candidates[0].location.y + '&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelContains&resultType=none&distance=1000&units=esriSRUnit_Meter&returnGeodetic=false&outFields=*&returnGeometry=true&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=4326&returnIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnDistinctValues=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&quantizationParameters=&sqlFormat=none&f=pjson';
-      return esriDataHelper.requestInformationLatLong(uri);
+      return esriDataHelper.requestESRIInformation(uri);
     }).then(function(response){
       return esriDataHelper.formatNearbyPublicArt(response);
     }).then(function(response) {
@@ -409,7 +409,7 @@ var artHandlers = Alexa.CreateStateHandler(APP_STATES.ART, {
     var address = this.attributes['address'];
     var prompt = '';
     var uri = ARCGISENDPOINT + 'Art_in_Public_Places/FeatureServer/0/query?where=&objectIds=&time=&geometry=' + address.x + ',' + address.y + '&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelContains&resultType=none&distance=1000&units=esriSRUnit_Meter&returnGeodetic=false&outFields=*&returnGeometry=true&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=4326&returnIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnDistinctValues=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&quantizationParameters=&sqlFormat=none&f=pjson';
-    esriDataHelper.requestInformationLatLong(uri).then(function(response){
+    esriDataHelper.requestESRIInformation(uri).then(function(response){
       return esriDataHelper.formatNearbyPublicArt(response);
     }).then(function(response) {
       self.emit(':tell', response);
@@ -494,7 +494,7 @@ var trashHandlers = Alexa.CreateStateHandler(APP_STATES.TRASH, {
     var address = street_number + ' ' + street
     esriDataHelper.requestAddressInformation(address).then(function(response) {
         var uri = ESRIENDPOINT + 'PublicWorks/Public_Works_Operations/MapServer/0/query?where=&text=&objectIds=&time=&geometry=' + response.candidates[0].location.x + ',' + response.candidates[0].location.y + '&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=*&returnGeometry=false&returnTrueCurves=false&maxAllowableOffset=&geometryPrecision=&outSR=4326&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&returnDistinctValues=false&resultOffset=&resultRecordCount=&f=pjson'
-      return esriDataHelper.requestTrashDay(uri);
+      return esriDataHelper.requestESRIInformation(uri);
     }).then(function(response){
       return esriDataHelper.formatMyTrashDay(response);
     }).then(function(response) {
@@ -512,7 +512,7 @@ var trashHandlers = Alexa.CreateStateHandler(APP_STATES.TRASH, {
     var self = this;
     var address = this.attributes['address'];
     var uri = ESRIENDPOINT + 'PublicWorks/Public_Works_Operations/MapServer/0/query?where=&text=&objectIds=&time=&geometry=' + address.x + ',' + address.y + '&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=*&returnGeometry=false&returnTrueCurves=false&maxAllowableOffset=&geometryPrecision=&outSR=4326&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&returnDistinctValues=false&resultOffset=&resultRecordCount=&f=pjson'
-    esriDataHelper.requestTrashDay(uri).then(function(response){
+    esriDataHelper.requestESRIInformation(uri).then(function(response){
       console.log(response);
       return esriDataHelper.formatMyTrashDay(response);
     }).then(function(response) {

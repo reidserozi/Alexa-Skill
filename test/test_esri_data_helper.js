@@ -17,7 +17,7 @@ describe('EsriDataHelper', function() {
     context('with a geolocation', function(){
       it('returns council representative and district from Lat Long', function(){
         var uri = ESRIENDPOINT + 'Elections/Elections/MapServer/identify?geometry=' + x + ',' + y + '&geometryType=esriGeometryPoint&sr=4326&layers=all&layerDefs=&time=&layerTimeOptions=&tolerance=2&mapExtent=-79.193,35.541,-78.63,35.989&imageDisplay=600+550+96&returnGeometry=false&maxAllowableOffset=&geometryPrecision=&dynamicLayers=&returnZ=false&returnM=false&gdbVersion=&f=pjson'
-        var value = subject.requestInformationLatLong(uri).then(function(obj){
+        var value = subject.requestESRIInformation(uri).then(function(obj){
           return obj.results[1].attributes["Representative Name"];
         });
         return expect(value).to.eventually.eq("Don Frantz");
@@ -27,7 +27,7 @@ describe('EsriDataHelper', function() {
       it('gets geolocation from ESRI and then gets council information', function() {
         var value = subject.requestAddressInformation(address).then(function(obj){
           var uri = ESRIENDPOINT + 'Elections/Elections/MapServer/identify?geometry=' + obj.candidates[0].location.x + ',' + obj.candidates[0].location.y + '&geometryType=esriGeometryPoint&sr=4326&layers=all&layerDefs=&time=&layerTimeOptions=&tolerance=2&mapExtent=-79.193,35.541,-78.63,35.989&imageDisplay=600+550+96&returnGeometry=false&maxAllowableOffset=&geometryPrecision=&dynamicLayers=&returnZ=false&returnM=false&gdbVersion=&f=pjson'
-          return subject.requestInformationLatLong(uri).then(function(obj){
+          return subject.requestESRIInformation(uri).then(function(obj){
             return obj.results[1].attributes["Representative Name"];
           });
         });
@@ -67,7 +67,7 @@ describe('EsriDataHelper', function() {
     context('with a geolocation', function(){
       it('returns all public art in 1km radius from Lat Long', function(){
         var uri = ARCGISENDPOINT + 'Art_in_Public_Places/FeatureServer/0/query?where=&objectIds=&time=&geometry=' + x + ',' + y + '&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelContains&resultType=none&distance=1000&units=esriSRUnit_Meter&returnGeodetic=false&outFields=*&returnGeometry=true&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=4326&returnIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnDistinctValues=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&quantizationParameters=&sqlFormat=none&f=pjson';
-        var value = subject.requestInformationLatLong(uri).then(function(obj){
+        var value = subject.requestESRIInformation(uri).then(function(obj){
           return obj.features[0].attributes["Name"];
         });
         return expect(value).to.eventually.eq("Join the Parade");
@@ -77,7 +77,7 @@ describe('EsriDataHelper', function() {
       it('gets geolocation from ESRI and then gets all public art in 1km radius', function() {
         var value = subject.requestAddressInformation(address).then(function(obj){
           var uri = ARCGISENDPOINT + 'Art_in_Public_Places/FeatureServer/0/query?where=&objectIds=&time=&geometry=' + obj.candidates[0].location.x + ',' + obj.candidates[0].location.y + '&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelContains&resultType=none&distance=1000&units=esriSRUnit_Meter&returnGeodetic=false&outFields=*&returnGeometry=true&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=4326&returnIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnDistinctValues=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&quantizationParameters=&sqlFormat=none&f=pjson';
-          return subject.requestInformationLatLong(uri).then(function(obj){
+          return subject.requestESRIInformation(uri).then(function(obj){
             return obj.features[0].attributes["Name"];
           });
         });
@@ -92,7 +92,7 @@ describe('EsriDataHelper', function() {
     context('with a geolocation', function(){
       it('returns next trash and recycle day', function(){
         var uri = ESRIENDPOINT + 'PublicWorks/Public_Works_Operations/MapServer/0/query?where=&text=&objectIds=&time=&geometry=' + x + ',' + y + '&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=*&returnGeometry=false&returnTrueCurves=false&maxAllowableOffset=&geometryPrecision=&outSR=4326&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&returnDistinctValues=false&resultOffset=&resultRecordCount=&f=pjson'
-        var value = subject.requestTrashDay(uri).then(function(obj){
+        var value = subject.requestESRIInformation(uri).then(function(obj){
           return obj.features[0].attributes["Day"];
         });
         return expect(value).to.eventually.eq("Wed");
@@ -102,7 +102,7 @@ describe('EsriDataHelper', function() {
       it('gets geolocation from ESRI and then gets next trash and recycle day', function() {
         var value = subject.requestAddressInformation(address).then(function(obj){
           var uri = ESRIENDPOINT + 'PublicWorks/Public_Works_Operations/MapServer/0/query?where=&geometry=' + obj.candidates[0].location.x + ',' + obj.candidates[0].location.y + '&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=*&returnGeometry=false&returnTrueCurves=false&maxAllowableOffset=&geometryPrecision=&outSR=4326&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&returnDistinctValues=false&resultOffset=&resultRecordCount=&f=pjson'
-          return subject.requestTrashDay(uri)
+          return subject.requestESRIInformation(uri)
         }).then(function(obj){
           return obj.features[0].attributes["Day"];
         });
