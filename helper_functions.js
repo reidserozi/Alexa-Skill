@@ -10,7 +10,6 @@ HelperClass.prototype.formatDate = function(date){
 }
 
 HelperClass.prototype.formatDateTime = function (dateTime){
-	//Wed Mar 08 2017 14:28:36
   var timeStr = this.formatTimeString(dateTime)
 	var tmpString = dateTime.toString()
 	var i = tmpString.search(/20\d{2}/);
@@ -39,14 +38,12 @@ HelperClass.prototype.getRecycleDay = function(cycle, trashDay){
   } else {
     diff = Date.DateDiff('d', RECYCLEYELLOWSTART, Date.today()) % 14;
   }
-  console.log(diff);
-  console.log(Date.parse(trashDay).compareTo(Date.today()));
   if(diff < 7 && Date.parse(trashDay).compareTo(Date.today()) == 0){
-    return formatDate(Date.parse(Date.today()));
+    return this.formatDate(Date.parse(Date.today()));
   } else if((diff < 7 && (Date.parse(trashDay).compareTo(Date.today()) <= -1) || (diff >= 7 && Date.parse(trashDay).compareTo(Date.today()) >= 1))){
-    return formatDate(Date.parse('next ' + trashDay).next().week());
+    return this.formatDate(Date.parse('next ' + trashDay).next().week());
   } else{
-    return formatDate(Date.parse('next ' + trashDay));
+    return this.formatDate(Date.parse('next ' + trashDay));
   }
 }
 
