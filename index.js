@@ -569,7 +569,7 @@ function getUserAddress(userToken, state, intent, self){
   }).finally(function(){
     if(self.attributes["address"] == undefined || self.attributes["address"] == null){
       self.handler.state = state;
-      var prompt = 'Please tell me your address so I can look up nearby public art';
+      var prompt = 'Please tell me your address so I can look up your requested information';
       self.emit(':ask', prompt, prompt);
     }
   });
