@@ -1,4 +1,6 @@
 var CASENUMBERLENGTH = 8 //the current number of digits in a case number to add leading zeros
+var RECYCLEYELLOWSTART = '2017-01-01';
+var RECYCLEBLUESTART = '2017-01-08';
 
 function HelperClass() { }
 
