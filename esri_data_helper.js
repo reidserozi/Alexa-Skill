@@ -60,8 +60,8 @@ EsriDataHelper.prototype.getESRIInformation = function(uri) {
   return rp(options);
 };
 
-EsriDataHelper.prototype.requestInformationByRadius = function(x, y, distance) {
-  return this.getInformationByRadius(x, y, distance).then(
+EsriDataHelper.prototype.requestInformationByRadius = function(x, y, distance, uri) {
+  return this.getInformationByRadius(x, y, distance, uri).then(
     function(response) {
       return response.body;
     }, function (error) {
@@ -70,15 +70,15 @@ EsriDataHelper.prototype.requestInformationByRadius = function(x, y, distance) {
   ).catch(console.log.bind(console));
 };
 
-EsriDataHelper.prototype.getInformationByRadius = function(x, y, distance) {
+EsriDataHelper.prototype.getInformationByRadius = function(x, y, distance, uri) {
   //radius of earth is 3959 miles
   var helperClass = new HelperClass();
   var radius = distance / EARTHRADUIS;
   var coords = helperClass.getCircleCoords(x,y,radius);
-  var uri = ESRIENDPOINT + 'ParksRec/Parks/FeatureServer/0/query?where=&objectIds=&time=&geometry={"rings":[[' + coords + ']]}&geometryType=esriGeometryPolygon&inSR=4326&spatialRel=esriSpatialRelContains&relationParam=&outFields=*&returnGeometry=true&maxAllowableOffset=&geometryPrecision=&outSR=4326&gdbVersion=&returnDistinctValues=false&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&f=pjson'
+  var finalUri = uri + '?where=&objectIds=&time=&geometry={"rings":[[' + coords + ']]}&geometryType=esriGeometryPolygon&inSR=4326&spatialRel=esriSpatialRelContains&relationParam=&outFields=*&returnGeometry=true&maxAllowableOffset=&geometryPrecision=&outSR=4326&gdbVersion=&returnDistinctValues=false&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&f=pjson'
   var options = {
     method: 'GET',
-    uri: encodeURI(uri),
+    uri: encodeURI(finalUri),
     resolveWithFullResponse: true,
     json: true,
     timeout: 3000
@@ -102,24 +102,26 @@ EsriDataHelper.prototype.formatMyCouncilMember = function(councilInfo) {
 };
 
 EsriDataHelper.prototype.formatNearbyParks = function(parkInfo) {
+  var helperClass = new HelperClass();
   var prompt = 'There are ' + parkInfo.features.length + ' parks nearby including ';
   parkInfo.features.forEach(function(item){
     prompt += _.template('${parkName} located at ${address}, ')({
       parkName: item.attributes["NAME"],
-      address: item.attributes["FULLADDR"]
+      address: helperClass.formatAddress(item.attributes["FULLADDR"])
     });
   });
   return prompt;
 };
 
 EsriDataHelper.prototype.formatNearbyPublicArt = function(artInfo) {
+  var helperClass = new HelperClass();
   var prompt = '';
   var numArt = artInfo.features.length;
   artInfo.features.forEach(function(item){
     if(item.attributes["Address"] != null){
       prompt += _.template('${artName} located at ${address}, ')({
         artName: item.attributes["Name"],
-        address: item.attributes["Address"]
+        address: helperClass.formatAddress(item.attributes["FULLADDR"])
       });
     } else {
       numArt  = numArt - 1;

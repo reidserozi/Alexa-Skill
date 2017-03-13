@@ -6,6 +6,8 @@ var Alexa = require('alexa-sdk');
 var OpenDataHelper = require('./open_data_helper');
 var EsriDataHelper = require('./esri_data_helper');
 var SalesforceHelper = require('./salesforce_helper');
+var HelperClass = require('./helper_functions.js');
+require('./jsDate.js')();
 var facts = require('./cary_facts');
 var ESRIENDPOINT = 'https://maps.townofcary.org/arcgis1/rest/services/';
 var ARCGISENDPOINT = 'https://services2.arcgis.com/l4TwMwwoiuEVRPw9/ArcGIS/rest/services/';
@@ -32,6 +34,7 @@ var helpMessageReprompt = 'What can I help you with today?';
 var helpMesssageCard = 'Sample questions:\nCases: What is my case status?\nWhat is the status of case {case number}?\nI need to create a case.\nI need help with {case issue}\nInformation: Tell me a fact about Cary.\nWho is my council member?\nWho is on the city council?\nWho is the mayor?\nWhat are the open gym times for {day}\nWhat parks are nearby?\nWhat public art is nearby?';
 
 var CASEISSUES = ['Broken Recycling', 'Broken Trash', 'Cardboard Collection', 'Leaf Collection', 'Missed Recycling', 'Missed Trash', 'Missed Yard Waste', 'Oil Collection', 'Upgrade Recycling', 'Upgrade Trash'];
+var GYMLOCATIONS = {'bond park': 'BPCC', 'herbert young': 'HYCC', 'herb young': 'HYCC', 'herbert c. young': 'HYCC', 'middle creek': 'MCCC', 'cary arts': 'CAC', 'cary arts center': 'CAC'};
 
 exports.handler = function(event, context, callback) {
   var alexa = Alexa.handler(event, context);
@@ -47,16 +50,27 @@ var newSessionHandlers = {
   },
 
   'OpenGymTimesIntent': function () {
-    var gymTimeDate = this.event.request.intent.slots.Date.value;
-    var openDataHelper = new OpenDataHelper();
+    var gymTimeDate = this.event.request.intent.slots.Date.value || Date.yyyymmdd(Date.today());
+    var location = this.event.request.intent.slots.location.value;
     var prompt = '';
-    var noData = false;
+    if(gymTimeDate.search(/^\d{4}-\d{2}-\d{2}$/) == -1){
+      prompt = 'Please choose a single day for open gym times.';
+      this.emit(':ask', prompt);
+      return;
+    }
+    var openDataHelper = new OpenDataHelper();
     var self = this;
-    var uri = OPENDATAENDPOINT + 'dataset=open-gym&q=open_gym_start==' + gymTimeDate + '&facet=facility_title&facet=pass_type&facet=community_center&facet=open_gym&facet=group&facet=date_scanned&timezone=UTC';
+    var q = '';
+    if(location === undefined){
+      q = 'open_gym_start==' + gymTimeDate;
+    } else {
+      q = 'open_gym_start==' + gymTimeDate + ' AND community_center==' + GYMLOCATIONS[location];
+    }
+    var uri = OPENDATAENDPOINT + 'dataset=open-gym&q=' + q + '&facet=facility_title&facet=pass_type&facet=community_center&facet=open_gym&facet=group&facet=date_scanned&timezone=UTC';
     openDataHelper.requestOpenData(uri).then(function(gymTimeStatus) {
-       prompt = openDataHelper.formatGymTimes(gymTimeStatus);
-    }).then(function(){
-      self.emit(':tell', prompt);
+       return openDataHelper.formatGymTimes(gymTimeStatus);
+    }).then(function(response){
+      self.emit(':tell', response);
     }).catch(function(err) {
       prompt = 'I didn\'t have data for gym times on ' + gymTimeDate;
       console.log(err);
@@ -146,32 +160,34 @@ var newSessionHandlers = {
     }
   },
 
-  'CreateCaseIntent': function() {
+  'CaseConfirmationIntent': function() {
+    var helperClass = new HelperClass();
     if(ACCOUNT_LINKING_REQUIRED == true && this.event.session.user.accessToken == undefined) {
   		var speechOutput = "You must link your account before accessing this skill.";
   		this.emit(':tellWithLinkAccountCard', speechOutput);
   	} else {
-      var caseSubject = this.event.request.intent.slots.caseSubject.value;
-      var caseAction = this.event.request.intent.slots.caseAction.value;
+      var caseSubject = helperClass.formatCaseSubject(this.event.request.intent.slots.caseSubject.value);
+      var caseAction = this.event.request.intent.slots.caseAction.value || helperClass.addCaseAction(caseSubject);
       this.attributes['caseIssue'] = CASEISSUES.find(checkCaseIssue, {"caseSubject": caseSubject, "caseAction": caseAction});
-      console.log(caseSubject);
-      console.log(caseAction);
-      console.log(this.attributes['caseIssue']);
       this.handler.state = APP_STATES.CASE;
-      this.emitWithState('CreateCaseIntent', true);
+      this.emitWithState('CaseConfirmationIntent', true);
     }
   },
 
   'MyCaseStatusIntent': function() {
+    var helperClass = new HelperClass();
     if(ACCOUNT_LINKING_REQUIRED == true && this.event.session.user.accessToken == undefined) {
   		var speechOutput = "You must link your account before accessing this skill.";
   		this.emit(':tellWithLinkAccountCard', speechOutput);
   	} else {
       var salesforceHelper = new SalesforceHelper();
       var userToken = this.event.session.user.accessToken;
+      var caseSubject = helperClass.formatCaseSubject(this.event.request.intent.slots.caseSubject.value);
+      var caseAction = this.event.request.intent.slots.caseAction.value || helperClass.addCaseAction(caseSubject);
       var prompt = '';
       var self = this;
-      salesforceHelper.findLatestCaseStatus(userToken).then(function(response) {
+      salesforceHelper.findLatestCaseStatus(userToken, CASEISSUES.find(checkCaseIssue, {"caseSubject": caseSubject, "caseAction": caseAction})).then(function(response) {
+        console.log(response);
         return salesforceHelper.formatExistingCase(response);
       }).then(function(response) {
         self.emit(':tellWithCard', response.prompt, 'Town of Cary Case', response.card);
@@ -218,6 +234,11 @@ var newSessionHandlers = {
       var userToken = this.event.session.user.accessToken;
       var salesforceHelper = new SalesforceHelper();
       var date = this.event.request.intent.slots.Date.value;
+      if(gymTimeDate.search(/^\d{4}-\d{2}-\d{2}$/) == -1){
+        var prompt = 'Please choose a single day for town hall hours.';
+        this.emit(':ask', prompt);
+        return;
+      }
       var self = this;
       salesforceHelper.getTownHallHours(userToken, date).then(function(response){
         return salesforceHelper.formatTownHallHours(response, date);
@@ -240,6 +261,10 @@ var newSessionHandlers = {
   },
 
   'AMAZON.StopIntent': function () {
+    this.emit(':tell', 'Goodbye');
+  },
+
+  'AMAZON.CancelIntent': function () {
     this.emit(':tell', 'Goodbye');
   },
 
@@ -307,6 +332,14 @@ var councilHandlers = Alexa.CreateStateHandler(APP_STATES.COUNCIL, {
       this.emit(':ask', prompt, prompt);
   },
 
+  'AMAZON.StopIntent': function () {
+    this.emit(':tell', 'Goodbye');
+  },
+
+  'AMAZON.CancelIntent': function () {
+    this.emit(':tell', 'Goodbye');
+  },
+
   'Unhandled': function () {
       var prompt = 'I\'m sorry.  I didn\'t catch that.  Can you please repeat that.';
       this.emit(':ask', prompt, prompt);
@@ -324,7 +357,8 @@ var parkHandlers = Alexa.CreateStateHandler(APP_STATES.PARKS, {
     var address = street_number + ' ' + street
     var prompt = '';
     esriDataHelper.requestAddressInformation(address).then(function(response) {
-      return esriDataHelper.requestInformationByRadius(response.candidates[0].location.x, response.candidates[0].location.y, DISTANCE);
+      var uri = ESRIENDPOINT + 'ParksRec/Parks/FeatureServer/0/query';
+      return esriDataHelper.requestInformationByRadius(response.candidates[0].location.x, response.candidates[0].location.y, DISTANCE, uri);
     }).then(function(response){
         return esriDataHelper.formatNearbyParks(response);
     }).then(function(responseresponse) {
@@ -341,7 +375,8 @@ var parkHandlers = Alexa.CreateStateHandler(APP_STATES.PARKS, {
     var self = this;
     var address = this.attributes['address'];
     esriDataHelper.requestAddressInformation(address).then(function(response) {
-      return esriDataHelper.requestInformationByRadius(address.x, address.y, DISTANCE)
+      var uri = ESRIENDPOINT + 'ParksRec/Parks/FeatureServer/0/query';
+      return esriDataHelper.requestInformationByRadius(address.x, address.y, DISTANCE, uri)
     }).then(function(response){
       return esriDataHelper.formatNearbyParks(response);
     }).then(function(response) {
@@ -371,6 +406,14 @@ var parkHandlers = Alexa.CreateStateHandler(APP_STATES.PARKS, {
   'AMAZON.HelpIntent': function() {
       var prompt = 'Please tell me a house number and street for me to look up nearby parks.'
       this.emit(':ask', prompt, prompt);
+  },
+
+  'AMAZON.StopIntent': function () {
+    this.emit(':tell', 'Goodbye');
+  },
+
+  'AMAZON.CancelIntent': function () {
+    this.emit(':tell', 'Goodbye');
   },
 
   'Unhandled': function () {
@@ -440,6 +483,14 @@ var artHandlers = Alexa.CreateStateHandler(APP_STATES.ART, {
       this.emit(':ask', prompt, prompt);
   },
 
+  'AMAZON.StopIntent': function () {
+    this.emit(':tell', 'Goodbye');
+  },
+
+  'AMAZON.CancelIntent': function () {
+    this.emit(':tell', 'Goodbye');
+  },
+
   'Unhandled': function () {
       var prompt = 'I\'m sorry.  I didn\'t catch that.  Can you please repeat the question.';
       this.emit(':ask', prompt, prompt);
@@ -450,7 +501,7 @@ var caseHandlers = Alexa.CreateStateHandler(APP_STATES.CASE, {
   'CreateCaseIntent': function () {
     var userToken = this.event.session.user.accessToken;
     var salesforceHelper = new SalesforceHelper();
-    var caseIssue =  this.attributes["caseIssue"] || CASEISSUES.find(checkCaseIssue, {"caseSubject": this.event.request.intent.slots.caseSubject.value, "caseAction": this.event.request.intent.slots.caseAction.value});
+    var caseIssue =  this.attributes["caseIssue"];
     var prompt = '';
     var self = this;
     salesforceHelper.createCaseInSalesforce(userToken, caseIssue).then(function(response){
@@ -467,14 +518,41 @@ var caseHandlers = Alexa.CreateStateHandler(APP_STATES.CASE, {
     });
   },
 
+  'CaseConfirmationIntent': function () {
+    var caseIssue =  this.attributes["caseIssue"] || CASEISSUES.find(checkCaseIssue, {"caseSubject": this.event.request.intent.slots.caseSubject.value, "caseAction": this.event.request.intent.slots.caseAction.value});
+    this.attributes["caseIssue"] = caseIssue;
+    var prompt = _.template('You wish to create a new case for ${caseIssue}.  Is that correct?')({
+      caseIssue: caseIssue
+    });
+    this.emit(':ask', prompt, prompt);
+  },
+
   'AMAZON.YesIntent': function() {
-    var prompt = 'You\'re case number is ' + this.attributes['case'].CaseNumber;
-    var reprompt = 'Do you want me to repeat the case number?'
-    this.emit(':ask', prompt, reprompt);
+    //I'm not sure if the attributes will be maintaned between Intents so reassigning it just incase.
+    this.attributes["caseIssue"] = this.attributes["caseIssue"];
+    this.emitWithState('CreateCaseIntent', true);
   },
 
   'AMAZON.NoIntent': function() {
-    this.emit(':tell', 'Ok, Your case will be looked at shortly.');
+    this.attributes = {};
+    var prompt = 'Ok, what typt of case would you like to submit?'
+    var reprompt = 'For a list of options please say help.  What do you need help with?';
+    this.emit(':ask', prompt, reprompt);
+  },
+
+  'AMAZON.HelpIntent': function() {
+      var prompt = 'To create a new case you can say I need help with a problem.  For a full list of current cases please check the card in your alexa app.  What can I help you with today?';
+      var reprompt = 'What can I help you with today?';
+      var cardMessage = 'Current case types you can submit to the Town of Cary:\nBroken Recycling Cart\nBroken Trash Cart\nCardboard Collection\nLeaf Collection\nMissed Recycling\nMissed Trash\nMissed Yard Waste\nOil Collection\nUpgrade Recycling Cart\nUpgrade Trash Cart';
+      this.emit(':askWithCard', prompt, prompt, 'Town of Cary Case Help', cardMessage);
+  },
+
+  'AMAZON.StopIntent': function () {
+    this.emit(':tell', 'Goodbye');
+  },
+
+  'AMAZON.CancelIntent': function () {
+    this.emit(':tell', 'Goodbye');
   },
 
   'Unhandled': function () {
@@ -513,10 +591,8 @@ var trashHandlers = Alexa.CreateStateHandler(APP_STATES.TRASH, {
     var address = this.attributes['address'];
     var uri = ESRIENDPOINT + 'PublicWorks/Public_Works_Operations/MapServer/0/query?where=&text=&objectIds=&time=&geometry=' + address.x + ',' + address.y + '&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=*&returnGeometry=false&returnTrueCurves=false&maxAllowableOffset=&geometryPrecision=&outSR=4326&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&returnDistinctValues=false&resultOffset=&resultRecordCount=&f=pjson'
     esriDataHelper.requestESRIInformation(uri).then(function(response){
-      console.log(response);
       return esriDataHelper.formatMyTrashDay(response);
     }).then(function(response) {
-      console.log(response);
       self.emit(':tell', response);
     }).catch(function(error){
       console.log(error);
@@ -545,6 +621,14 @@ var trashHandlers = Alexa.CreateStateHandler(APP_STATES.TRASH, {
       this.emit(':ask', prompt, prompt);
   },
 
+  'AMAZON.StopIntent': function () {
+    this.emit(':tell', 'Goodbye');
+  },
+
+  'AMAZON.CancelIntent': function () {
+    this.emit(':tell', 'Goodbye');
+  },
+
   'Unhandled': function () {
       var prompt = 'I\'m sorry.  I didn\'t catch that.  Can you please repeat the question.';
       this.emit(':ask', prompt, prompt);
@@ -558,9 +642,6 @@ function getUserAddress(userToken, state, intent, self){
     console.log(results);
     console.log(self.attributes["address"]);
     if(results.x != null && results.y != null) {
-      console.log('about to launch state');
-      console.log(state);
-      console.log(intent);
       self.handler.state = state;
       self.emitWithState(intent, true);
     }
@@ -576,5 +657,8 @@ function getUserAddress(userToken, state, intent, self){
 }
 
 function checkCaseIssue(caseIssue){
+  if(this.caseAction === undefined || this.caseSubject === undefined){
+    return false;
+  }
   return (caseIssue.toUpperCase() == this.caseSubject.toUpperCase() + ' ' + this.caseAction.toUpperCase()) || (caseIssue.toUpperCase() == this.caseAction.toUpperCase() + ' ' + this.caseSubject.toUpperCase());
 }

@@ -1,6 +1,9 @@
 var CASENUMBERLENGTH = 8 //the current number of digits in a case number to add leading zeros
 var RECYCLEYELLOWSTART = '2017-01-01';
 var RECYCLEBLUESTART = '2017-01-08';
+var TRASHCASES = {'trash': 'trash', 'garbage': 'trash', 'rubbish': 'trash', 'waste': 'trash'};
+var LEAFCASES = {'leaf': 'leaf', 'leaves': 'leaf'};
+var CASESUBJECTPAIRINGS = {'yard waste': 'collection', 'oil': 'collection', 'cardboard': 'collection', 'leaf': 'collection', 'trash': 'missed', 'recycling': 'missed'};
 
 function HelperClass() { }
 
@@ -10,10 +13,12 @@ HelperClass.prototype.formatDate = function(date){
 }
 
 HelperClass.prototype.formatDateTime = function (dateTime){
-  var timeStr = this.formatTimeString(dateTime)
-	var tmpString = dateTime.toString()
-	var i = tmpString.search(/20\d{2}/);
-	return tmpString.slice(0,i).trim() + ' at ' + timeStr.trim();
+  console.log(dateTime);
+  if(dateTime != null && dateTime != undefined){
+    return this.formatDate(dateTime) + ' at ' +  this.formatTimeString(dateTime);
+  } else {
+    return null;
+  }
 }
 
 HelperClass.prototype.formatTimeString = function(date) {
@@ -29,6 +34,11 @@ HelperClass.prototype.formatTimeString = function(date) {
   var h=date.getHours(), m=date.getMinutes(), s=date.getSeconds()
     , timeStr=[pad(fixHour(h)), pad(m), pad(s)].join(':');
   return timeStr + ' ' + (h < 12 ? 'AM' : 'PM');
+}
+
+HelperClass.prototype.formatAddress = function (fullAddress){
+  var sliceIndex = fullAddress.toUpperCase().search('CARY') || fullAddress.toUpperCase().search('APEX') || fullAddress.toUpperCase().search('MORRISVILLE');
+	return fullAddress.slice(0,sliceIndex - 1).trim();
 }
 
 HelperClass.prototype.getRecycleDay = function(cycle, trashDay){
@@ -66,6 +76,19 @@ HelperClass.prototype.addLeadZeros =  function(caseNumber){
   var filler = '0';
   var results = filler.repeat(CASENUMBERLENGTH - caseNumber.length).concat(caseNumber);
   return results.valueOf();
+}
+
+HelperClass.prototype.formatCaseSubject = function(caseSubject){
+  var tempSubject = TRASHCASES[caseSubject] || LEAFCASES[caseSubject];
+  if(tempSubject === undefined){
+    return caseSubject;
+  } else {
+    return tempSubject;
+  }
+}
+
+HelperClass.prototype.addCaseAction = function(caseSubject){
+  return CASESUBJECTPAIRINGS['caseSubject'];
 }
 
 module.exports = HelperClass;

@@ -13,6 +13,9 @@
       "intent": "AMAZON.StopIntent"
     },
     {
+      "intent": "AMAZON.CancelIntent"
+    },
+    {
       "intent": "AMAZON.RepeatIntent"
     },
     {
@@ -21,6 +24,10 @@
         {
           "name": "Date",
           "type": "AMAZON.DATE"
+        },
+        {
+          "name": "location",
+          "type": "GYM_NAME"
         }
       ]
     },
@@ -92,7 +99,7 @@
       ]
     },
     {
-     "intent": "CreateCaseIntent",
+     "intent": "CaseConfirmationIntent",
      "slots":[
         {
           "name": "caseSubject",
@@ -120,6 +127,33 @@
     {
       "intent": "TrashDayIntent",
       "slots": []
+    },
+    {
+      "intent": "UpcomingCaryEventsIntent",
+      "slots":[
+        {
+          "name": "Date",
+          "type": "AMAZON.Date"
+        }
+      ]
+    },
+    {
+      "intent": "UpcomingTheCaryShowsIntent",
+      "slots":[
+        {
+          "name": "Date",
+          "type": "AMAZON.Date"
+        }
+      ]
+    },
+    {
+      "intent": "KokoBoothIntent",
+      "slots":[
+        {
+          "name": "Date",
+          "type": "AMAZON.Date"
+        }
+      ]
     }
   ]
 }

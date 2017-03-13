@@ -49,7 +49,7 @@ SalesforceHelper.prototype.createCaseInSalesforce = function(userToken, caseIssu
   });
 };
 
-SalesforceHelper.prototype.findLatestCaseStatus = function(userToken) {
+SalesforceHelper.prototype.findLatestCaseStatus = function(userToken, caseIssue) {
 	var conn = new jsforce.Connection({
 		instanceUrl : INSTANCE_URL,
 		accessToken : userToken,
@@ -58,8 +58,15 @@ SalesforceHelper.prototype.findLatestCaseStatus = function(userToken) {
 	return getUserId(userToken).then(function(results){
 		return conn.query("Select ContactId from User where Id = '" + results.body.id + "'")
 	}).then(function(results){
+		var q = '';
 		var userContactId = results.records[0].ContactId;
-		return conn.query("Select Status, CaseNumber, Expected_Completion_Date__c, CreatedDate, ClosedDate, LastModifiedDate, CaseIssue__r.Name from Case where ContactId = '" + userContactId + "' order by createdDate DESC Limit 1");
+		if(caseIssue == undefined){
+			q = "ContactId = '" + userContactId + "'";
+		} else {
+			q = "ContactId = '" + userContactId + "' AND CaseIssue__r.Name LIKE '%" + caseIssue + "%'";
+		}
+		console.log(q);
+		return conn.query("Select Status, CaseNumber, Expected_Completion_Date__c, CreatedDate, ClosedDate, LastModifiedDate, CaseIssue__r.Name from Case where " +  q + " order by createdDate DESC Limit 1");
 	}).then(function(results){
 			return results.records;
 	}).catch(function(err) {
@@ -84,18 +91,19 @@ SalesforceHelper.prototype.findCaseStatus = function(userToken, caseNumber) {
 
 SalesforceHelper.prototype.formatExistingCase = function(caseInfo) {
 	var response = {};
+	var helperClass = new HelperClass();
 	if (caseInfo.length > 0) {
-		var prompt = _.template('The status of your case is ${caseStatus},  and it was last modified on ${lastModifiedDate}.');
+		var prompt = _.template('The status of your case is ${caseStatus}, and it was last modified on ${lastModifiedDate}.');
 		var lmDate = Date.parse(caseInfo[0].LastModifiedDate).toString();
 	  response.prompt = prompt({
 			caseStatus: caseInfo[0].Status,
-			lastModifiedDate: HelperClass.formatDateTime(lmDate.slice(0, lmDate.indexOf('GMT')))
+			lastModifiedDate: helperClass.formatDateTime(Date.parse(caseInfo[0].LastModifiedDate)) //helperClass.formatDateTime(lmDate.slice(0, lmDate.indexOf('GMT')))
 		});
 		var card = _.template('Your case for ${caseIssue} has a case number of ${caseNumber} an expected completion date of ${finishDate}');
 		response.card = card({
 			caseIssue: caseInfo[0].CaseIssue__r.Name,
 			caseNumber: caseInfo[0].CaseNumber,
-			finishDate: HelperClass.formatDateTime(caseInfo[0].Expected_Completion_Date__c)
+			finishDate: helperClass.formatDateTime(Date.parse(caseInfo[0].Expected_Completion_Date__c))
 		});
 	} else {
 		response.prompt = 'I\'m sorry, but I could not find any previous cases on your account';
@@ -106,7 +114,8 @@ SalesforceHelper.prototype.formatExistingCase = function(caseInfo) {
 
 SalesforceHelper.prototype.formatNewCaseStatus = function(caseInfo) {
 	var response = {};
-  var prompt = _.template('I\'ve created a new case for ${caseIssue}.  The case number is ${caseNumber}. Please note it down for future reference.  Do you want me to repeat the case number?');
+	var helperClass = new HelperClass();
+  var prompt = _.template('I\'ve created a new case for ${caseIssue}.  The case number is ${caseNumber}.');
 	response.prompt = prompt({
 		caseIssue: caseInfo.CaseIssue__r.Name,
 		caseNumber: caseInfo.CaseNumber
@@ -115,7 +124,7 @@ SalesforceHelper.prototype.formatNewCaseStatus = function(caseInfo) {
 	response.card = card({
 		caseIssue: caseInfo.CaseIssue__r.Name,
 		caseNumber: caseInfo.CaseNumber,
-		finishDate: HelperClass.formatDateTime(caseInfo.Expected_Completion_Date__c)
+		finishDate: helperClass.formatDateTime(caseInfo.Expected_Completion_Date__c)
 	});
 	return response;
 };

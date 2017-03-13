@@ -14,13 +14,29 @@ describe('OpenDataHelper', function() {
   describe('#getOpenGymTimes', function() {
     context('with a date', function() {
       it('returns gym times on current date', function() {
-        today = new Date('2017-01-09');
+        today = new Date('2017-01-10');
         open_gym_date = today.toISOString().substring(0,10);
         var uri = OPENDATAENDPOINT + 'dataset=open-gym&q=open_gym_start==' + open_gym_date + '&facet=facility_title&facet=pass_type&facet=community_center&facet=open_gym&facet=group&facet=date_scanned&timezone=UTC'
+        console.log(uri);
         var value = subject.requestOpenData(uri).then(function(obj) {
           return obj.records[0].fields.date_scanned;
         });
         return expect(value).to.eventually.eq(open_gym_date);
+      });
+    });
+  });
+  describe('#getOpenGymTimes', function() {
+    context('with a date and location', function() {
+      it('returns gym times on date only for BPCC', function() {
+        today = new Date('2017-01-10');
+        open_gym_date = today.toISOString().substring(0,10);
+        var location = 'BPCC';
+        var uri = OPENDATAENDPOINT + 'dataset=open-gym&q=open_gym_start==' + open_gym_date + ' AND community_center==' + location +  '&facet=facility_title&facet=pass_type&facet=community_center&facet=open_gym&facet=group&facet=date_scanned&timezone=UTC';
+        console.log(uri);
+        var value = subject.requestOpenData(uri).then(function(obj) {
+          return obj.records.length;
+        });
+        return expect(value).to.eventually.eq(2);
       });
     });
   });

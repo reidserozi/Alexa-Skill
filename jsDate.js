@@ -162,7 +162,15 @@ module.exports = function() {
 		}
 	}
 
+	Date.yyyymmdd = function(p_Date) {
+	  var mm = p_Date.getMonth() + 1; // getMonth() is zero-based
+	  var dd = p_Date.getDate();
 
+	  return [p_Date.getFullYear(),
+	          (mm>9 ? '' : '0') + mm,
+	          (dd>9 ? '' : '0') + dd
+					].join('-');
+	};
 
 
 	Date.DatePart = function(p_Interval, p_Date, p_FirstDayOfWeek){

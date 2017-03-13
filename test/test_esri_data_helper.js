@@ -40,9 +40,10 @@ describe('EsriDataHelper', function() {
     var y = '35.789212829037126';
     var address = '316 N Academy St';
     var DISTANCE = 1;
+    var uri = ESRIENDPOINT + 'ParksRec/Parks/FeatureServer/0/query';
     context('with a geolocation', function(){
       it('returns all parks in 1 mile radius from Lat Long', function(){
-        var value = subject.requestInformationByRadius(x,y, DISTANCE).then(function(obj){
+        var value = subject.requestInformationByRadius(x,y, DISTANCE, uri).then(function(obj){
           return obj.features[0].attributes["NAME"];
         });
         return expect(value).to.eventually.eq("Heater Park");
@@ -51,7 +52,7 @@ describe('EsriDataHelper', function() {
     context('with an address', function() {
       it('gets geolocation from ESRI and then gets all parks in 1 mile radius', function() {
         var value = subject.requestAddressInformation(address).then(function(obj){
-          return subject.requestInformationByRadius(obj.candidates[0].location.x, obj.candidates[0].location.y, DISTANCE).then(function(obj){
+          return subject.requestInformationByRadius(obj.candidates[0].location.x, obj.candidates[0].location.y, DISTANCE, uri).then(function(obj){
             return obj.features[0].attributes["NAME"];
           });
         });
@@ -276,10 +277,11 @@ describe('EsriDataHelper', function() {
     }
     context('two parks', function() {
       it('formats the status as expected', function() {
-        expect(subject.formatNearbyParks(status)).to.eq('There are 2 parks nearby including Heater Park located at 400 S. West Street Cary NC 27511, Lexie Lane Park located at 301 N. Dixon Avenue Cary NC 27513, ');
+        expect(subject.formatNearbyParks(status)).to.eq('There are 2 parks nearby including Heater Park located at 400 S. West Street, Lexie Lane Park located at 301 N. Dixon Avenue, ');
       });
     });
   });
+  /* keeping this commented out until public art data set is back up
   describe('#formatPublicArtInfo', function() {
     var status = {
       "features": [
@@ -348,4 +350,5 @@ describe('EsriDataHelper', function() {
       });
     });
   });
+  */
 });
