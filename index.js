@@ -14,6 +14,7 @@ var ARCGISENDPOINT = 'https://services2.arcgis.com/l4TwMwwoiuEVRPw9/ArcGIS/rest/
 var OPENDATAENDPOINT = 'https://data.townofcary.org/api/records/1.0/search/?';
 var DISTANCE = 1; //distance for radius search.  currently 1 mile can be adapted later.
 var APP_ID = process.env.ALEXAAPPID;  // TODO replace with your app ID (OPTIONAL).
+var CASENUMBERLENGTH = 8 //the current number of digits in a case number to add leading zeros
 //If false, it means that Account Linking isn't mandatory there fore we dont have accaes to the account of the community user so we will ask for the user's Phone Number.
 // IMPORTANT!! Make sure that the profile of the community user has the 'API Enabled' field marked as true.
 var ACCOUNT_LINKING_REQUIRED = true;
@@ -207,13 +208,17 @@ var newSessionHandlers = {
       var helperClass = new HelperClass();
       var salesforceHelper = new SalesforceHelper();
       var userToken = this.event.session.user.accessToken;
-      var caseNumber = this.event.request.intent.slots.CaseNumber.value.toString();
+      var caseNumber = this.event.request.intent.slots.CaseNumber.value;
       if(caseNumber.length < CASENUMBERLENGTH){
-        caseNumber = helperClass.addLeadZeros(caseNumber);
+        caseNumber = helperClass.addLeadZeros(caseNumber, CASENUMBERLENGTH);
       }
       var prompt = '';
       var self = this;
       salesforceHelper.findCaseStatus(userToken, caseNumber).then(function(response) {
+        console.log(response)
+        if(response.length <= 0){
+          self.emit(':tell', 'I could not find a case with that number on your account.  Please double check your case number.');
+        }
         return salesforceHelper.formatExistingCase(response);
       }).then(function(response) {
         self.emit(':tellWithCard', response.prompt, 'Town of Cary Case', response.card);

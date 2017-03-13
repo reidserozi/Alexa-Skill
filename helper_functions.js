@@ -1,4 +1,3 @@
-var CASENUMBERLENGTH = 8 //the current number of digits in a case number to add leading zeros
 var RECYCLEYELLOWSTART = '2017-01-01';
 var RECYCLEBLUESTART = '2017-01-08';
 var TRASHCASES = {'trash': 'trash', 'garbage': 'trash', 'rubbish': 'trash', 'waste': 'trash'};
@@ -72,9 +71,9 @@ HelperClass.prototype.getCircleCoords = function(x,y,d){
   return results;
 }
 
-HelperClass.prototype.addLeadZeros =  function(caseNumber){
+HelperClass.prototype.addLeadZeros =  function(caseNumber, caseNumberLength){
   var filler = '0';
-  var results = filler.repeat(CASENUMBERLENGTH - caseNumber.length).concat(caseNumber);
+  var results = filler.repeat(caseNumberLength - caseNumber.length).concat(caseNumber);
   return results.valueOf();
 }
 
