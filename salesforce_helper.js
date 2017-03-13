@@ -162,8 +162,6 @@ SalesforceHelper.prototype.getTownHallHours = function(userToken, date) {
 		accessToken : userToken,
 		version: '39.0'
 	});
-	console.log(date);
-	console.log(Date.parse(date).is().weekday());
 
 	return conn.query('Select ActivityDate from Holiday').then(function(response) {
 		if(!Date.parse(date).is().weekday()){
@@ -184,16 +182,17 @@ SalesforceHelper.prototype.getTownHallHours = function(userToken, date) {
 
 SalesforceHelper.prototype.formatTownHallHours = function(timeInfo, date) {
 	var prompt = '';
+	var helperClass = new HelperClass();
 	console.log(Date.parse(date));
 	if(timeInfo.closed){
 		prompt = _.template('The Town Hall is closed on ${closedDate}')({
-			closedDate: date
+			closedDate: helperClass.formatDate(Date.parse(date))
 		});
 	} else {
 		prompt = _.template('The Town Hall is open from ${startTime} until ${endTime} on ${date}')({
 			startTime: timeInfo.start,
 			endTime: timeInfo.close,
-			date: date
+			date: helperClass.formatDate(Date.parse(date))
 		});
 	}
 	return prompt;
