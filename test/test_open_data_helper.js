@@ -263,7 +263,7 @@ describe('OpenDataHelper', function() {
     });
   });
   describe('#formatAtLargeCouncilMembers', function() {
-    var responseText = 'Your at large representatives are Ed Yerha, and Lori Bush.'
+    var responseText = 'Your at large representatives are Ed Yerha, Lori Bush, and Harold Weinbrecht is the mayor.'
     context('return call from open data', function() {
       it('formats the status as expected', function() {
         expect(subject.formatAtLargeCouncilMembers(cityInfo)).to.eq(responseText);

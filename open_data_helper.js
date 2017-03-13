@@ -105,9 +105,10 @@ OpenDataHelper.prototype.formatAtLargeCouncilMembers = function(cityInfo) {
   if (atLarge.size == 0 ){
     throw new Error('No at large representatives returned');
   } else {
-    response += _.template('Your at large representatives are ${rep1}, and ${rep2}.')({
+    response += _.template('Your at large representatives are ${rep1}, ${rep2}, and ${mayor} is the mayor.')({
       rep1: atLarge[0],
-      rep2: atLarge[1]
+      rep2: atLarge[1],
+      mayor: cityInfo.records[0].fields.mayor
     });
   }
   if (response == '') {
