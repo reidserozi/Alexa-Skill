@@ -226,30 +226,24 @@ var newSessionHandlers = {
   },
 
   'TownHallHoursIntent': function(){
-    var slots = this.event.request.intent.slots;
-    if(slots.length <= 0){
-      prompt = 'The normal opperating hours for the Town of Cary are Monday through Friday 8 am to 5pm.';
-      this.emit(':tell', prompt);
-    } else {
-      var userToken = this.event.session.user.accessToken;
-      var salesforceHelper = new SalesforceHelper();
-      var date = this.event.request.intent.slots.Date.value;
-      if(gymTimeDate.search(/^\d{4}-\d{2}-\d{2}$/) == -1){
-        var prompt = 'Please choose a single day for town hall hours.';
-        this.emit(':ask', prompt);
-        return;
-      }
-      var self = this;
-      salesforceHelper.getTownHallHours(userToken, date).then(function(response){
-        return salesforceHelper.formatTownHallHours(response, date);
-      }).then(function(response){
-        self.emit(':tell', response);
-      }).catch(function(err){
-        prompt = 'There seems to be a problem with the connection right now.  Please try again later';
-        console.log(err);
-        self.emit(':tell', prompt);
-      });
+    var userToken = this.event.session.user.accessToken;
+    var salesforceHelper = new SalesforceHelper();
+    var date = this.event.request.intent.slots.Date.value || Date.yyyymmdd(Date.today());
+    if(date.search(/^\d{4}-\d{2}-\d{2}$/) == -1){
+      var prompt = 'Please choose a single day for town hall hours.';
+      this.emit(':ask', prompt);
+      return;
     }
+    var self = this;
+    salesforceHelper.getTownHallHours(userToken, date).then(function(response){
+      return salesforceHelper.formatTownHallHours(response, date);
+    }).then(function(response){
+      self.emit(':tell', response);
+    }).catch(function(err){
+      prompt = 'There seems to be a problem with the connection right now.  Please try again later';
+      console.log(err);
+      self.emit(':tell', prompt);
+    });
   },
 
   'AMAZON.RepeatIntent': function () {
