@@ -87,7 +87,7 @@ HelperClass.prototype.formatCaseSubject = function(caseSubject){
 }
 
 HelperClass.prototype.addCaseAction = function(caseSubject){
-  return CASESUBJECTPAIRINGS['caseSubject'];
+  return CASESUBJECTPAIRINGS[caseSubject];
 }
 
 module.exports = HelperClass;

@@ -43,7 +43,7 @@ OpenDataHelper.prototype.formatGymTimes = function(gymTimes) {
     var response = _.template('There are ${numTimes} open gym times on ${date}.${times}');
     return response({
       numTimes: gymTimes.records.length,
-      date: gymTimes.records[0].fields.date_scanned,
+      date: helperClass.formatDate(gymTimes.records[0].fields.date_scanned),
       times: times
     });
   } else {

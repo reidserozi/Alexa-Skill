@@ -97,12 +97,14 @@ OpenGymTimesIntent	when are the open gym times at {location} community center
 
 MyCouncilMemberIntent	who is my council
 MyCouncilMemberIntent	who represents me in council
+MyCouncilMemberIntent	who represents me in the city council
 MyCouncilMemberIntent	who is my council member
 MyCouncilMemberIntent	who represents me in council member
 MyCouncilMemberIntent	who is my council representative
 MyCouncilMemberIntent	who represents me in council representative
 MyCouncilMemberIntent	who represents my district
 MyCouncilMemberIntent	who represents my district in council
+MyCouncilMemberIntent	who represents my district in the city council
 
 GetByAddressIntent my address is {street_number} {street}
 GetByAddressIntent {street_number} {street}
@@ -186,6 +188,12 @@ CaseStartIntent	to create a new issue
 CaseStartIntent	to submit a new issue
 CaseStartIntent	to help with a new issue
 
+CaseConfirmationIntent	{caseAction} {caseSubject}
+CaseConfirmationIntent	{caseAction} {caseSubject} bin
+CaseConfirmationIntent	{caseAction} {caseSubject} cart
+CaseConfirmationIntent	{caseSubject} {caseAction}
+CaseConfirmationIntent	{caseSubject} {caseAction} bin
+CaseConfirmationIntent	{caseSubject} {caseAction} cart
 CaseConfirmationIntent	i need report {caseAction} {caseSubject}
 CaseConfirmationIntent	to report {caseAction} {caseSubject}
 CaseConfirmationIntent	i need help with {caseAction} {caseSubject}
@@ -611,7 +619,7 @@ Strings used to generate utterances:
 
 to {create|submit|help with} a {|new} {case|service request|request|problem|work order|issue}'
 
-'{i need|to} {report|help with|schedule|set up} {|a} {-|caseAction} {-|caseSubject} {|bin|cart}', '{I need} to {report|arrange|schedule|set up|reserve} {|a} {-|caseAction} {-|caseSubject} {|bin|cart}', '{i need|to} {report|help with|schedule|set up} {|a} {-|caseSubject} {-|caseAction} {|bin|cart}', '{I need} to {report|arrange|schedule|set up|reserve} {|a} {-|caseSubject} {-|caseAction} {|bin|cart}', '{you|} {missed|forgot} my {-|caseSubject}', '{i need|to} {report|help with|schedule|set up} {|a} {-|caseSubject}', '{I need} to {report|arrange|schedule|set up|reserve} {|a} {-|caseSubject}', '{i need|to} {report|help with|schedule|set up} {|a} {-|caseSubject}', '{I need} to {report|arrange|schedule|set up|reserve} {|a} {-|caseSubject}'
+'{-|caseAction} {-|caseSubject} {|bin|cart}', '{-|caseSubject} {-|caseAction} {|bin|cart}', '{i need|to} {report|help with|schedule|set up} {|a} {-|caseAction} {-|caseSubject} {|bin|cart}', '{I need} to {report|arrange|schedule|set up|reserve} {|a} {-|caseAction} {-|caseSubject} {|bin|cart}', '{i need|to} {report|help with|schedule|set up} {|a} {-|caseSubject} {-|caseAction} {|bin|cart}', '{I need} to {report|arrange|schedule|set up|reserve} {|a} {-|caseSubject} {-|caseAction} {|bin|cart}', '{you|} {missed|forgot} my {-|caseSubject}', '{i need|to} {report|help with|schedule|set up} {|a} {-|caseSubject}', '{I need} to {report|arrange|schedule|set up|reserve} {|a} {-|caseSubject}', '{i need|to} {report|help with|schedule|set up} {|a} {-|caseSubject}', '{I need} to {report|arrange|schedule|set up|reserve} {|a} {-|caseSubject}'
 
 'what is my {problem|case} {|condition|status}', 'what is the {|current} status of my {case|problem}', 'what is the {|current} status of {|my} {-|caseAction} {-|caseSubject} {|bin|cart}', 'what is my {-|caseAction} {-|caseSubject} {|bin|cart} {|current} {condition|status}', '{|to} lookup the {|current} {condition|status} of my {problem|case}'
 

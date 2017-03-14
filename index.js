@@ -169,7 +169,7 @@ var newSessionHandlers = {
   	} else {
       var caseSubject = helperClass.formatCaseSubject(this.event.request.intent.slots.caseSubject.value);
       var caseAction = this.event.request.intent.slots.caseAction.value || helperClass.addCaseAction(caseSubject);
-      this.attributes['caseIssue'] = CASEISSUES.find(checkCaseIssue, {"caseSubject": caseSubject, "caseAction": caseAction});
+      this.attributes['caseIssue'] = CASEISSUES.find(checkCaseIssue, {"caseSubject": caseSubject, "caseAction": caseAction}) || CASEISSUES.find(checkCaseIssue, {"caseSubject": caseSubject, "caseAction": helperClass.addCaseAction(caseSubject)});
       this.handler.state = APP_STATES.CASE;
       this.emitWithState('CaseConfirmationIntent', true);
     }
@@ -506,7 +506,6 @@ var caseHandlers = Alexa.CreateStateHandler(APP_STATES.CASE, {
     salesforceHelper.createCaseInSalesforce(userToken, caseIssue).then(function(response){
       self.attributes['case'] = response;
       self.attributes['caseIssue'] = response.CaseIssue__r.Name;
-      console.log(response);
       return salesforceHelper.formatNewCaseStatus(response);
     }).then(function(response){
       self.emit(':askWithCard', response.prompt, response.prompt, 'Town of Cary Case', response.card);
@@ -518,8 +517,14 @@ var caseHandlers = Alexa.CreateStateHandler(APP_STATES.CASE, {
   },
 
   'CaseConfirmationIntent': function () {
-    var caseIssue =  this.attributes["caseIssue"] || CASEISSUES.find(checkCaseIssue, {"caseSubject": this.event.request.intent.slots.caseSubject.value, "caseAction": this.event.request.intent.slots.caseAction.value});
-    this.attributes["caseIssue"] = caseIssue;
+    var helperClass = new HelperClass();
+    var caseIssue = this.attributes["caseIssue"];
+    if(caseIssue === undefined){
+      var caseSubject = helperClass.formatCaseSubject(this.event.request.intent.slots.caseSubject.value);
+      var caseAction = this.event.request.intent.slots.caseAction.value || helperClass.addCaseAction(caseSubject);
+      this.attributes['caseIssue'] = CASEISSUES.find(checkCaseIssue, {"caseSubject": caseSubject, "caseAction": caseAction});
+      caseIssue = this.attributes["caseIssue"];
+    }
     var prompt = _.template('You wish to create a new case for ${caseIssue}.  Is that correct?')({
       caseIssue: caseIssue
     });
