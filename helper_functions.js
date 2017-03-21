@@ -8,7 +8,13 @@ function HelperClass() { }
 
 //date formating functions to make a response sound better for alexa
 HelperClass.prototype.formatDate = function(date){
-  return date.toString().slice(0,date.toString().search(/\s20\d{2}/));
+  var i = date.toString().search(/20\d{2}/);
+  console.log(date);
+  console.log(i);
+  if(i > 0){
+    return date.toString().slice(0,i).trim();
+  }
+  return date;
 }
 
 HelperClass.prototype.formatDateTime = function (dateTime){

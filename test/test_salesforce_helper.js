@@ -9,13 +9,12 @@ chai.config.includeStack = true;
 
 describe('SalesforceHelper', function() {
   var subject = new SalesforceHelper();
-  var accessToken = '00D7A0000000P0o!AQMAQHr43VP5IRYdPEKgM_9htDfChavJAxUVgY_NYxJHolA311f6ULfDT8vUCwPc8EKNcJWQDvNhMwX30Ngwe6qg8olmN_nE';
+  var accessToken = '"00D7A0000000P0o!AQMAQJ_K52y.Q1B2PR.Tu9LVW4Wi5Gi8i4LwqVSOM4oQ4vWVn0_rLeadInw0Op5NGnFcM7B1z8CZ_wBugetdI9tR_Z_kj2iY';
   var address = { x: -78.78019524656116, y: 35.7892128286608 };
   describe('#getUserAddress', function() {
     context('with a user access token', function() {
       it('returns users street address', function() {
         var value = subject.getUserAddress(accessToken).then(function(results){
-          console.log(results);
           return results.x;
         }).catch(function(err){
           console.log('Error in connecting to salesforce');
@@ -30,8 +29,6 @@ describe('SalesforceHelper', function() {
       var date = '2018-03-02';
       it('returns normal town hall hours', function() {
         var value = subject.getTownHallHours(accessToken,date).then(function(results){
-          console.log('got results back');
-          console.log(results);
           return results.start;
         }).catch(function(err){
           console.log('Error in connecting to salesforce');
@@ -44,8 +41,6 @@ describe('SalesforceHelper', function() {
       var date = '2017-04-14';
       it('returns that the townhall is closed for the holiday', function() {
         var value = subject.getTownHallHours(accessToken, date).then(function(results) {
-          console.log('got results back');
-          console.log(results);
           return results.closed;
         }).catch(function(err){
           console.log('Error in connecting to salesforce');
@@ -60,8 +55,6 @@ describe('SalesforceHelper', function() {
       var date = '2018-03-04';
       it('returns that the townhall is closed for the weekend', function() {
         var value = subject.getTownHallHours(accessToken, date).then(function(results) {
-          console.log('got results back');
-          console.log(results);
           return results.closed;
         }).catch(function(err){
           console.log('Error in connecting to salesforce');
