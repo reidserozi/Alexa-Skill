@@ -76,29 +76,44 @@ EventDataHelper.prototype.getEventData = function(uri){
 };
 
 // building out alexa response
+
+EventDataHelper.prototype.formatEventTitles = function(sampleReturn) {
+  var eventCount = sampleReturn.PagingList.Content.length
+  var eventTitles = [];
+  var eventContent = sampleReturn.PagingList.Content
+
+  if (eventCount === 0 ){
+    return 'There are no scheduled events for that ${date}';
+  } else {
+    eventContent.forEach(function(item) {
+      eventTitles.push(item.Title)
+    });
+    return eventTitles.join(', ');
+  }
+};
+
 EventDataHelper.prototype.formatEventData = function(sampleReturn) {
   // formatting variables
+  var eventCount = sampleReturn.PagingList.Content.length
   var response = '';
   var date = "Saturday, March 25th" // placeholder
   // do a check for eventCount if === 0 then response is no event scheduled from alexa to user
-  var eventCount = sampleReturn.PagingList.Content.length
-  return eventCount
-  // var eventContent = sampleReturn.PagingList.Content[0]
+
+  var eventContent = sampleReturn.PagingList.Content
   // var eventTitle = eventContent.Title
   // var eventStart = eventContent.StartDate
   // var eventStart = eventContent.EndDate
 
-  var eventTitles = eventCount.foreach(function(item) {
 
-  });
 
-  if (eventCount === 0 ){
-    throw new Error('No events for ${date}');
-  } else {
-    response += _.template('')({
 
-    });
-  }
+  // if (eventCount === 0 ){
+  //   throw new Error('No events for ${date}');
+  // } else {
+  //   response += _.template('')({
+  //
+  //   });
+  // }
 };
 
 

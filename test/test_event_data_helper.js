@@ -9,35 +9,6 @@ describe('EventDataHelper', function() {
   var today;
   var subject = new EventDataHelper();
   var uri = 'http://www.townofcary.org/API'
-
-  context('With a date', function() {
-    context('with one or more scheduled events', function() {
-      it('Returns an event', function() {
-        today = new Date('2017-03-25')
-        // var value = subject.requestEventData(uri)//.then(function(obj) {
-        //   return obj.PagingList.Content.ID;
-        //
-        // });
-        var value = subject.requestEventData(uri)
-
-        return expect(value.PagingList.Content[0].ID).to.eq(229);
-
-      });
-
-    });
-
-    context('with no scheduled events', function() {
-      it('Returns a canned no events scheduled message', function() {
-        today = new Date('2017-03-23')
-        // var value = subject.requestEventData(uri).then(function(obj) {
-        //   return obj.PagingList.TotalResults.to.eventually.eq(0);
-        // });
-        var value = subject.requestEventData(uri)
-          return expect(value.PagingList.TotalResults).to.eq(0);
-      });
-    });
-  });
-  // event variables
   var sampleReturnWithEvents =
     {
       "PagingList":{
@@ -83,31 +54,57 @@ describe('EventDataHelper', function() {
        }
      }
 
-  context('#formatEventData returns the count of events', function() {
-    it('returns the number of events when events are scheduled', function() {
-      var today = new Date('2017-03-25')
-      var value = subject.formatEventData(sampleReturnWithEvents)
-        return expect(value.eventCount).to.eq(2)
-    });
-    it('returns 0 if there are no events', function() {
-      var today = new Date('2017-03-22')
-      var value = subject.formatEventData(sampleReturnWithoutEvents)
-        return expect(value.eventCount).to.eq(0)
-    });
-  });
-
-  context('eventTitle returns the event titles', function() {
-    context('when multiple events scheduled', function() {
-      it('returns all event titles', function() {
-        var value = subject.formatEventData(sampleReturnWithEvents)
-          return expect(value.eventTitle).to.eq("Cary Ballet presents Spring Mixed Repertoire, NCSU Sigma Pi Break the Silence 5K Run/Walk")
+  // context('With a date', function() {
+  //   context('with one or more scheduled events', function() {
+  //     it('Returns an event', function() {
+  //       today = new Date('2017-03-25')
+  //       // var value = subject.requestEventData(uri)//.then(function(obj) {
+  //       //   return obj.PagingList.Content.ID;
+  //       //
+  //       // });
+  //       var value = subject.requestEventData(uri)
+  //       return expect(value.PagingList.Content[0].ID).to.eq(229);
+  //     });
+  //   });
+  //
+  //   context('with no scheduled events', function() {
+  //     it('Returns a canned no events scheduled message', function() {
+  //       today = new Date('2017-03-23')
+  //       // var value = subject.requestEventData(uri).then(function(obj) {
+  //       //   return obj.PagingList.TotalResults.to.eventually.eq(0);
+  //       // });
+  //       var value = subject.requestEventData(uri)
+  //       return expect(value.PagingList.TotalResults).to.eq(0);
+  //     });
+  //   });
+  // });
+  //
+  // context('#formatEventData returns the count of events', function() {
+  //   it('returns the number of events when events are scheduled', function() {
+  //     var today = new Date('2017-03-25')
+  //     var value = subject.formatEventData(sampleReturnWithEvents)
+  //     return expect(value.eventCount).to.eq(2)
+  //   });
+  //   it('returns 0 if there are no events', function() {
+  //     var today = new Date('2017-03-22')
+  //     var value = subject.formatEventData(sampleReturnWithoutEvents)
+  //     return expect(value.eventCount).to.eq(0)
+  //   });
+  // });
+  describe('#formatEventTitles', function() {
+    context('eventTitles returns the event titles', function() {
+      context('when multiple events scheduled', function() {
+        it('returns all event titles', function() {
+          var value = subject.formatEventTitles(sampleReturnWithEvents)
+          return expect(value).to.eq("Cary Ballet presents Spring Mixed Repertoire, NCSU Sigma Pi Break the Silence 5K Run/Walk")
+        });
       });
-    });
 
-    context('when no events scheduled', function() {
-      it('returns no event message', function() {
-        var value = subject.formatEventData(sampleReturnWithoutEvents)
-          return expect(value.eventTitle).to.eq("There are no scheduled events for that dat") // want to interpolate this to say day
+      context('when no events scheduled', function() {
+        it('returns no event message', function() {
+          var value = subject.formatEventTitles(sampleReturnWithoutEvents)
+          return expect(value).to.eq("There are no scheduled events for that ${date}") // want to interpolate this to say day
+        });
       });
     });
   });
