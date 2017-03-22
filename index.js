@@ -13,6 +13,7 @@ var facts = require('./cary_facts');
 var ESRIENDPOINT = 'https://maps.townofcary.org/arcgis1/rest/services/';
 var ARCGISENDPOINT = 'https://services2.arcgis.com/l4TwMwwoiuEVRPw9/ArcGIS/rest/services/';
 var OPENDATAENDPOINT = 'https://data.townofcary.org/api/records/1.0/search/?';
+var EVENTDATAENDPOINT = 'http://www.townofcary.org/API';
 var DISTANCE = 1; //distance for radius search.  currently 1 mile can be adapted later.
 var APP_ID = process.env.ALEXAAPPID;  // TODO replace with your app ID (OPTIONAL).
 var CASENUMBERLENGTH = 8 //the current number of digits in a case number to add leading zeros
@@ -250,6 +251,21 @@ var newSessionHandlers = {
       console.log(err);
       self.emit(':tell', prompt);
     });
+  },
+
+  'UpcomingCaryEventsIntent': function() {
+    var prompt = '';
+    var date = this.event.request.intent.slots.Date.value || Date.yyyymmdd(Date.today());
+    if(date.search(/^\d{4}-\d{2}-\d{2}$/) == -1){
+      var prompt = 'Please choose a single day for a list of events.';
+      this.emit(':ask', prompt);
+      return;
+    }
+    // var self = this;
+    var startDate = date + 'T00:00:00';
+    var endDate = date + 'T23:59:59';
+
+    var uri = EVENTDATAENDPOINT //continue building out query string once vision gets back to us
   },
 
   'FieldStatusIntent': function() {
