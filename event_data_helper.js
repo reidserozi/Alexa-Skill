@@ -83,7 +83,8 @@ EventDataHelper.prototype.formatEventTitles = function(sampleReturn) {
   var eventContent = sampleReturn.PagingList.Content
 
   if (eventCount === 0 ){
-    return 'There are no scheduled events for that ${date}';
+    var date = "Wednesday, March 22nd";
+    return 'There are no scheduled events for that ${date}'; //need to get formated date back before I interpolate properly -waitin on vision
   } else {
     eventContent.forEach(function(item) {
       eventTitles.push(item.Title)
@@ -92,20 +93,23 @@ EventDataHelper.prototype.formatEventTitles = function(sampleReturn) {
   }
 };
 
+
+
 EventDataHelper.prototype.formatEventData = function(sampleReturn) {
-  // formatting variables
+  var eventHelper = new EventDataHelper();
   var eventCount = sampleReturn.PagingList.Content.length
   var response = '';
-  var date = "Saturday, March 25th" // placeholder
-  // do a check for eventCount if === 0 then response is no event scheduled from alexa to user
-
+  var date = "Saturday, March 25th"; // placeholder
   var eventContent = sampleReturn.PagingList.Content
-  // var eventTitle = eventContent.Title
+
+  var eventTitles = eventHelper.formatEventTitles(sampleReturn)
+  return eventTitles
+
+
   // var eventStart = eventContent.StartDate
   // var eventStart = eventContent.EndDate
 
-
-
+// might have to use something like var server = app.listen(8000, function(){self.consolePrint(server)});
 
   // if (eventCount === 0 ){
   //   throw new Error('No events for ${date}');
