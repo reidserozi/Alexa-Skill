@@ -77,49 +77,61 @@ EventDataHelper.prototype.getEventData = function(uri){
 
 // building out alexa response
 
-EventDataHelper.prototype.formatEventTitles = function(sampleReturn) {
-  var eventCount = sampleReturn.PagingList.Content.length
-  var eventTitles = [];
-  var eventContent = sampleReturn.PagingList.Content
-
-  if (eventCount === 0 ){
-    var date = "Wednesday, March 22nd";
-    return 'There are no scheduled events for that ${date}'; //need to get formated date back before I interpolate properly -waitin on vision
-  } else {
-    eventContent.forEach(function(item) {
-      eventTitles.push(item.Title)
-    });
-    return eventTitles.join(', ');
-  }
-};
-
-
+// EventDataHelper.prototype.formatEventTitles = function(sampleReturn) {
+//   var eventCount = sampleReturn.PagingList.Content.length
+//   var eventData = [];
+//   var eventContent = sampleReturn.PagingList.Content
+//
+//   if (eventCount === 0 ) {
+//     return 'There are no scheduled events for that day';
+//   } else {
+//     eventContent.forEach(function(item) {
+//       var eventStart = Date.parse(item.StartDate)
+//       var eventEnd = Date.parse(item.EndDate)
+//       eventData.concat([item.Title, eventStart, eventEnd])
+//     });
+//     return eventData;
+//   }
+// };
 
 EventDataHelper.prototype.formatEventData = function(sampleReturn) {
-  var eventHelper = new EventDataHelper();
+  // var titleHelper = new EventDataHelper();
+  // var eventCount = sampleReturn.PagingList.Content.length
+  // var response = '';
+  // var date = "Saturday, March 25th"; // placeholder
+  // var eventContent = sampleReturn.PagingList.Content
+  //
+  // var eventTitles = titleHelper.formatEventTitles(sampleReturn)
+
   var eventCount = sampleReturn.PagingList.Content.length
-  var response = '';
-  var date = "Saturday, March 25th"; // placeholder
+  var eventData =[];
   var eventContent = sampleReturn.PagingList.Content
 
-  var eventTitles = eventHelper.formatEventTitles(sampleReturn)
-  return eventTitles
+  if (eventCount === 0 ) {
+    return 'There are no scheduled events for that day';
+  } else {
+    eventContent.forEach(function(item) {
+      // var eventStart = Date.parse(item.StartDate)
+      // var eventEnd = Date.parse(item.EndDate)
+      // var eventTitle = item.Title
 
-
-  // var eventStart = eventContent.StartDate
-  // var eventStart = eventContent.EndDate
-
-// might have to use something like var server = app.listen(8000, function(){self.consolePrint(server)});
-
-  // if (eventCount === 0 ){
-  //   throw new Error('No events for ${date}');
-  // } else {
-  //   response += _.template('')({
-  //
-  //   });
-  // }
+      eventData += _.template('${eventTitle} start ${eventStart}, and ends ${eventEnd}.')({
+        eventStart: Date.parse(item.StartDate),
+        eventEnd: Date.parse(item.EndDate),
+        eventTitle: item.Title
+        // location: item.Category // Vision not sending back location information
+      });
+    });
+    console.log(eventData);
+    return eventData;
+  };
 };
 
 
 module.exports = EventDataHelper;
-// where is the info from amazon (when a customer says "tomorrow", where is the "tomorrow data")
+
+
+
+
+
+//

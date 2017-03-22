@@ -79,45 +79,38 @@ describe('EventDataHelper', function() {
       //   });
       // });
     });
-    context('when #formatEventTitles called inside #formatEventData', function() {
-      it('returns event titles', function() {
-        var value = subject.formatEventData(sampleReturnWithEvents)
-        return expect(value).to.eq("Cary Ballet presents Spring Mixed Repertoire, NCSU Sigma Pi Break the Silence 5K Run/Walk")
-
-      });
-    });
-    // context('eventCount', function() {
-    //   it('returns the number of events when events are scheduled', function() {
-    //     var today = new Date('2017-03-25')
+    // This test was used to make sure helper function was being called correctly inside another function
+    // context('when #formatEventTitles called inside #formatEventData', function() {
+    //   it('returns event titles', function() {
     //     var value = subject.formatEventData(sampleReturnWithEvents)
-    //     return expect(value.eventCount).to.eq(2)
+    //     return expect(value).to.eq("Cary Ballet presents Spring Mixed Repertoire, NCSU Sigma Pi Break the Silence 5K Run/Walk")
     //   });
-    //   it('returns 0 if there are no events', function() {
-    //     var today = new Date('2017-03-22')
-    //     var value = subject.formatEventData(sampleReturnWithoutEvents)
-    //     return expect(value.eventCount).to.eq(0)
-    //   });
-  });
-
-  describe('#formatEventTitles', function() {
-    context('eventTitles returns the event titles', function() {
-      context('when multiple events scheduled', function() {
-        var date = "Saturday, March 25th"
-        it('returns all event titles', function() {
-          var value = subject.formatEventTitles(sampleReturnWithEvents)
-          return expect(value).to.eq("Cary Ballet presents Spring Mixed Repertoire, NCSU Sigma Pi Break the Silence 5K Run/Walk")
-        });
-      });
-
-      context('when no events scheduled', function() {
-        var date = "Wednesday, March 22nd"
-        it('returns no event message', function() {
-          var value = subject.formatEventTitles(sampleReturnWithoutEvents)
-          return expect(value).to.eq("There are no scheduled events for that ${date}") // want to interpolate this to say day
-        });
+    // });
+    context('when passed multiple events', function() {
+      it('gives all events title, start, end', function() {
+        var value = subject.formatEventData(sampleReturnWithEvents)
+        expect(value).to.eq(1);
       });
     });
   });
+  // used to check formating of titles before refactor
+  // describe('#formatEventTitles', function() {
+  //   context('eventTitles returns the event titles', function() {
+  //     context('when multiple events scheduled', function() {
+  //       it('returns all event titles', function() {
+  //         var value = subject.formatEventTitles(sampleReturnWithEvents)
+  //         return expect(value).to.eq("Cary Ballet presents Spring Mixed Repertoire, NCSU Sigma Pi Break the Silence 5K Run/Walk")
+  //       });
+  //     });
+  //
+  //     context('when no events scheduled', function() {
+  //       it('returns no event message', function() {
+  //         var value = subject.formatEventTitles(sampleReturnWithoutEvents)
+  //         return expect(value).to.eq("There are no scheduled events for that day") // want to interpolate this to say day
+  //       });
+  //     });
+  //   });
+  // });
 
   // describe('#formatEventTimes', function() {
   //   context('')
