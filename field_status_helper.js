@@ -7,25 +7,6 @@ require('./jsDate.js')();
 require('datejs');
 var FIELDSTATUSENDPOINT = 'http://games.townofcarync.gov';
 var FIELDTYPES = ['/ballfields/ballfields.txt', '/multipurposefields/multipurposefields.txt', '/gymnasiums/gymnasiums.txt', '/soccerpark/soccerpark.txt', '/usabaseball/usabaseball.txt'];
-var FIELDNAMEPAIRINGS = {'THOMAS BROOKS': 'THOMAS BROOKS PARK',
-'MILLS PARK MIDDLE SCHOOL': 'MILLS PARK',
-'MIDDLE CREEK COMMUNITY CENTER': 'MIDDLE CREEK',
-'HERBERT C. YOUNG COMMUNITY CENTER': 'HERBERT YOUNG',
-'HERBERT C. YOUNG': 'HERBERT YOUNG',
-'HERBERT YOUNG COMMUNITY CENTER': 'HERBERT YOUNG',
-'BOND PARK COMMUNITY CENTER': 'BOND PARK',
-'MIDDLE CREEk SCHOOL/PARK': 'MIDDLE CREEK',
-'CARY HIGH SCHOOL': 'CARY HIGH',
-'DAVIS DRIVE MIDDLE SCHOOL': 'DAVIS DRIVE',
-'GREEN HOPE HIGH SCHOOL': 'GREEN HOPE HIGH',
-'GREEN HOPE ELEMENTARY SCHOOL': 'GREEN HOPE ELEMENTARY',
-'LEXIE LANE PARK': 'LEXIE LANE',
-'USA BASEBALL NATIONAL TRAINING COMPLEX': 'USA BASEBALL',
-'WAKEMED': 'WAKEMED SOCCER',
-'WAKEMED SOCCER PARK': 'WAKEMED SOCCER',
-'CARY ELEMENTARY SCHOOL': 'CARY ELEMENTARY',
-
-}
 
 function FieldStatusHelper() { }
 
@@ -63,7 +44,8 @@ FieldStatusHelper.prototype.promiseLoop = function(results, i){
 
 FieldStatusHelper.prototype.formatFieldStatus = function(fieldStatus, parkQuery){
   var prompt;
-  var parkName = FIELDNAMEPAIRINGS[parkQuery.toUpperCase()] || parkQuery.toUpperCase();
+  var helperClass = new HelperClass();
+  var parkName = helperClass.FIELDNAMEPAIRINGS[parkQuery.toUpperCase()] || parkQuery.toUpperCase();
   if(fieldStatus[parkName].closed.length <= 0){
       prompt = _.template('All fields at ${park} are currently open')({
         park: parkName

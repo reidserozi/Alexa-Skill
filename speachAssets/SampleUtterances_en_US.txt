@@ -636,6 +636,34 @@ TrashDayIntent	is my trash date this week
 TrashDayIntent	is my recycle date this week
 TrashDayIntent	is my garbage date this week
 
+FieldStatusIntent	what is the field status at {park}
+FieldStatusIntent	what is the status of {park}
+FieldStatusIntent	are the fileds open at {park}
+FieldStatusIntent	are the fileds closed at {park}
+FieldStatusIntent	are the fileds shut down at {park}
+FieldStatusIntent	Is {park} open
+FieldStatusIntent	Is {park} closed
+FieldStatusIntent	Is {park} shut down
+FieldStatusIntent	Is {park} open today
+FieldStatusIntent	Is {park} closed today
+FieldStatusIntent	Is {park} shut down today
+FieldStatusIntent	Are games at {park} on for
+FieldStatusIntent	Are games at {park} canceled
+FieldStatusIntent	Are games at {park} postponed
+FieldStatusIntent	Are games at {park} being played
+FieldStatusIntent	Are games at {park} on for today
+FieldStatusIntent	Are games at {park} canceled today
+FieldStatusIntent	Are games at {park} postponed today
+FieldStatusIntent	Are games at {park} being played today
+FieldStatusIntent	Are games on at {park}
+FieldStatusIntent	Are games canceled at {park}
+FieldStatusIntent	Are games postponed at {park}
+FieldStatusIntent	Are games being played at {park}
+FieldStatusIntent	Are games on at {park} today
+FieldStatusIntent	Are games canceled at {park} today
+FieldStatusIntent	Are games postponed at {park} today
+FieldStatusIntent	Are games being played at {park} today
+
 Strings used to generate utterances:
 '{what|when} are the open gym {|times} {|on|for} {-|Date}', 'How many open gym {|times} are {|there} on {-|Date}', '{what|when} are the open gym {|times} {|on|for} {-|Date} at {-|location} {|community center}', '{what|when} are the open gym {|times} at {-|location} {|community center} {|on|for} {-|Date}', 'How many open gym {|times} are {|there} on {-|Date} at {-|location} {|community center}', 'How many open gym {|times} are {|there} at {-|location} {|community center} on {-|Date}', 'How many open gym {|times} are {|there} at {-|location} {|community center}', '{what|when} are the open gym {|times} at {-|location} {|community center}'
 
@@ -652,3 +680,5 @@ to {create|submit|help with} a {|new} {case|service request|request|problem|work
 'what are {|the} {hours for town hall|town hall hours} {|on} {-|Date}', '{|when} is {|the} town hall {closed|open} {|on} {-|Date}', 'what are {|the} {hours for town hall|town hall hours}', '{|when} is {|the} town hall {closed|open}'
 
 '{when|what day} is my {|next} {trash|recycle|garbage} {day|pickup|collection|date}', 'is my {trash|recycle|garbage} {day|pickup|collection|date} this week'
+
+'what is the {field status at|status of} {-|park}', 'are the fileds {open|closed|shut down} at {-|park}', 'Is {-|park} {open|closed|shut down} {|today}', 'Are games at {-|park} {on for|canceled|postponed|being played} {|today}', 'Are games {on|canceled|postponed|being played} at {-|park} {|today}'

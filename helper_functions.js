@@ -4,9 +4,11 @@ var RECYCLEBLUESTART = '2017-01-08';
 var TRASHCASES = {'trash': 'trash', 'garbage': 'trash', 'rubbish': 'trash', 'waste': 'trash'};
 var LEAFCASES = {'leaf': 'leaf', 'leaves': 'leaf'};
 var CASESUBJECTPAIRINGS = {'yard waste': 'collection', 'oil': 'collection', 'cardboard': 'collection', 'leaf': 'collection', 'trash': 'missed', 'recycling': 'missed'};
-var FIELDNAMEPAIRINGS = {'THOMAS BROOKS': 'THOMAS BROOKS PARK', 'MILLS PARK MIDDLE SCHOOL': 'MILLS PARK', 'MIDDLE CREEK COMMUNITY CENTER': 'MIDDLE CREEK', 'HERBERT C. YOUNG COMMUNITY CENTER': 'HERBERT YOUNG', 'BOND PARK COMMUNITY CENTER': 'BOND PARK', 'MIDDLE CREEk SCHOOL/PARK': 'MIDDLE CREEK'}
 
 function HelperClass() { }
+
+HelperClass.prototype.FIELDNAMEPAIRINGS = {'THOMAS BROOKS': 'THOMAS BROOKS PARK', 'MILLS PARK MIDDLE SCHOOL': 'MILLS PARK', 'MIDDLE CREEK COMMUNITY CENTER': 'MIDDLE CREEK', 'HERBERT C. YOUNG COMMUNITY CENTER': 'HERBERT YOUNG', 'HERBERT C. YOUNG': 'HERBERT YOUNG', 'HERB YOUNG': 'HERBERT YOUNG', 'HERBERT YOUNG COMMUNITY CENTER': 'HERBERT YOUNG', 'BOND PARK COMMUNITY CENTER': 'BOND PARK', 'MIDDLE CREEk SCHOOL/PARK': 'MIDDLE CREEK', 'CARY HIGH SCHOOL': 'CARY HIGH', 'DAVIS DRIVE MIDDLE SCHOOL': 'DAVIS DRIVE','GREEN HOPE HIGH SCHOOL': 'GREEN HOPE HIGH', 'GREEN HOPE ELEMENTARY SCHOOL': 'GREEN HOPE ELEMENTARY', 'LEXIE LANE PARK': 'LEXIE LANE', 'USA BASEBALL NATIONAL TRAINING COMPLEX': 'USA BASEBALL', 'WAKEMED': 'WAKEMED SOCCER', 'WAKEMED SOCCER PARK': 'WAKEMED SOCCER', 'CARY ELEMENTARY SCHOOL': 'CARY ELEMENTARY', 'PANTHER CREEK HIGH SCHOOL': 'PANTHER CREEK', 'PANTHER CREEK HIGH': 'PANTHER CREEK',
+'REEDY CREEK MIDDLE SCHOOL': 'REEDY CREEK', 'REEDY CREEK MIDDLE': 'REEDY CREEK', 'WEST CARY MIDDLE SCHOOL': 'WEST CARY', 'WEST CARY MIDDLE': 'WEST CARY'}
 
 //date formating functions to make a response sound better for alexa
 HelperClass.prototype.formatDate = function(date){
@@ -100,7 +102,7 @@ HelperClass.prototype.addFieldResults = promise.method(function(body, results){
   for(var i = 1; i < lines.length; i++){
     var fieldInfo = lines[i].split("\t");
     if(fieldInfo.length > 1){
-      var parkName = FIELDNAMEPAIRINGS[fieldInfo[0].toUpperCase()] || fieldInfo[0].toUpperCase();
+      var parkName = this.FIELDNAMEPAIRINGS[fieldInfo[0].toUpperCase()] || fieldInfo[0].toUpperCase();
       var fieldName = fieldInfo[1];
       if(results[parkName] === undefined){
         results[parkName] = {open: [], closed: []};
