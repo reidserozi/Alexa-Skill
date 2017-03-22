@@ -6,6 +6,7 @@ var Alexa = require('alexa-sdk');
 var OpenDataHelper = require('./open_data_helper');
 var EsriDataHelper = require('./esri_data_helper');
 var SalesforceHelper = require('./salesforce_helper');
+var FieldStatusHelper = require('./field_status_helper');
 var HelperClass = require('./helper_functions.js');
 require('./jsDate.js')();
 var facts = require('./cary_facts');
@@ -265,8 +266,17 @@ var newSessionHandlers = {
     var endDate = date + 'T23:59:59';
 
     var uri = EVENTDATAENDPOINT //continue building out query string once vision gets back to us
+  },
 
-
+  'FieldStatusIntent': function() {
+    var parkName = this.event.request.intent.slots.park.value;
+    var fieldStatusHelper = new FieldStatusHelper();
+    var self = this;
+    fieldStatusHelper.getAllFieldStatus().then(function(response){
+      return fieldStatusHelper.formatFieldStatus(response, parkName);
+    }).then(function(response){
+      self.emit(':tell', response);
+    });
   },
 
   'AMAZON.RepeatIntent': function () {
