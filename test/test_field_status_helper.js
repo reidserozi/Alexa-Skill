@@ -13,7 +13,7 @@ describe('FieldStatusHelper', function() {
     context('basball field', function(){
       it('gets field status of baseball fields', function(){
         subject.getAllFieldStatus().then(function(response){
-          expect(response["Bond Park"].open.length).to.eventually.eq(7);
+          expect(response["BOND PARK"].open.length).to.eventually.eq(7);
           done();
         });
       });

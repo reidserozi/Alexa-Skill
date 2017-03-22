@@ -6,7 +6,7 @@ var promise = require('bluebird');
 require('./jsDate.js')();
 require('datejs');
 var FIELDSTATUSENDPOINT = 'http://games.townofcarync.gov';
-var FIELDTYPES = ['/ballfields/ballfields.txt', '/multipurposefields/multipurposefields.txt', '/gymnasiums/gymnasiums.txt', '/sk8-cary/sk8cary.txt', '/soccerpark/soccerpark.txt', '/tenniscenter/tenniscenter.txt', '/usabaseball/usabaseball.txt', '/culturalarts/culturalarts.txt'];
+var FIELDTYPES = ['/ballfields/ballfields.txt', '/multipurposefields/multipurposefields.txt', '/gymnasiums/gymnasiums.txt', '/soccerpark/soccerpark.txt', '/usabaseball/usabaseball.txt'];
 
 function FieldStatusHelper() { }
 
@@ -40,6 +40,31 @@ FieldStatusHelper.prototype.promiseLoop = function(results, i){
   }).then(function(response){
     return (response >= FIELDTYPES.length) ? results : self.promiseLoop(results, response)
   });
+}
+
+FieldStatusHelper.prototype.formatFieldStatus = function(fieldStatus, parkQuery){
+  var prompt;
+  if(fieldStatus[parkQuery].closed.length <= 0){
+      prompt = _.template('All fields at ${park} are currently open')({
+        park: parkQuery
+      });
+  } else {
+    if(fieldStatus[parkQuery].open.length <= 0){
+      prompt = _.template('All fields at ${park} are currently closed')({
+        park: parkQuery
+      });
+    } else {
+      var closedFields = '';
+      fieldStatus[parkQuery].closed.forEach(function(element){
+        closedFields += element + ", ";
+      });
+      prompt = _.template('At ${park}, the following list of facilities are closed. ${fields}')({
+        park: parkQuery,
+        fields: closedFields
+      });
+    }
+  }
+  return prompt;
 }
 
 var counter = promise.method(function(i){

@@ -154,6 +154,15 @@
           "type": "AMAZON.Date"
         }
       ]
+    },
+    {
+      "intent": "FieldStatusIntent",
+      "slots":[
+        {
+          "name": "park",
+          "type": "CARY_PARK"
+        }
+      ]
     }
   ]
 }

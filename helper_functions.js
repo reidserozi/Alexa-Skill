@@ -4,14 +4,13 @@ var RECYCLEBLUESTART = '2017-01-08';
 var TRASHCASES = {'trash': 'trash', 'garbage': 'trash', 'rubbish': 'trash', 'waste': 'trash'};
 var LEAFCASES = {'leaf': 'leaf', 'leaves': 'leaf'};
 var CASESUBJECTPAIRINGS = {'yard waste': 'collection', 'oil': 'collection', 'cardboard': 'collection', 'leaf': 'collection', 'trash': 'missed', 'recycling': 'missed'};
+var FIELDNAMEPAIRINGS = {'THOMAS BROOKS': 'THOMAS BROOKS PARK', 'MILLS PARK MIDDLE SCHOOL': 'MILLS PARK', 'MIDDLE CREEK COMMUNITY CENTER': 'MIDDLE CREEK', 'HERBERT C. YOUNG COMMUNITY CENTER': 'HERBERT YOUNG', 'BOND PARK COMMUNITY CENTER': 'BOND PARK', 'MIDDLE CREEk SCHOOL/PARK': 'MIDDLE CREEK'}
 
 function HelperClass() { }
 
 //date formating functions to make a response sound better for alexa
 HelperClass.prototype.formatDate = function(date){
   var i = date.toString().search(/20\d{2}/);
-  console.log(date);
-  console.log(i);
   if(i > 0){
     return date.toString().slice(0,i).trim();
   }
@@ -19,7 +18,6 @@ HelperClass.prototype.formatDate = function(date){
 }
 
 HelperClass.prototype.formatDateTime = function (dateTime){
-  console.log(dateTime);
   if(dateTime != null && dateTime != undefined){
     return this.formatDate(dateTime) + ' at ' +  this.formatTimeString(dateTime);
   } else {
@@ -102,13 +100,15 @@ HelperClass.prototype.addFieldResults = promise.method(function(body, results){
   for(var i = 1; i < lines.length; i++){
     var fieldInfo = lines[i].split("\t");
     if(fieldInfo.length > 1){
-      if(results[fieldInfo[0]] === undefined){
-        results[fieldInfo[0]] = {open: [], closed: []};
+      var parkName = FIELDNAMEPAIRINGS[fieldInfo[0].toUpperCase()] || fieldInfo[0].toUpperCase();
+      var fieldName = fieldInfo[1];
+      if(results[parkName] === undefined){
+        results[parkName] = {open: [], closed: []};
       }
       if(fieldInfo[2].toString().match(/(cancel|close)/i) === null){
-        results[fieldInfo[0]].open.push(fieldInfo[1]);
+        results[parkName].open.push(fieldName);
       } else {
-        results[fieldInfo[0]].closed.push(fieldInfo[1]);
+        results[parkName].closed.push(fieldName);
       }
     }
   }

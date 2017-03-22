@@ -251,6 +251,10 @@ var newSessionHandlers = {
     });
   },
 
+  'FieldStatusIntent': function() {
+    
+  }
+
   'AMAZON.RepeatIntent': function () {
       this.emit(':ask', this.attributes['speechOutput'], this.attributes['repromptText']);
   },
