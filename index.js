@@ -252,7 +252,8 @@ var newSessionHandlers = {
     });
   },
 
-  'UpcomingCaryEventsIntent': function(){
+  'UpcomingCaryEventsIntent': function() {
+    var prompt = '';
     var date = this.event.request.intent.slots.Date.value || Date.yyyymmdd(Date.today());
     if(date.search(/^\d{4}-\d{2}-\d{2}$/) == -1){
       var prompt = 'Please choose a single day for a list of events.';
@@ -263,7 +264,8 @@ var newSessionHandlers = {
     var startDate = date + 'T00:00:00';
     var endDate = date + 'T23:59:59';
 
-    var uri = EVENTDATAENDPOINT //continue building out query string
+    var uri = EVENTDATAENDPOINT //continue building out query string once vision gets back to us
+
 
   },
 
