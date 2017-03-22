@@ -1,3 +1,4 @@
+var promise = require('bluebird');
 var RECYCLEYELLOWSTART = '2017-01-01';
 var RECYCLEBLUESTART = '2017-01-08';
 var TRASHCASES = {'trash': 'trash', 'garbage': 'trash', 'rubbish': 'trash', 'waste': 'trash'};
@@ -95,5 +96,23 @@ HelperClass.prototype.formatCaseSubject = function(caseSubject){
 HelperClass.prototype.addCaseAction = function(caseSubject){
   return CASESUBJECTPAIRINGS[caseSubject];
 }
+
+HelperClass.prototype.addFieldResults = promise.method(function(body, results){
+  var lines = body.toString().split("\n");
+  for(var i = 1; i < lines.length; i++){
+    var fieldInfo = lines[i].split("\t");
+    if(fieldInfo.length > 1){
+      if(results[fieldInfo[0]] === undefined){
+        results[fieldInfo[0]] = {open: [], closed: []};
+      }
+      if(fieldInfo[2].toString().match(/(cancel|close)/i) === null){
+        results[fieldInfo[0]].open.push(fieldInfo[1]);
+      } else {
+        results[fieldInfo[0]].closed.push(fieldInfo[1]);
+      }
+    }
+  }
+  return results;
+});
 
 module.exports = HelperClass;

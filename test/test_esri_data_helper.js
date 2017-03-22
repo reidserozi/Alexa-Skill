@@ -17,10 +17,9 @@ describe('EsriDataHelper', function() {
     context('with a geolocation', function(){
       it('returns council representative and district from Lat Long', function(){
         var uri = ESRIENDPOINT + 'Elections/Elections/MapServer/identify?geometry=' + x + ',' + y + '&geometryType=esriGeometryPoint&sr=4326&layers=all&layerDefs=&time=&layerTimeOptions=&tolerance=2&mapExtent=-79.193,35.541,-78.63,35.989&imageDisplay=600+550+96&returnGeometry=false&maxAllowableOffset=&geometryPrecision=&dynamicLayers=&returnZ=false&returnM=false&gdbVersion=&f=pjson'
-        var value = subject.requestESRIInformation(uri).then(function(obj){
-          return obj.results[1].attributes["Representative Name"];
+        return subject.requestESRIInformation(uri).then(function(obj){
+          expect(obj.results[1].attributes["Representative Name"]).to.equal("Don Frantz");
         });
-        return expect(value).to.eventually.eq("Don Frantz");
       });
     });
     context('with an address', function() {
@@ -28,10 +27,9 @@ describe('EsriDataHelper', function() {
         var value = subject.requestAddressInformation(address).then(function(obj){
           var uri = ESRIENDPOINT + 'Elections/Elections/MapServer/identify?geometry=' + obj.candidates[0].location.x + ',' + obj.candidates[0].location.y + '&geometryType=esriGeometryPoint&sr=4326&layers=all&layerDefs=&time=&layerTimeOptions=&tolerance=2&mapExtent=-79.193,35.541,-78.63,35.989&imageDisplay=600+550+96&returnGeometry=false&maxAllowableOffset=&geometryPrecision=&dynamicLayers=&returnZ=false&returnM=false&gdbVersion=&f=pjson'
           return subject.requestESRIInformation(uri).then(function(obj){
-            return obj.results[1].attributes["Representative Name"];
+            expect(obj.results[1].attributes["Representative Name"]).to.equal("Don Frantz");
           });
         });
-        return expect(value).to.eventually.eq("Don Frantz");
       });
     });
   });
@@ -43,20 +41,18 @@ describe('EsriDataHelper', function() {
     var uri = ESRIENDPOINT + 'ParksRec/Parks/FeatureServer/0/query';
     context('with a geolocation', function(){
       it('returns all parks in 1 mile radius from Lat Long', function(){
-        var value = subject.requestInformationByRadius(x,y, DISTANCE, uri).then(function(obj){
-          return obj.features[0].attributes["NAME"];
+        return subject.requestInformationByRadius(x,y, DISTANCE, uri).then(function(obj){
+          expect(obj.features[0].attributes["NAME"]).to.eq("Heater Park");
         });
-        return expect(value).to.eventually.eq("Heater Park");
       });
     });
     context('with an address', function() {
       it('gets geolocation from ESRI and then gets all parks in 1 mile radius', function() {
         var value = subject.requestAddressInformation(address).then(function(obj){
           return subject.requestInformationByRadius(obj.candidates[0].location.x, obj.candidates[0].location.y, DISTANCE, uri).then(function(obj){
-            return obj.features[0].attributes["NAME"];
+            expect(obj.features[0].attributes["NAME"]).to.eq("Heater Park");
           });
         });
-        return expect(value).to.eventually.eq("Heater Park");
       });
     });
   });
@@ -93,10 +89,9 @@ describe('EsriDataHelper', function() {
     context('with a geolocation', function(){
       it('returns next trash and recycle day', function(){
         var uri = ESRIENDPOINT + 'PublicWorks/Public_Works_Operations/MapServer/0/query?where=&text=&objectIds=&time=&geometry=' + x + ',' + y + '&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=*&returnGeometry=false&returnTrueCurves=false&maxAllowableOffset=&geometryPrecision=&outSR=4326&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&returnDistinctValues=false&resultOffset=&resultRecordCount=&f=pjson'
-        var value = subject.requestESRIInformation(uri).then(function(obj){
-          return obj.features[0].attributes["Day"];
+        return subject.requestESRIInformation(uri).then(function(obj){
+          expect(obj.features[0].attributes["Day"]).to.eq("Wed");
         });
-        return expect(value).to.eventually.eq("Wed");
       });
     });
     context('with an address', function() {
@@ -105,9 +100,8 @@ describe('EsriDataHelper', function() {
           var uri = ESRIENDPOINT + 'PublicWorks/Public_Works_Operations/MapServer/0/query?where=&geometry=' + obj.candidates[0].location.x + ',' + obj.candidates[0].location.y + '&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=*&returnGeometry=false&returnTrueCurves=false&maxAllowableOffset=&geometryPrecision=&outSR=4326&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&returnDistinctValues=false&resultOffset=&resultRecordCount=&f=pjson'
           return subject.requestESRIInformation(uri)
         }).then(function(obj){
-          return obj.features[0].attributes["Day"];
+          expect(obj.features[0].attributes["Day"]).to.eventually.eq("Wed");
         });
-        return expect(value).to.eventually.eq("Wed");
       });
     });
   });
