@@ -252,7 +252,14 @@ var newSessionHandlers = {
   },
 
   'FieldStatusIntent': function() {
-    
+    var parkName = this.event.request.intent.slots.park.value;
+    var fieldStatusHelper = new FieldStatusHelper();
+    var self = this;
+    fieldStatusHelper.getAllFieldStatus().then(function(response){
+      return fieldStatusHelper.formatFieldStatus(response, parkName);
+    }).then(function(response){
+      self.emit(':tell', response);
+    });
   }
 
   'AMAZON.RepeatIntent': function () {
