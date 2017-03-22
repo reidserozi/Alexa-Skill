@@ -6,6 +6,7 @@ var Alexa = require('alexa-sdk');
 var OpenDataHelper = require('./open_data_helper');
 var EsriDataHelper = require('./esri_data_helper');
 var SalesforceHelper = require('./salesforce_helper');
+var FieldStatusHelper = require('./field_status_helper');
 var HelperClass = require('./helper_functions.js');
 require('./jsDate.js')();
 var facts = require('./cary_facts');
@@ -260,7 +261,7 @@ var newSessionHandlers = {
     }).then(function(response){
       self.emit(':tell', response);
     });
-  }
+  },
 
   'AMAZON.RepeatIntent': function () {
       this.emit(':ask', this.attributes['speechOutput'], this.attributes['repromptText']);

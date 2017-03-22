@@ -7,6 +7,7 @@ require('./jsDate.js')();
 require('datejs');
 var FIELDSTATUSENDPOINT = 'http://games.townofcarync.gov';
 var FIELDTYPES = ['/ballfields/ballfields.txt', '/multipurposefields/multipurposefields.txt', '/gymnasiums/gymnasiums.txt', '/soccerpark/soccerpark.txt', '/usabaseball/usabaseball.txt'];
+var FIELDNAMEPAIRINGS = {'THOMAS BROOKS': 'THOMAS BROOKS PARK', 'MILLS PARK MIDDLE SCHOOL': 'MILLS PARK', 'MIDDLE CREEK COMMUNITY CENTER': 'MIDDLE CREEK', 'HERBERT C. YOUNG COMMUNITY CENTER': 'HERBERT YOUNG', 'BOND PARK COMMUNITY CENTER': 'BOND PARK', 'MIDDLE CREEk SCHOOL/PARK': 'MIDDLE CREEK'}
 
 function FieldStatusHelper() { }
 
@@ -38,28 +39,29 @@ FieldStatusHelper.prototype.promiseLoop = function(results, i){
     results = response;
     return counter(i);
   }).then(function(response){
-    return (response >= FIELDTYPES.length) ? results : self.promiseLoop(results, response)
+    return (response >= FIELDTYPES.length) ? results : self.promiseLoop(results, response);
   });
 }
 
 FieldStatusHelper.prototype.formatFieldStatus = function(fieldStatus, parkQuery){
   var prompt;
-  if(fieldStatus[parkQuery].closed.length <= 0){
+  var parkName = FIELDNAMEPAIRINGS[parkQuery.toUpperCase()] || parkQuery.toUpperCase();
+  if(fieldStatus[parkName].closed.length <= 0){
       prompt = _.template('All fields at ${park} are currently open')({
-        park: parkQuery
+        park: parkName
       });
   } else {
-    if(fieldStatus[parkQuery].open.length <= 0){
+    if(fieldStatus[parkName].open.length <= 0){
       prompt = _.template('All fields at ${park} are currently closed')({
-        park: parkQuery
+        park: parkName
       });
     } else {
       var closedFields = '';
-      fieldStatus[parkQuery].closed.forEach(function(element){
+      fieldStatus[parkName].closed.forEach(function(element){
         closedFields += element + ", ";
       });
       prompt = _.template('At ${park}, the following list of facilities are closed. ${fields}')({
-        park: parkQuery,
+        park: parkName,
         fields: closedFields
       });
     }
@@ -68,48 +70,7 @@ FieldStatusHelper.prototype.formatFieldStatus = function(fieldStatus, parkQuery)
 }
 
 var counter = promise.method(function(i){
-    return i++;
+    return i + 1;
 });
 
 module.exports = FieldStatusHelper;
-/*
-{
-  'park name':{
-    'open': [
-      { 'field name': 'field status' },
-      { 'field name': 'field status' },
-      { 'field name': 'field status' },
-      ...
-      { 'field name': 'field status' }
-    ],
-    'closed': [
-    { 'field name': 'field status' },
-    { 'field name': 'field status' },
-    { 'field name': 'field status' },
-    ...
-    { 'field name': 'field status' }
-    ]
-  },
-  'park name':{
-    'all_same_status': true or false,
-    'field_stats': [
-      { 'field name': 'field status' },
-      { 'field name': 'field status' },
-      { 'field name': 'field status' },
-      ...
-      { 'field name': 'field status' }
-    ]
-  },
-    ...
-    'park name':{
-      'all_same_status': true or false,
-      'field_stats': [
-        { 'field name': 'field status' },
-        { 'field name': 'field status' },
-        { 'field name': 'field status' },
-        ...
-        { 'field name': 'field status' }
-      ]
-    }
-}
-*/
