@@ -13,7 +13,8 @@ var facts = require('./cary_facts');
 var ESRIENDPOINT = 'https://maps.townofcary.org/arcgis1/rest/services/';
 var ARCGISENDPOINT = 'https://services2.arcgis.com/l4TwMwwoiuEVRPw9/ArcGIS/rest/services/';
 var OPENDATAENDPOINT = 'https://data.townofcary.org/api/records/1.0/search/?';
-var EVENTDATAENDPOINT = 'http://www.townofcary.org/API';
+var EVENTDATAENDPOINT = 'http://www.townofcary.org/API'; // still waiting on vision to get this set properly
+var EVENTLOCATIONENDPOINT = 'http://www.townofcary.org/API'; // location based on evendata ID
 var DISTANCE = 1; //distance for radius search.  currently 1 mile can be adapted later.
 var APP_ID = process.env.ALEXAAPPID;  // TODO replace with your app ID (OPTIONAL).
 var CASENUMBERLENGTH = 8 //the current number of digits in a case number to add leading zeros
@@ -265,6 +266,7 @@ var newSessionHandlers = {
     var startDate = date + 'T00:00:00';
     var endDate = date + 'T23:59:59';
 
+    var locationuri = EVENTLOCATIONENDPOINT // waiting on vision...
     var uri = EVENTDATAENDPOINT //continue building out query string once vision gets back to us
   },
 
