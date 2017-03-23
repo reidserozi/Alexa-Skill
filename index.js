@@ -269,13 +269,23 @@ var newSessionHandlers = {
   },
 
   'FieldStatusIntent': function() {
+    var helperClass = new HelperClass();
     var parkName = this.event.request.intent.slots.park.value;
+    var prompt = '';
+    if(helperClass.FIELDNAMEPAIRINGS[parkname] === undefined){
+      prompt = 'I\'m sorry I did not recognize that field name.'
+      this.emit(':tell', prompt);
+    }
     var fieldStatusHelper = new FieldStatusHelper();
     var self = this;
     fieldStatusHelper.getAllFieldStatus().then(function(response){
       return fieldStatusHelper.formatFieldStatus(response, parkName);
     }).then(function(response){
       self.emit(':tell', response);
+    }).catch(function(err){
+      console.log(err);
+      prompt = 'I\'m sorry, there seems to be a problem with the connection right now.';
+      self.emit(:'tell', prompt);
     });
   },
 
