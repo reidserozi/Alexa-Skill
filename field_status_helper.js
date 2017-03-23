@@ -12,9 +12,7 @@ function FieldStatusHelper() { }
 
 FieldStatusHelper.prototype.getAllFieldStatus = function(){
   var results = {};
-  return this.promiseLoop(results, 1).then(function(response){
-    console.log('results are:');
-    console.log(response);
+  return this.promiseLoop(results, 0).then(function(response){
     return response
   });
 }
@@ -56,10 +54,7 @@ FieldStatusHelper.prototype.formatFieldStatus = function(fieldStatus, parkQuery)
         park: parkName
       });
     } else {
-      var closedFields = '';
-      fieldStatus[parkName].closed.forEach(function(element){
-        closedFields += element + ", ";
-      });
+      var closedFields = fieldStatus[parkName].closed.join(', ')
       prompt = _.template('At ${park}, the following list of facilities are closed. ${fields}')({
         park: parkName,
         fields: closedFields
