@@ -2,8 +2,10 @@
 var _ = require('lodash');
 var rp = require('request-promise');
 var request = require('request');
+var Promise = require('bluebird');
 require('./jsDate.js')();
 require('datejs');
+var HelperClass = require('./helper_functions.js');
 
 // delete this once API is authorized
 var sampleReturn =
@@ -50,17 +52,35 @@ var sampleReturnWithoutEvents =
       ]
     }
   }
+var sampleLocation =
+  {
+      "Event":{
+          "ID":0,
+          "StartDate":"0001-01-01T00:00:00",
+          "EndDate":"0001-01-01T00:00:00",
+          "DisplayLinkToDocumentViewer":false,
+          "AllowNotification":false,
+          "AllowRegistration":false,
+          "Categories":[
+              {
+                  "ID":51,
+                  "Name":"WakeMed Soccer Park"
+              }
+          ]
+      }
+  }
 
 function EventDataHelper() { }
 // line 254 index
 EventDataHelper.prototype.requestEventData = function(uri) {
-  return this.getEventData(uri)//.then(
-  //   function(response) {
-  //     return response.body;
-  //   }, function (error) {
-  //       console.log('error in the promise');
-  //   }
-  // ).catch(console.log.bind(console));
+  var self = this;
+  return this.getEventData(uri).then(
+    function(response) {
+      return self.promiseWhile(response.body, 0)
+    }, function (error) {
+        console.log('error in the promise');
+    }
+  ).catch(console.log.bind(console));
 };
 
 EventDataHelper.prototype.getEventData = function(uri){
@@ -69,64 +89,63 @@ EventDataHelper.prototype.getEventData = function(uri){
   //   uri: encodeURI(uri),
   //   timeout: 3000,
   //   resolveWithFullResponse: true,
-  //   app_key: process.env.VISIONAPPKEY
+  //   app_key: process.env.VISIONAPPKEY,
+  //   sign: process.env.VISIONAPPSECRET
   // };
   // return rp(options);
   return sampleReturn;
-};
+}
+
+
 
 // building out alexa response
 
-// EventDataHelper.prototype.formatEventTitles = function(sampleReturn) {
-//   var eventCount = sampleReturn.PagingList.Content.length
-//   var eventData = [];
-//   var eventContent = sampleReturn.PagingList.Content
-//
-//   if (eventCount === 0 ) {
-//     return 'There are no scheduled events for that day';
-//   } else {
-//     eventContent.forEach(function(item) {
-//       var eventStart = Date.parse(item.StartDate)
-//       var eventEnd = Date.parse(item.EndDate)
-//       eventData.concat([item.Title, eventStart, eventEnd])
-//     });
-//     return eventData;
-//   }
-// };
+// promise loop to move to insert location into alexa return
+EventDataHelper.prototype.promiseWhile = function(results, i) {
+  var self = this;
+  // build up uri - may just be url or build out full options
+  return rp(options);
+  this.getEventData(uri).then(function(response) {
+      results.PagingList.Content[i].Location = response.body.Event.Categories[0].Name
+      return counter(i)
+    }).then(function(response) {
+      return (response >= results.PagingList.Content.length) ? results : self.promiseWhile(results, response)
+    });
+}
+
 
 EventDataHelper.prototype.formatEventData = function(sampleReturn) {
-  // var titleHelper = new EventDataHelper();
-  // var eventCount = sampleReturn.PagingList.Content.length
-  // var response = '';
-  // var date = "Saturday, March 25th"; // placeholder
-  // var eventContent = sampleReturn.PagingList.Content
-  //
-  // var eventTitles = titleHelper.formatEventTitles(sampleReturn)
-
+  var helperClass = new HelperClass();
   var eventCount = sampleReturn.PagingList.Content.length
   var eventData =[];
   var eventContent = sampleReturn.PagingList.Content
+  var response = '';
 
   if (eventCount === 0 ) {
     return 'There are no scheduled events for that day';
   } else {
     eventContent.forEach(function(item) {
-      // var eventStart = Date.parse(item.StartDate)
-      // var eventEnd = Date.parse(item.EndDate)
-      // var eventTitle = item.Title
-
-      eventData += _.template('${eventTitle} start ${eventStart}, and ends ${eventEnd}.')({
-        eventStart: Date.parse(item.StartDate),
-        eventEnd: Date.parse(item.EndDate),
-        eventTitle: item.Title
-        // location: item.Category // Vision not sending back location information
+      eventData += _.template('${eventTitle} starts at ${eventStart}, and ends at ${eventEnd} at ${eventLocation}. ')({
+        eventStart: helperClass.formatTimeString(Date.parse(item.StartDate)),
+        eventEnd: helperClass.formatTimeString(Date.parse(item.EndDate)),
+        eventTitle: item.Title,
+        eventLocation: item.Location
       });
     });
-    console.log(eventData);
-    return eventData;
-  };
-};
+    response = _.template('On ${date} there are ${count} events: ${eventData}')({
 
+      date: helperClass.formatDate(Date.parse(eventContent[0].StartDate)),
+      count: eventCount,
+      eventData: eventData
+    });
+
+    return response;
+  };
+}
+
+var counter = Promise.method(function(i){
+    return i + 1;
+});
 
 module.exports = EventDataHelper;
 
