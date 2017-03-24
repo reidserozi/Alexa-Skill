@@ -103,7 +103,7 @@ EventDataHelper.prototype.getEventData = function(uri){
 // promise loop to move to insert location into alexa return
 EventDataHelper.prototype.promiseWhile = function(results, i) {
   var self = this;
-  // build up uri - may just be url or build out full options
+  // build up uri - may just be url or build out full options - waiting on api doc
   return rp(options);
   this.getEventData(uri).then(function(response) {
       results.PagingList.Content[i].Location = response.body.Event.Categories[0].Name
