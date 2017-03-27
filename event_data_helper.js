@@ -93,7 +93,7 @@ EventDataHelper.prototype.getEventData = function(uri){
       _format: 'json',
       _method: 'vision.cms.calendarcomponent.event.find',
       _timestamp: new Date().toString('yyyy-MM-dd HH:mm:ss'),
-      _v: process.env.VISIONAPPVERSION,
+      _v: '1.0',
       enddate: '2017-03-26T00:00:00',
       pageindex: '1',
       pagesize: '20',
