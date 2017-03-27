@@ -16,6 +16,7 @@ var ARCGISENDPOINT = 'https://services2.arcgis.com/l4TwMwwoiuEVRPw9/ArcGIS/rest/
 var OPENDATAENDPOINT = 'https://data.townofcary.org/api/records/1.0/search/?';
 var EVENTDATAENDPOINT = 'http://www.townofcary.org/API'; // still waiting on vision to get this set properly
 var EVENTLOCATIONENDPOINT = 'http://www.townofcary.org/API'; // location based on evendata ID
+var RSSFEEDENDPOINT = 'http://www.townofcary.org/Home/Components/RssFeeds/RssFeed/View?ctID=5&cateIDs=1%2c2%2c3%2c4%2c5%2c6%2c10%2c11%2c12%2c13%2c14%2c15%2c16%2c17%2c18%2c19%2c20%2c21%2c22%2c53%2c54%2c55%2c59%2c64';
 var DISTANCE = 1; //distance for radius search.  currently 1 mile can be adapted later.
 var APP_ID = process.env.ALEXAAPPID;  // TODO replace with your app ID (OPTIONAL).
 var CASENUMBERLENGTH = 8; //the current number of digits in a case number to add leading zeros
@@ -365,6 +366,12 @@ var newSessionHandlers = {
     intentTrackingID.event("Success","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
     var prompt = 'I\'m sorry.  I didn\'t catch that.  Can you please repeat the question.';
     this.emit(':ask', prompt, prompt);
+  },
+
+  'RSSFeedIntent': function() {
+    var intentTrackingID = ua('UA-96121814-20');
+    var prompt = '';
+    // work in progress.  Need to figure out what we're actually intaking from someone...
   }
 };
 
