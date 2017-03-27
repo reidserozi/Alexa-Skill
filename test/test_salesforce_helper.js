@@ -9,7 +9,7 @@ chai.config.includeStack = true;
 
 describe('SalesforceHelper', function() {
   var subject = new SalesforceHelper();
-  var accessToken = '00D7A0000000P0o!AQMAQOCSpLD53qrC_Axjqgvre1X2OV3dRd6mI0ldZQrzE3adannmcwuHVOJY4IF9eHD3hxOiV_l7mseBzLg0VdJ3OTHUzduf';
+  var accessToken = '00D7A0000000P0o!AQMAQJ_K52y.Q1B2PR.Tu9LVW4Wi5Gi8i4LwqVSOM4oQ4vWVn0_rLeadInw0Op5NGnFcM7B1z8CZ_wBugetdI9tR_Z_kj2iY';
   var address = { x: -78.78019524656116, y: 35.7892128286608 };
   describe('#getUserAddress', function() {
     context('with a user access token', function() {

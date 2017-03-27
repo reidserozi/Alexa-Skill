@@ -35,7 +35,7 @@ OpenDataHelper.prototype.formatGymTimes = function(gymTimes) {
     times += _.template(' ${startTime} to ${endTime} at ${location} for ${sport}.')({
       startTime: helperClass.formatTimeString(startTime),
       endTime: helperClass.formatTimeString(endTime),
-      location: item.fields.facility_title,
+      location: helperClass.FIELDNAMEPAIRINGS[item.fields.facility_title.toUpperCase()],
       sport: item.fields.open_gym
     });
   });
@@ -43,7 +43,7 @@ OpenDataHelper.prototype.formatGymTimes = function(gymTimes) {
     var response = _.template('There are ${numTimes} open gym times on ${date}.${times}');
     return response({
       numTimes: gymTimes.records.length,
-      date: helperClass.formatDate(gymTimes.records[0].fields.date_scanned),
+      date: helperClass.formatDate(Date.parse(gymTimes.records[0].fields.date_scanned)),
       times: times
     });
   } else {

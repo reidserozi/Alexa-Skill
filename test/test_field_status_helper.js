@@ -13,8 +13,8 @@ describe('FieldStatusHelper', function() {
     context('basball field', function(){
       it('gets field status of baseball fields', function(){
         subject.getAllFieldStatus().then(function(response){
-          expect(response["BOND PARK"].open.length).to.eventually.eq(7);
-          done();
+          //looking for 9 since tehre are 9 total fileds/gyms at bond park.
+          expect(response["BOND PARK"].open.length).to.eq(9);
         });
       });
     });

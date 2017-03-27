@@ -3,19 +3,16 @@ var _ = require('lodash');
 var rp = require('request-promise');
 var HelperClass = require('./helper_functions.js');
 var promise = require('bluebird');
-require('./jsDate.js')();
+require('./jsDate.js');
 require('datejs');
 var FIELDSTATUSENDPOINT = 'http://games.townofcarync.gov';
 var FIELDTYPES = ['/ballfields/ballfields.txt', '/multipurposefields/multipurposefields.txt', '/gymnasiums/gymnasiums.txt', '/soccerpark/soccerpark.txt', '/usabaseball/usabaseball.txt'];
-var FIELDNAMEPAIRINGS = {'THOMAS BROOKS': 'THOMAS BROOKS PARK', 'MILLS PARK MIDDLE SCHOOL': 'MILLS PARK', 'MIDDLE CREEK COMMUNITY CENTER': 'MIDDLE CREEK', 'HERBERT C. YOUNG COMMUNITY CENTER': 'HERBERT YOUNG', 'BOND PARK COMMUNITY CENTER': 'BOND PARK', 'MIDDLE CREEk SCHOOL/PARK': 'MIDDLE CREEK'}
 
 function FieldStatusHelper() { }
 
 FieldStatusHelper.prototype.getAllFieldStatus = function(){
   var results = {};
-  return this.promiseLoop(results, 1).then(function(response){
-    console.log('results are:');
-    console.log(response);
+  return this.promiseLoop(results, 0).then(function(response){
     return response
   });
 }
@@ -45,7 +42,8 @@ FieldStatusHelper.prototype.promiseLoop = function(results, i){
 
 FieldStatusHelper.prototype.formatFieldStatus = function(fieldStatus, parkQuery){
   var prompt;
-  var parkName = FIELDNAMEPAIRINGS[parkQuery.toUpperCase()] || parkQuery.toUpperCase();
+  var helperClass = new HelperClass();
+  var parkName = helperClass.FIELDNAMEPAIRINGS[parkQuery.toUpperCase()] || parkQuery.toUpperCase();
   if(fieldStatus[parkName].closed.length <= 0){
       prompt = _.template('All fields at ${park} are currently open')({
         park: parkName
@@ -56,10 +54,7 @@ FieldStatusHelper.prototype.formatFieldStatus = function(fieldStatus, parkQuery)
         park: parkName
       });
     } else {
-      var closedFields = '';
-      fieldStatus[parkName].closed.forEach(function(element){
-        closedFields += element + ", ";
-      });
+      var closedFields = fieldStatus[parkName].closed.join(', ')
       prompt = _.template('At ${park}, the following list of facilities are closed. ${fields}')({
         park: parkName,
         fields: closedFields
