@@ -97,7 +97,6 @@ EventDataHelper.prototype.getEventData = function(uri){
 }
 
 
-
 // building out alexa response
 
 // promise loop to move to insert location into alexa return
