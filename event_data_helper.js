@@ -3,6 +3,7 @@ var _ = require('lodash');
 var rp = require('request-promise');
 var request = require('request');
 var Promise = require('bluebird');
+var crypto = require('crypto');
 require('./jsDate.js')();
 require('datejs');
 var HelperClass = require('./helper_functions.js');
@@ -74,26 +75,45 @@ function EventDataHelper() { }
 // line 254 index
 EventDataHelper.prototype.requestEventData = function(uri) {
   var self = this;
-  return this.getEventData(uri).then(
-    function(response) {
-      return self.promiseWhile(response.body, 0)
-    }, function (error) {
-        console.log('error in the promise');
-    }
-  ).catch(console.log.bind(console));
+  console.log('in the function');
+  return this.getEventData(uri).then(function(response) {
+    console.log('got response');
+    console.log(response);
+    return response;
+  }, function (error) {
+      console.log('error in the promise');
+  }).catch(console.log.bind(console));
 };
 
 EventDataHelper.prototype.getEventData = function(uri){
-  // var options = {
-  //   method: 'GET',
-  //   uri: encodeURI(uri),
-  //   timeout: 3000,
-  //   resolveWithFullResponse: true,
-  //   app_key: process.env.VISIONAPPKEY,
-  //   sign: process.env.VISIONAPPSECRET
-  // };
-  // return rp(options);
-  return sampleReturn;
+  var options = { method: 'GET',
+    url: 'https://www.townofcary.org/API',
+    headers:{
+      _app_key: process.env.VISIONAPPKEY,
+      _format: 'json',
+      _method: 'vision.cms.calendarcomponent.event.find',
+      _timestamp: new Date().toString('yyyy-MM-dd HH:mm:ss'),
+      _v: process.env.VISIONAPPVERSION,
+      enddate: '2017-03-26T00:00:00',
+      pageindex: '1',
+      pagesize: '20',
+      startdate: '2017-03-21T00:00:00'
+   }
+  };
+  var sign = signAPIRequest(options.headers);
+  console.log(sign);
+  options.headers.sign = sign;
+  console.log(options);
+  return rp(options);
+  //return sampleReturn;
+}
+
+function signAPIRequest(params){
+  var returnVal = process.env.VISIONAPPSECRET;
+  Object.keys(params).forEach(function(key) {
+    returnVal += key + params[key];
+  });
+  return crypto.createHash('md5').update(returnVal).digest("hex");
 }
 
 

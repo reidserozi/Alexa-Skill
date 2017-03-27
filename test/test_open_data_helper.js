@@ -14,7 +14,7 @@ describe('OpenDataHelper', function() {
   describe('#getOpenGymTimes', function() {
     context('with a date', function() {
       it('returns gym times on current date', function() {
-        today = new Date('2017-01-10');
+        today = new Date('2017-03-24');
         open_gym_date = today.toISOString().substring(0,10);
         var uri = OPENDATAENDPOINT + 'dataset=open-gym&q=open_gym_start==' + open_gym_date + '&facet=facility_title&facet=pass_type&facet=community_center&facet=open_gym&facet=group&facet=date_scanned&timezone=UTC';
         var value = subject.requestOpenData(uri).then(function(obj) {

@@ -3,7 +3,7 @@ var _ = require('lodash');
 var rp = require('request-promise');
 var HelperClass = require('./helper_functions.js');
 var promise = require('bluebird');
-require('./jsDate.js')();
+require('./jsDate.js');
 require('datejs');
 var FIELDSTATUSENDPOINT = 'http://games.townofcarync.gov';
 var FIELDTYPES = ['/ballfields/ballfields.txt', '/multipurposefields/multipurposefields.txt', '/gymnasiums/gymnasiums.txt', '/soccerpark/soccerpark.txt', '/usabaseball/usabaseball.txt'];
