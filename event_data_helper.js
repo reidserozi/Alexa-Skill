@@ -75,35 +75,35 @@ function EventDataHelper() { }
 // line 254 index
 EventDataHelper.prototype.requestEventData = function(uri) {
   var self = this;
-  console.log('in the function');
   return this.getEventData(uri).then(function(response) {
-    console.log('got response');
-    console.log(response);
-    return response;
-  }, function (error) {
-      console.log('error in the promise');
-  }).catch(console.log.bind(console));
+    var json = JSON.parse(response);
+    return json;
+  }).catch(function(err) {
+    console.log('Error in api call');
+    console.log(err);
+  });
 };
 
 EventDataHelper.prototype.getEventData = function(uri){
-  var options = { method: 'GET',
+  var options = { method: 'POST',
     url: 'https://www.townofcary.org/API',
-    headers:{
+    form:{
       _app_key: process.env.VISIONAPPKEY,
       _format: 'json',
       _method: 'vision.cms.calendarcomponent.event.find',
       _timestamp: new Date().toString('yyyy-MM-dd HH:mm:ss'),
       _v: process.env.VISIONAPPVERSION,
-      enddate: '2017-03-26T00:00:00',
-      pageindex: '1',
-      pagesize: '20',
-      startdate: '2017-03-21T00:00:00'
+      CategoryIDsConstraint: null,
+      DepartmentIDsConstraint: null,
+      EndDate: '2017-03-26T00:00:00',
+      Filter: null,
+      PageIndex: '1',
+      PageSize: '20',
+      StartDate: '2017-03-21T00:00:00'
    }
   };
-  var sign = signAPIRequest(options.headers);
-  console.log(sign);
-  options.headers.sign = sign;
-  console.log(options);
+  var sign = signAPIRequest(options.form).toUpperCase();
+  options.form._sign = sign;
   return rp(options);
   //return sampleReturn;
 }
@@ -111,7 +111,9 @@ EventDataHelper.prototype.getEventData = function(uri){
 function signAPIRequest(params){
   var returnVal = process.env.VISIONAPPSECRET;
   Object.keys(params).forEach(function(key) {
-    returnVal += key + params[key];
+    if(params[key] !== null){
+      returnVal += key + params[key];
+    }
   });
   return crypto.createHash('md5').update(returnVal).digest("hex");
 }
