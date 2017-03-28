@@ -8,85 +8,22 @@ require('./jsDate.js')();
 require('datejs');
 var HelperClass = require('./helper_functions.js');
 
-// delete this once API is authorized
-var sampleReturn =
-  {
-    "PagingList":{
-      "TotalResults":4,
-      "HasNext":false,
-      "Content":[
-        {
-          "ID":229,
-          "Title":"Cary Ballet presents Spring Mixed Repertoire",
-          "StartDate":"2017-03-25T19:00:00",
-          "EndDate":"2017-03-25T23:59:00",
-          "DisplayLinkToDocumentViewer":false,
-          "AllowNotification":false,
-          "Content":"stuff about ballet event",
-          "RedirectTarget":"_self",
-          "State":"",
-          "ThumbnailImage":"",
-          "AllowRegistration":false
-        },
-        {
-           "ID":1681,
-           "Title":"NCSU Sigma Pi Break the Silence 5K Run/Walk",
-           "StartDate":"2017-03-25T10:00:00",
-           "EndDate":"2017-03-25T14:00:00",
-           "DisplayLinkToDocumentViewer":false,
-           "AllowNotification":false,
-           "Content":"stuff about second sigma event",
-           "RedirectTarget":"_self",
-           "State":"",
-           "ThumbnailImage":"",
-           "AllowRegistration":false
-         }
-       ]
-     }
-   }
-var sampleReturnWithoutEvents =
-  {
-    "PagingList":{
-      "TotalResults":0,
-      "HasNext":false,
-      "Content":[
-      ]
-    }
-  }
-var sampleLocation =
-  {
-      "Event":{
-          "ID":0,
-          "StartDate":"0001-01-01T00:00:00",
-          "EndDate":"0001-01-01T00:00:00",
-          "DisplayLinkToDocumentViewer":false,
-          "AllowNotification":false,
-          "AllowRegistration":false,
-          "Categories":[
-              {
-                  "ID":51,
-                  "Name":"WakeMed Soccer Park"
-              }
-          ]
-      }
-  }
-
 function EventDataHelper() { }
 // line 254 index
-EventDataHelper.prototype.requestEventData = function(uri) {
+EventDataHelper.prototype.requestEventData = function(uri, startDate, endDate) {
   var self = this;
-  return this.getEventData(uri).then(function(response) {
+  return this.calendarEventFind(uri, startDate, endDate).then(function(response) {
     var json = JSON.parse(response);
-    return json;
+    return self.promiseWhile(uri, json, 0);
   }).catch(function(err) {
     console.log('Error in api call');
     console.log(err);
   });
 };
 
-EventDataHelper.prototype.getEventData = function(uri){
+EventDataHelper.prototype.calendarEventFind = function(uri, startDate, endDate){
   var options = { method: 'POST',
-    url: 'https://www.townofcary.org/API',
+    url: uri,
     form:{
       _app_key: process.env.VISIONAPPKEY,
       _format: 'json',
@@ -95,17 +32,34 @@ EventDataHelper.prototype.getEventData = function(uri){
       _v: process.env.VISIONAPPVERSION,
       CategoryIDsConstraint: null,
       DepartmentIDsConstraint: null,
-      EndDate: '2017-03-26T00:00:00',
+      EndDate: endDate,
       Filter: null,
       PageIndex: '1',
-      PageSize: '20',
-      StartDate: '2017-03-21T00:00:00'
+      PageSize: '8',
+      StartDate: startDate
    }
   };
   var sign = signAPIRequest(options.form).toUpperCase();
   options.form._sign = sign;
   return rp(options);
-  //return sampleReturn;
+}
+
+EventDataHelper.prototype.calendarEventGet = function(uri, id){
+  var options = { method: 'POST',
+    url: uri,
+    form:{
+      _app_key: process.env.VISIONAPPKEY,
+      _format: 'json',
+      _method: 'vision.cms.calendarcomponent.event.get',
+      _timestamp: new Date().toString('yyyy-MM-dd HH:mm:ss'),
+      _v: process.env.VISIONAPPVERSION,
+      Fields: 16,
+      ID: id
+   }
+  };
+  var sign = signAPIRequest(options.form).toUpperCase();
+  options.form._sign = sign;
+  return rp(options);
 }
 
 function signAPIRequest(params){
@@ -118,23 +72,21 @@ function signAPIRequest(params){
   return crypto.createHash('md5').update(returnVal).digest("hex");
 }
 
-
-
-// building out alexa response
-
 // promise loop to move to insert location into alexa return
-EventDataHelper.prototype.promiseWhile = function(results, i) {
+EventDataHelper.prototype.promiseWhile = function(uri, results, i) {
   var self = this;
-  // build up uri - may just be url or build out full options
-  return rp(options);
-  this.getEventData(uri).then(function(response) {
-      results.PagingList.Content[i].Location = response.body.Event.Categories[0].Name
-      return counter(i)
-    }).then(function(response) {
-      return (response >= results.PagingList.Content.length) ? results : self.promiseWhile(results, response)
-    });
+  console.log(results);
+  return this.calendarEventGet(uri, results.PagingList.Content[i].ID).then(function(response) {
+    var json = JSON.parse(response);
+    results.PagingList.Content[i].Location = json.Event.Categories[0].Name
+    return counter(i)
+  }).then(function(response) {
+    return (response >= results.PagingList.Content.length) ? results : self.promiseWhile(uri, results, response)
+  }).catch(function(err){
+    console.log('error on get api call');
+    console.log(err);
+  });
 }
-
 
 EventDataHelper.prototype.formatEventData = function(sampleReturn) {
   var helperClass = new HelperClass();
@@ -155,7 +107,6 @@ EventDataHelper.prototype.formatEventData = function(sampleReturn) {
       });
     });
     response = _.template('On ${date} there are ${count} events: ${eventData}')({
-
       date: helperClass.formatDate(Date.parse(eventContent[0].StartDate)),
       count: eventCount,
       eventData: eventData

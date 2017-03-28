@@ -664,6 +664,8 @@ FieldStatusIntent	Are games canceled at {park} today
 FieldStatusIntent	Are games postponed at {park} today
 FieldStatusIntent	Are games being played at {park} today
 
+UpcomingCaryEventsIntent What is happening in cary {Date}
+
 Strings used to generate utterances:
 '{what|when} are the open gym {|times} {|on|for} {-|Date}', 'How many open gym {|times} are {|there} on {-|Date}', '{what|when} are the open gym {|times} {|on|for} {-|Date} at {-|location} {|community center}', '{what|when} are the open gym {|times} at {-|location} {|community center} {|on|for} {-|Date}', 'How many open gym {|times} are {|there} on {-|Date} at {-|location} {|community center}', 'How many open gym {|times} are {|there} at {-|location} {|community center} on {-|Date}', 'How many open gym {|times} are {|there} at {-|location} {|community center}', '{what|when} are the open gym {|times} at {-|location} {|community center}'
 
