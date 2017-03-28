@@ -14,7 +14,7 @@ describe('OpenDataHelper', function() {
   describe('#getOpenGymTimes', function() {
     context('with a date', function() {
       it('returns gym times on current date', function() {
-        today = new Date('2017-01-10');
+        today = new Date('2017-03-24');
         open_gym_date = today.toISOString().substring(0,10);
         var uri = OPENDATAENDPOINT + 'dataset=open-gym&q=open_gym_start==' + open_gym_date + '&facet=facility_title&facet=pass_type&facet=community_center&facet=open_gym&facet=group&facet=date_scanned&timezone=UTC';
         var value = subject.requestOpenData(uri).then(function(obj) {
@@ -102,7 +102,7 @@ describe('OpenDataHelper', function() {
     };
     context('with multiple gym times', function() {
       it('formats the status as expected', function() {
-        expect(subject.formatGymTimes(status)).to.eq('There are 2 open gym times on 2017-01-06. 03:30:00 PM to 05:30:00 PM at Bond Park Community Center for Basketball. 09:00:00 AM to 12:30:00 PM at Bond Park Community Center for Pickleball.');
+        expect(subject.formatGymTimes(status)).to.eq('There are 2 open gym times on Fri Jan 06. 03:30:00 PM to 05:30:00 PM at BOND PARK for Basketball. 09:00:00 AM to 12:30:00 PM at BOND PARK for Pickleball.');
       });
     });
     context('with no gym times', function() {
