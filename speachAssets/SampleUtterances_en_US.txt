@@ -638,9 +638,9 @@ TrashDayIntent	is my garbage date this week
 
 FieldStatusIntent	what is the field status at {park}
 FieldStatusIntent	what is the status of {park}
-FieldStatusIntent	are the fileds open at {park}
-FieldStatusIntent	are the fileds closed at {park}
-FieldStatusIntent	are the fileds shut down at {park}
+FieldStatusIntent	are the fields open at {park}
+FieldStatusIntent	are the fields closed at {park}
+FieldStatusIntent	are the fields shut down at {park}
 FieldStatusIntent	Is {park} open
 FieldStatusIntent	Is {park} closed
 FieldStatusIntent	Is {park} shut down
@@ -663,6 +663,18 @@ FieldStatusIntent	Are games on at {park} today
 FieldStatusIntent	Are games canceled at {park} today
 FieldStatusIntent	Are games postponed at {park} today
 FieldStatusIntent	Are games being played at {park} today
+
+RSSFeedIntent what is the latest Cary news
+RSSFeedIntent what is the latest Cary update
+RSSFeedIntent what is the latest flash briefing
+RSSFeedIntent what is the latest news
+RSSFeedIntent what is the latest news feed
+RSSFeedIntent what is the latest news update
+RSSFeedIntent what is the latest rss feed
+RSSFeedIntent what is the latest syndication feed
+RSSFeedIntent what is the latest town news
+RSSFeedIntent what is the latest town update
+RSSFeedIntent what is the latest update
 
 Strings used to generate utterances:
 '{what|when} are the open gym {|times} {|on|for} {-|Date}', 'How many open gym {|times} are {|there} on {-|Date}', '{what|when} are the open gym {|times} {|on|for} {-|Date} at {-|location} {|community center}', '{what|when} are the open gym {|times} at {-|location} {|community center} {|on|for} {-|Date}', 'How many open gym {|times} are {|there} on {-|Date} at {-|location} {|community center}', 'How many open gym {|times} are {|there} at {-|location} {|community center} on {-|Date}', 'How many open gym {|times} are {|there} at {-|location} {|community center}', '{what|when} are the open gym {|times} at {-|location} {|community center}'

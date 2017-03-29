@@ -14,32 +14,23 @@ function dateFilter(value) {
 }
 
 RSSFeedHelper.prototype.requestRSSFeed = function() {
+  var feedData = '';
   return feedparser.parse(encodeURI(url)).then( (items) => {
-    return items.filter(dateFilter);
+    return feedData = items.filter(dateFilter);
   }).catch( (error) => {
     console.log('error: ', error);
   });
+  // return feedData;
 };
 
-RSSFeedHelper.prototype.formatRSSFeed = function() {
-  // return this.requestRSSFeed().then(function(response) {
-  //   return "The latest Town of Cary News item: " + response[0].title
-  // }).catch( (error) => {
-  //   console.log('error: ', error);
-  // });
-
-  // need to have "That latest Cary news: ${response}"
-  var response = '';
-  return this.requestRSSFeed().then(function(feedData) {
-    response = 'The latest Town of Cary News today: '
-    feedData.forEach(function(item) {
-      console.log(item.title);
-      response += _.template("${rssTitle}. ")({
-        rssTitle: item.title,
-      });
+RSSFeedHelper.prototype.formatRSSFeed = function(feedData) {
+  var response = 'The latest Town of Cary News today: ';
+  feedData.forEach(function(item) {
+    response += _.template("${rssTitle}. ")({
+      rssTitle: item.title,
     });
-    return response;
   });
+  return response;
 };
 
 

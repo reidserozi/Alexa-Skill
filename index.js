@@ -375,9 +375,16 @@ var newSessionHandlers = {
     var rssFeedHelper = new rssFeedHelper();
     var self = this;
 
-    return rssFeedHelper.requestRSSFeed().then(function(response) {
+    rssFeedHelper.requestRSSFeed().then(function(response) {
+      return rssFeedHelper.formatRSSFeed(response);
+    }).then(function(response) {
       intentTrackingID.event("Success","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.Stringify(self.attributes)).sent();
       self.emit(':tell', response);
+    }).catch(function(err){
+      prompt = 'Please say: Ask Cary what is the latest flash briefing';
+      console.log(err);
+      intentTrackingID.event("Failure","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
+      self.emit(':tell', prompt);
     });
   }
 };
