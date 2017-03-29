@@ -381,7 +381,7 @@ var newSessionHandlers = {
       intentTrackingID.event("Success","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.Stringify(self.attributes)).sent();
       self.emit(':tell', response);
     }).catch(function(err){
-      prompt = 'Please say: Ask Cary what is the latest flash briefing';
+      prompt = 'System down, please try again.';
       console.log(err);
       intentTrackingID.event("Failure","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
       self.emit(':tell', prompt);
