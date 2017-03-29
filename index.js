@@ -8,6 +8,7 @@ var EsriDataHelper = require('./esri_data_helper');
 var SalesforceHelper = require('./salesforce_helper');
 var FieldStatusHelper = require('./field_status_helper');
 var HelperClass = require('./helper_functions.js');
+var EventDataHelper = require('./event_data_helper');
 var ua = require('universal-analytics');
 require('./jsDate.js')();
 var facts = require('./cary_facts');
@@ -15,7 +16,6 @@ var ESRIENDPOINT = 'https://maps.townofcary.org/arcgis1/rest/services/';
 var ARCGISENDPOINT = 'https://services2.arcgis.com/l4TwMwwoiuEVRPw9/ArcGIS/rest/services/';
 var OPENDATAENDPOINT = 'https://data.townofcary.org/api/records/1.0/search/?';
 var EVENTDATAENDPOINT = 'http://www.townofcary.org/API'; // still waiting on vision to get this set properly
-var EVENTLOCATIONENDPOINT = 'http://www.townofcary.org/API'; // location based on evendata ID
 var RSSFEEDENDPOINT = 'http://www.townofcary.org/Home/Components/RssFeeds/RssFeed/View?ctID=5&cateIDs=1%2c2%2c3%2c4%2c5%2c6%2c10%2c11%2c12%2c13%2c14%2c15%2c16%2c17%2c18%2c19%2c20%2c21%2c22%2c53%2c54%2c55%2c59%2c64';
 var DISTANCE = 1; //distance for radius search.  currently 1 mile can be adapted later.
 var APP_ID = process.env.ALEXAAPPID;  // TODO replace with your app ID (OPTIONAL).
@@ -59,17 +59,18 @@ var newSessionHandlers = {
 
   'OpenGymTimesIntent': function () {
     var intentTrackingID = ua('UA-96121814-3');
+    var self = this;
     var gymTimeDate = this.event.request.intent.slots.Date.value || Date.yyyymmdd(Date.today());
     var location = this.event.request.intent.slots.location.value;
     var prompt = '';
     if(gymTimeDate.search(/^\d{4}-\d{2}-\d{2}$/) == -1){
       prompt = 'Please choose a single day for open gym times.';
       intentTrackingID.event("Wrong Input","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
-      this.emit(':ask', prompt);
+      self.emit(':ask', prompt);
       return;
     }
     var openDataHelper = new OpenDataHelper();
-    var self = this;
+
     var q = '';
     if(location === undefined){
       q = 'open_gym_start==' + gymTimeDate;
@@ -174,50 +175,52 @@ var newSessionHandlers = {
 
   'CaseStartIntent': function() {
     var intentTrackingID = ua('UA-96121814-8');
-    if(ACCOUNT_LINKING_REQUIRED == true && this.event.session.user.accessToken == undefined) {
+    var self = this;
+    if(ACCOUNT_LINKING_REQUIRED == true && self.event.session.user.accessToken == undefined) {
   		var speechOutput = "You must link your account before accessing this skill.";
       intentTrackingID.event("Account Not Linked","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
-  		this.emit(':tellWithLinkAccountCard', speechOutput);
+  		self.emit(':tellWithLinkAccountCard', speechOutput);
   	} else {
       var prompt = "OK, let's create a new Case. What do you need help with?";
       var reprompt = 'For a list of options please say help.  What do you need help with?';
       intentTrackingID.event("Success","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
-      this.handler.state = APP_STATES.CASE;
-      this.emit(':ask', prompt, reprompt);
+      self.handler.state = APP_STATES.CASE;
+      self.emit(':ask', prompt, reprompt);
     }
   },
 
   'CaseConfirmationIntent': function() {
     var intentTrackingID = ua('UA-96121814-9');
     var helperClass = new HelperClass();
-    if(ACCOUNT_LINKING_REQUIRED == true && this.event.session.user.accessToken == undefined) {
+    var self = this;
+    if(ACCOUNT_LINKING_REQUIRED == true && self.event.session.user.accessToken == undefined) {
   		var speechOutput = "You must link your account before accessing this skill.";
       intentTrackingID.event("Account Not Linked","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
-  		this.emit(':tellWithLinkAccountCard', speechOutput);
+  		self.emit(':tellWithLinkAccountCard', speechOutput);
   	} else {
       intentTrackingID.event("Success","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
-      var caseSubject = helperClass.formatCaseSubject(this.event.request.intent.slots.caseSubject.value);
-      var caseAction = this.event.request.intent.slots.caseAction.value || helperClass.addCaseAction(caseSubject);
-      this.attributes['caseIssue'] = CASEISSUES.find(checkCaseIssue, {"caseSubject": caseSubject, "caseAction": caseAction}) || CASEISSUES.find(checkCaseIssue, {"caseSubject": caseSubject, "caseAction": helperClass.addCaseAction(caseSubject)});
-      this.handler.state = APP_STATES.CASE;
-      this.emitWithState('CaseConfirmationIntent', true);
+      var caseSubject = helperClass.formatCaseSubject(self.event.request.intent.slots.caseSubject.value);
+      var caseAction = self.event.request.intent.slots.caseAction.value || helperClass.addCaseAction(caseSubject);
+      self.attributes['caseIssue'] = CASEISSUES.find(checkCaseIssue, {"caseSubject": caseSubject, "caseAction": caseAction}) || CASEISSUES.find(checkCaseIssue, {"caseSubject": caseSubject, "caseAction": helperClass.addCaseAction(caseSubject)});
+      self.handler.state = APP_STATES.CASE;
+      self.emitWithState('CaseConfirmationIntent', true);
     }
   },
 
   'MyCaseStatusIntent': function() {
     var intentTrackingID = ua('UA-96121814-10');
+    var self = this;
     var helperClass = new HelperClass();
     if(ACCOUNT_LINKING_REQUIRED == true && this.event.session.user.accessToken == undefined) {
   		var speechOutput = "You must link your account before accessing this skill.";
       intentTrackingID.event("Account Not Linked","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
-  		this.emit(':tellWithLinkAccountCard', speechOutput);
+  		self.emit(':tellWithLinkAccountCard', speechOutput);
   	} else {
       var salesforceHelper = new SalesforceHelper();
       var userToken = this.event.session.user.accessToken;
       var caseSubject = helperClass.formatCaseSubject(this.event.request.intent.slots.caseSubject.value);
       var caseAction = this.event.request.intent.slots.caseAction.value || helperClass.addCaseAction(caseSubject);
       var prompt = '';
-      var self = this;
       salesforceHelper.findLatestCaseStatus(userToken, CASEISSUES.find(checkCaseIssue, {"caseSubject": caseSubject, "caseAction": caseAction})).then(function(response) {
         console.log(response);
         return salesforceHelper.formatExistingCase(response);
@@ -235,10 +238,11 @@ var newSessionHandlers = {
 
   'CaseStatusIntent': function() {
     var intentTrackingID = ua('UA-96121814-11');
+    var self = this;
     if(ACCOUNT_LINKING_REQUIRED == true && this.event.session.user.accessToken == undefined) {
   		var speechOutput = "You must link your account before accessing this skill.";
       intentTrackingID.event("Account Not Linked","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
-  		this.emit(':tellWithLinkAccountCard', speechOutput);
+  		self.emit(':tellWithLinkAccountCard', speechOutput);
   	} else {
       var helperClass = new HelperClass();
       var salesforceHelper = new SalesforceHelper();
@@ -248,7 +252,6 @@ var newSessionHandlers = {
         caseNumber = helperClass.addLeadZeros(caseNumber, CASENUMBERLENGTH);
       }
       var prompt = '';
-      var self = this;
       salesforceHelper.findCaseStatus(userToken, caseNumber).then(function(response) {
         console.log(response)
         if(response.length <= 0){
@@ -273,13 +276,13 @@ var newSessionHandlers = {
     var userToken = this.event.session.user.accessToken;
     var salesforceHelper = new SalesforceHelper();
     var date = this.event.request.intent.slots.Date.value || Date.yyyymmdd(Date.today());
+    var self = this;
     if(date.search(/^\d{4}-\d{2}-\d{2}$/) == -1){
       var prompt = 'Please choose a single day for town hall hours.';
       intentTrackingID.event("Wrong Input","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
-      this.emit(':ask', prompt);
+      self.emit(':ask', prompt);
       return;
     }
-    var self = this;
     salesforceHelper.getTownHallHours(userToken, date).then(function(response){
       return salesforceHelper.formatTownHallHours(response, date);
     }).then(function(response){
@@ -296,34 +299,45 @@ var newSessionHandlers = {
 
   'UpcomingCaryEventsIntent': function() {
     var intentTrackingID = ua('UA-96121814-13');
-    var prompt = '';
     var date = this.event.request.intent.slots.Date.value || Date.yyyymmdd(Date.today());
+    var self = this;
     if(date.search(/^\d{4}-\d{2}-\d{2}$/) == -1){
       var prompt = 'Please choose a single day for a list of events.';
       intentTrackingID.event("Wrong Input","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
-      this.emit(':ask', prompt);
+      self.emit(':ask', prompt);
       return;
     }
-    // var self = this;
+
     var startDate = date + 'T00:00:00';
     var endDate = date + 'T23:59:59';
-
-    var locationuri = EVENTLOCATIONENDPOINT // waiting on vision...
-    var uri = EVENTDATAENDPOINT //continue building out query string once vision gets back to us
+    var uri = EVENTDATAENDPOINT
+    var eventDataHelper = new EventDataHelper();
+    eventDataHelper.requestEventData(uri, startDate, endDate).then(function(response){
+      return eventDataHelper.formatEventData(response);
+    }).then(function(response){
+      intentTrackingID.event("Success","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
+      self.emit(':tell', response);
+    }).catch(function(err){
+      console.log('error in events retrieval');
+      console.log(err);
+      var prompt = 'I\'m sorry, there was an error in finding events.';
+      intentTrackingID.event("Failure","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
+      self.emit(':tell', prompt)
+    });
   },
 
   'FieldStatusIntent': function() {
     var intentTrackingID = ua('UA-96121814-14');
     var helperClass = new HelperClass();
-    var parkName = this.event.request.intent.slots.park.value;
+    var parkName = this.event.request.intent.slots.park.value.toUpperCase();
     var prompt = '';
-    if(helperClass.FIELDNAMEPAIRINGS[parkname] === undefined){
+    var self = this;
+    if(helperClass.FIELDNAMEPAIRINGS[parkName] === undefined){
       prompt = 'I\'m sorry I did not recognize that field name.';
       intentTrackingID.event("Wrong Input","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
-      this.emit(':tell', prompt);
+      self.emit(':tell', prompt);
     }
     var fieldStatusHelper = new FieldStatusHelper();
-    var self = this;
     fieldStatusHelper.getAllFieldStatus().then(function(response){
       return fieldStatusHelper.formatFieldStatus(response, parkName);
     }).then(function(response){
@@ -339,31 +353,31 @@ var newSessionHandlers = {
 
   'AMAZON.RepeatIntent': function () {
       var intentTrackingID = ua('UA-96121814-15');
-      intentTrackingID.event("Success","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
+      intentTrackingID.event("Success","Slots: " + JSON.stringify(this.event.request.intent.slots) + " Attributes: " + JSON.stringify(this.attributes)).send();
       this.emit(':ask', this.attributes['speechOutput'], this.attributes['repromptText']);
   },
 
   'AMAZON.HelpIntent': function() {
     var intentTrackingID = ua('UA-96121814-16');
-    intentTrackingID.event("Success","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event("Success","Slots: " + JSON.stringify(this.event.request.intent.slots) + " Attributes: " + JSON.stringify(this.attributes)).send();
       this.emit(':askWithCard', helpMessage, helpMessageReprompt, 'Town of Cary Help Index', helpMesssageCard);
   },
 
   'AMAZON.StopIntent': function () {
     var intentTrackingID = ua('UA-96121814-17');
-    intentTrackingID.event("Success","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event("Success","Slots: " + JSON.stringify(this.event.request.intent.slots) + " Attributes: " + JSON.stringify(this.attributes)).send();
     this.emit(':tell', 'Goodbye');
   },
 
   'AMAZON.CancelIntent': function () {
     var intentTrackingID = ua('UA-96121814-18');
-    intentTrackingID.event("Success","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event("Success","Slots: " + JSON.stringify(this.event.request.intent.slots) + " Attributes: " + JSON.stringify(this.attributes)).send();
     this.emit(':tell', 'Goodbye');
   },
 
   'Unhandled': function () {
     var intentTrackingID = ua('UA-96121814-19');
-    intentTrackingID.event("Success","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event("Success","Slots: " + JSON.stringify(this.event.request.intent.slots) + " Attributes: " + JSON.stringify(this.attributes)).send();
     var prompt = 'I\'m sorry.  I didn\'t catch that.  Can you please repeat the question.';
     this.emit(':ask', prompt, prompt);
   },
@@ -437,46 +451,46 @@ var councilHandlers = Alexa.CreateStateHandler(APP_STATES.COUNCIL, {
 
   'AMAZON.YesIntnet': function() {
     var intentTrackingID = ua('UA-96187564-3');
-    intentTrackingID.event("Success","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event("Success","Slots: " + JSON.stringify(this.event.request.intent.slots) + " Attributes: " + JSON.stringify(this.attributes)).send();
     var prompt = 'Please tell me an address so I can look up your council information';
     this.emit(':ask', prompt, prompt);
   },
 
   'AMAZON.NoIntent': function() {
     var intentTrackingID = ua('UA-96187564-4');
-    intentTrackingID.event("Success","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event("Success","Slots: " + JSON.stringify(this.event.request.intent.slots) + " Attributes: " + JSON.stringify(this.attributes)).send();
     var prompt = 'OK, Have a nice day';
     this.emit(':tell', prompt);
   },
 
   'AMAZON.RepeatIntent': function () {
     var intentTrackingID = ua('UA-96187564-5');
-    intentTrackingID.event("Success","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event("Success","Slots: " + JSON.stringify(this.event.request.intent.slots) + " Attributes: " + JSON.stringify(this.attributes)).send();
     this.emit(':ask', this.attributes['speechOutput'], this.attributes['repromptText']);
   },
 
   'AMAZON.HelpIntent': function() {
     var intentTrackingID = ua('UA-96187564-6');
-    intentTrackingID.event("Success","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event("Success","Slots: " + JSON.stringify(this.event.request.intent.slots) + " Attributes: " + JSON.stringify(this.attributes)).send();
     var prompt = 'Please tell me your house number and street for me to look up your council information.'
     this.emit(':ask', prompt, prompt);
   },
 
   'AMAZON.StopIntent': function () {
     var intentTrackingID = ua('UA-96187564-7');
-    intentTrackingID.event("Success","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event("Success","Slots: " + JSON.stringify(this.event.request.intent.slots) + " Attributes: " + JSON.stringify(this.attributes)).send();
     this.emit(':tell', 'Goodbye');
   },
 
   'AMAZON.CancelIntent': function () {
     var intentTrackingID = ua('UA-96187564-8');
-    intentTrackingID.event("Success","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event("Success","Slots: " + JSON.stringify(this.event.request.intent.slots) + " Attributes: " + JSON.stringify(this.attributes)).send();
     this.emit(':tell', 'Goodbye');
   },
 
   'Unhandled': function () {
     var intentTrackingID = ua('UA-96187564-9');
-    intentTrackingID.event("Success","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event("Success","Slots: " + JSON.stringify(this.event.request.intent.slots) + " Attributes: " + JSON.stringify(this.attributes)).send();
     var prompt = 'I\'m sorry.  I didn\'t catch that.  Can you please repeat that.';
     this.emit(':ask', prompt, prompt);
   }
@@ -532,46 +546,46 @@ var parkHandlers = Alexa.CreateStateHandler(APP_STATES.PARKS, {
 
   'AMAZON.YesIntnet': function() {
     var intentTrackingID = ua('UA-96098494-3');
-    intentTrackingID.event("Success","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event("Success","Slots: " + JSON.stringify(this.event.request.intent.slots) + " Attributes: " + JSON.stringify(this.attributes)).send();
     var prompt = 'Please tell me an address so I can look up nearby parks';
     this.emit(':ask', prompt, prompt);
   },
 
   'AMAZON.NoIntent': function() {
     var intentTrackingID = ua('UA-96098494-4');
-    intentTrackingID.event("Success","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event("Success","Slots: " + JSON.stringify(this.event.request.intent.slots) + " Attributes: " + JSON.stringify(this.attributes)).send();
     var prompt = 'OK, Have a nice day';
     this.emit(':tell', prompt);
   },
 
   'AMAZON.RepeatIntent': function () {
     var intentTrackingID = ua('UA-96098494-5');
-    intentTrackingID.event("Success","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event("Success","Slots: " + JSON.stringify(this.event.request.intent.slots) + " Attributes: " + JSON.stringify(this.attributes)).send();
     this.emit(':ask', this.attributes['speechOutput'], this.attributes['repromptText']);
   },
 
   'AMAZON.HelpIntent': function() {
     var intentTrackingID = ua('UA-96098494-6');
-    intentTrackingID.event("Success","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event("Success","Slots: " + JSON.stringify(this.event.request.intent.slots) + " Attributes: " + JSON.stringify(this.attributes)).send();
     var prompt = 'Please tell me a house number and street for me to look up nearby parks.'
     this.emit(':ask', prompt, prompt);
   },
 
   'AMAZON.StopIntent': function () {
     var intentTrackingID = ua('UA-96098494-7');
-    intentTrackingID.event("Success","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event("Success","Slots: " + JSON.stringify(this.event.request.intent.slots) + " Attributes: " + JSON.stringify(this.attributes)).send();
     this.emit(':tell', 'Goodbye');
   },
 
   'AMAZON.CancelIntent': function () {
     var intentTrackingID = ua('UA-96098494-8');
-    intentTrackingID.event("Success","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event("Success","Slots: " + JSON.stringify(this.event.request.intent.slots) + " Attributes: " + JSON.stringify(this.attributes)).send();
     this.emit(':tell', 'Goodbye');
   },
 
   'Unhandled': function () {
     var intentTrackingID = ua('UA-96098494-9');
-    intentTrackingID.event("Success","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event("Success","Slots: " + JSON.stringify(this.event.request.intent.slots) + " Attributes: " + JSON.stringify(this.attributes)).send();
     var prompt = 'I\'m sorry.  I didn\'t catch that.  Can you please repeat that.';
     this.emit(':ask', prompt, prompt);
   }
@@ -633,39 +647,39 @@ var artHandlers = Alexa.CreateStateHandler(APP_STATES.ART, {
 
   'AMAZON.NoIntent': function() {
     var intentTrackingID = ua('UA-96124235-4');
-    intentTrackingID.event("Success","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event("Success","Slots: " + JSON.stringify(this.event.request.intent.slots) + " Attributes: " + JSON.stringify(this.attributes)).send();
     var prompt = 'OK, Have a nice day';
     this.emit(':tell', prompt);
   },
 
   'AMAZON.RepeatIntent': function () {
     var intentTrackingID = ua('UA-96124235-5');
-    intentTrackingID.event("Success","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event("Success","Slots: " + JSON.stringify(this.event.request.intent.slots) + " Attributes: " + JSON.stringify(this.attributes)).send();
     this.emit(':ask', this.attributes['speechOutput'], this.attributes['repromptText']);
   },
 
   'AMAZON.HelpIntent': function() {
     var intentTrackingID = ua('UA-96124235-6');
-    intentTrackingID.event("Success","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event("Success","Slots: " + JSON.stringify(this.event.request.intent.slots) + " Attributes: " + JSON.stringify(this.attributes)).send();
     var prompt = 'Please tell me your house number and street for me to look up nearby public art.'
     this.emit(':ask', prompt, prompt);
   },
 
   'AMAZON.StopIntent': function () {
     var intentTrackingID = ua('UA-96124235-7');
-    intentTrackingID.event("Success","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event("Success","Slots: " + JSON.stringify(this.event.request.intent.slots) + " Attributes: " + JSON.stringify(this.attributes)).send();
     this.emit(':tell', 'Goodbye');
   },
 
   'AMAZON.CancelIntent': function () {
     var intentTrackingID = ua('UA-96124235-8');
-    intentTrackingID.event("Success","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event("Success","Slots: " + JSON.stringify(this.event.request.intent.slots) + " Attributes: " + JSON.stringify(this.attributes)).send();
     this.emit(':tell', 'Goodbye');
   },
 
   'Unhandled': function () {
     var intentTrackingID = ua('UA-96124235-9');
-    intentTrackingID.event("Success","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event("Success","Slots: " + JSON.stringify(this.event.request.intent.slots) + " Attributes: " + JSON.stringify(this.attributes)).send();
     var prompt = 'I\'m sorry.  I didn\'t catch that.  Can you please repeat the question.';
     this.emit(':ask', prompt, prompt);
   }
@@ -707,13 +721,13 @@ var caseHandlers = Alexa.CreateStateHandler(APP_STATES.CASE, {
     var prompt = _.template('You wish to create a new case for ${caseIssue}.  Is that correct?')({
       caseIssue: caseIssue
     });
-    intentTrackingID.event("Success","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event("Success","Slots: " + JSON.stringify(this.event.request.intent.slots) + " Attributes: " + JSON.stringify(this.attributes)).send();
     this.emit(':ask', prompt, prompt);
   },
 
   'AMAZON.YesIntent': function() {
     var intentTrackingID = ua('UA-96098495-3');
-    intentTrackingID.event("Success","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event("Success","Slots: " + JSON.stringify(this.event.request.intent.slots) + " Attributes: " + JSON.stringify(this.attributes)).send();
     //I'm not sure if the attributes will be maintaned between Intents so reassigning it just incase.
     this.attributes["caseIssue"] = this.attributes["caseIssue"];
     this.emitWithState('CreateCaseIntent', true);
@@ -721,7 +735,7 @@ var caseHandlers = Alexa.CreateStateHandler(APP_STATES.CASE, {
 
   'AMAZON.NoIntent': function() {
     var intentTrackingID = ua('UA-96098495-4');
-    intentTrackingID.event("Success","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event("Success","Slots: " + JSON.stringify(this.event.request.intent.slots) + " Attributes: " + JSON.stringify(this.attributes)).send();
     this.attributes = {};
     var prompt = 'Ok, what typt of case would you like to submit?'
     var reprompt = 'For a list of options please say help.  What do you need help with?';
@@ -730,7 +744,7 @@ var caseHandlers = Alexa.CreateStateHandler(APP_STATES.CASE, {
 
   'AMAZON.HelpIntent': function() {
     var intentTrackingID = ua('UA-96098495-5');
-    intentTrackingID.event("Success","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event("Success","Slots: " + JSON.stringify(this.event.request.intent.slots) + " Attributes: " + JSON.stringify(this.attributes)).send();
     var prompt = 'To create a new case you can say I need help with a problem.  For a full list of current cases please check the card in your alexa app.  What can I help you with today?';
     var reprompt = 'What can I help you with today?';
     var cardMessage = 'Current case types you can submit to the Town of Cary:\nBroken Recycling Cart\nBroken Trash Cart\nCardboard Collection\nLeaf Collection\nMissed Recycling\nMissed Trash\nMissed Yard Waste\nOil Collection\nUpgrade Recycling Cart\nUpgrade Trash Cart';
@@ -739,19 +753,19 @@ var caseHandlers = Alexa.CreateStateHandler(APP_STATES.CASE, {
 
   'AMAZON.StopIntent': function () {
     var intentTrackingID = ua('UA-96098495-6');
-    intentTrackingID.event("Success","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event("Success","Slots: " + JSON.stringify(this.event.request.intent.slots) + " Attributes: " + JSON.stringify(this.attributes)).send();
     this.emit(':tell', 'Goodbye');
   },
 
   'AMAZON.CancelIntent': function () {
     var intentTrackingID = ua('UA-96098495-7');
-    intentTrackingID.event("Success","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event("Success","Slots: " + JSON.stringify(this.event.request.intent.slots) + " Attributes: " + JSON.stringify(this.attributes)).send();
     this.emit(':tell', 'Goodbye');
   },
 
   'Unhandled': function () {
     var intentTrackingID = ua('UA-96098495-8');
-    intentTrackingID.event("Success","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event("Success","Slots: " + JSON.stringify(this.event.request.intent.slots) + " Attributes: " + JSON.stringify(this.attributes)).send();
     var prompt = 'I\'m sorry.  I didn\'t catch that.  Can you please repeat your problem.';
     this.emit(':ask', prompt, prompt);
   }
@@ -804,46 +818,46 @@ var trashHandlers = Alexa.CreateStateHandler(APP_STATES.TRASH, {
 
   'AMAZON.YesIntnet': function() {
     var intentTrackingID = ua('UA-96121926-3');
-    intentTrackingID.event("Success","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event("Success","Slots: " + JSON.stringify(this.event.request.intent.slots) + " Attributes: " + JSON.stringify(this.attributes)).send();
     var prompt = 'Please tell me an address so I can look up your next trash and recycle day.';
     this.emit(':ask', prompt, prompt);
   },
 
   'AMAZON.NoIntent': function() {
     var intentTrackingID = ua('UA-96121926-4');
-    intentTrackingID.event("Success","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event("Success","Slots: " + JSON.stringify(this.event.request.intent.slots) + " Attributes: " + JSON.stringify(this.attributes)).send();
     var prompt = 'OK, Have a nice day';
     this.emit(':tell', prompt);
   },
 
   'AMAZON.RepeatIntent': function () {
     var intentTrackingID = ua('UA-96121926-5');
-    intentTrackingID.event("Success","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event("Success","Slots: " + JSON.stringify(this.event.request.intent.slots) + " Attributes: " + JSON.stringify(this.attributes)).send();
     this.emit(':ask', this.attributes['speechOutput'], this.attributes['repromptText']);
   },
 
   'AMAZON.HelpIntent': function() {
     var intentTrackingID = ua('UA-96121926-6');
-    intentTrackingID.event("Success","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event("Success","Slots: " + JSON.stringify(this.event.request.intent.slots) + " Attributes: " + JSON.stringify(this.attributes)).send();
     var prompt = 'Please tell me your house number and street for me to look your next trash and recycle day.'
     this.emit(':ask', prompt, prompt);
   },
 
   'AMAZON.StopIntent': function () {
     var intentTrackingID = ua('UA-96121926-7');
-    intentTrackingID.event("Success","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event("Success","Slots: " + JSON.stringify(this.event.request.intent.slots) + " Attributes: " + JSON.stringify(this.attributes)).send();
     this.emit(':tell', 'Goodbye');
   },
 
   'AMAZON.CancelIntent': function () {
     var intentTrackingID = ua('UA-96121926-8');
-    intentTrackingID.event("Success","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event("Success","Slots: " + JSON.stringify(this.event.request.intent.slots) + " Attributes: " + JSON.stringify(this.attributes)).send();
     this.emit(':tell', 'Goodbye');
   },
 
   'Unhandled': function () {
     var intentTrackingID = ua('UA-96121926-9');
-    intentTrackingID.event("Success","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event("Success","Slots: " + JSON.stringify(this.event.request.intent.slots) + " Attributes: " + JSON.stringify(this.attributes)).send();
     var prompt = 'I\'m sorry.  I didn\'t catch that.  Can you please repeat the question.';
     this.emit(':ask', prompt, prompt);
   }

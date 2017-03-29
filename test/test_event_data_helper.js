@@ -4,11 +4,12 @@ var chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 var expect = chai.expect;
 var EventDataHelper = require('../event_data_helper');
+var EVENTLOCATIONENDPOINT = 'https://www.townofcary.org/API';
 
 describe('EventDataHelper', function() {
   var today;
   var subject = new EventDataHelper();
-  var uri = 'http://www.townofcary.org/API'
+  var uri = EVENTLOCATIONENDPOINT;
   var sampleReturnWithEvents =
     {
       "PagingList":{
@@ -58,13 +59,15 @@ describe('EventDataHelper', function() {
     context('With a date', function() {
       context('with one or more scheduled events', function() {
         it('Returns an event', function() {
-          today = new Date('2017-03-25')
-          // var value = subject.requestEventData(uri)//.then(function(obj) {
-          //   return obj.PagingList.Content.ID;
-          //
-          // });
-          return subject.requestEventData(uri).then(function(response){
-            expect(response.PagingList.Content[0].ID).to.eq(227);
+          this.timeout(10000);
+          var startDate = '2017-03-31T00:00:00';
+          var endDate = '2017-03-31T23:59:59';
+          var test = new Date();
+          return subject.requestEventData(uri, startDate, endDate).then(function(response){
+            console.log(response.PagingList);
+            expect(response.PagingList.Content[0].ID).to.eq(233);
+            console.log('time elapsed');
+            console.log(test.getElapsed());
           });
         });
       });
