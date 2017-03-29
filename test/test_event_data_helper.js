@@ -64,7 +64,7 @@ describe('EventDataHelper', function() {
           //
           // });
           return subject.requestEventData(uri).then(function(response){
-              expect(response.body.PagingList.Content[0].ID).to.eq(229);
+            expect(response.PagingList.Content[0].ID).to.eq(227);
           });
         });
       });
