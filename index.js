@@ -371,7 +371,14 @@ var newSessionHandlers = {
   'RSSFeedIntent': function() {
     var intentTrackingID = ua('UA-96121814-20');
     var prompt = '';
-    // work in progress.  Need to figure out what we're actually intaking from someone...
+
+    var rssFeedHelper = new rssFeedHelper();
+    var self = this;
+
+    return rssFeedHelper.requestRSSFeed().then(function(response) {
+      intentTrackingID.event("Success","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.Stringify(self.attributes)).sent();
+      self.emit(':tell', response);
+    });
   }
 };
 
