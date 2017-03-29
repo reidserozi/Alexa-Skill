@@ -22,11 +22,24 @@ RSSFeedHelper.prototype.requestRSSFeed = function() {
 };
 
 RSSFeedHelper.prototype.formatRSSFeed = function() {
-  var self = this;
-  this.requestRSSFeed().then(function(response) {
-    console.log(response);
-  });
+  // return this.requestRSSFeed().then(function(response) {
+  //   return "The latest Town of Cary News item: " + response[0].title
+  // }).catch( (error) => {
+  //   console.log('error: ', error);
+  // });
 
+  // need to have "That latest Cary news: ${response}"
+  var response = '';
+  return this.requestRSSFeed().then(function(feedData) {
+    response = 'The latest Town of Cary News today: '
+    feedData.forEach(function(item) {
+      console.log(item.title);
+      response += _.template("${rssTitle}. ")({
+        rssTitle: item.title,
+      });
+    });
+    return response;
+  });
 };
 
 

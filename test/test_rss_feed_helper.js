@@ -12,36 +12,19 @@ describe('RSSFeedHelper', function() {
   //     it('returns the parsed rss object', function() {
   //       this.timeout(10000);
   //       return subject.requestRSSFeed().then(function(response) {
-  //         console.log(response);
   //         expect(response).to.be.a('array');
   //       });
   //     });
   //   });
   // });
   describe('#formatRSSFeed', function() {
-    context('with multiple feed items', function() {
-      it('returns multiple formatted items', function() {
+    context('with valid utterance from user', function() {
+      it('returns the latest RSS feed item', function() {
         this.timeout(10000);
         return subject.formatRSSFeed().then(function(response) {
           console.log(response);
-          expect(response).to.eq(1);
+          expect(response).to.include("The latest Town of Cary News today: ");
         });
-      });
-    });
-    context('with a single feed item', function() {
-      it('returns a single formatted item', function() {
-        // this.timeout(10000);
-        // return subject.formatRSSFeed().then(function(response) {
-
-        // });
-      });
-    });
-    context('with no feed items', function() {
-      it('returns the piano music', function() {
-        // this.timeout(10000);
-        // return subject.formatRSSFeed().then(function(response) {
-
-        // });
       });
     });
   });
