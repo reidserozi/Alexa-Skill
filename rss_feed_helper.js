@@ -10,11 +10,8 @@ const url = 'http://www.townofcary.org/Home/Components/RssFeeds/RssFeed/View?ctI
 function RSSFeedHelper() { }
 
 function dateFilter(value) {
-  var yesterday = new Date(new Date().getTime() - (24 * 60 * 60 * 1000))
-  // return value.date >= Date.today();
+  var yesterday = new Date(new Date().getTime() - (24 * 60 * 60 * 1000));
   return value.date >= yesterday;
-  // change to past 24 hours instead of just the day
-  // as soon as I find a non 24 hour time period, stop the filter
 }
 
 RSSFeedHelper.prototype.requestRSSFeed = function() {
@@ -24,7 +21,6 @@ RSSFeedHelper.prototype.requestRSSFeed = function() {
   }).catch( (error) => {
     console.log('error: ', error);
   });
-  // return feedData;
 };
 
 RSSFeedHelper.prototype.formatRSSFeed = function(feedData) {
