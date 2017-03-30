@@ -12,8 +12,13 @@ function EventDataHelper() { }
 // line 254 index
 EventDataHelper.prototype.requestEventData = function(uri, startDate, endDate) {
   var self = this;
+  var helperClass = new HelperClass();
   return this.calendarEventFind(uri, startDate, endDate).then(function(response) {
     var json = JSON.parse(response);
+    // json.PagingList.Content.forEach(function(item){
+    //   item.Location = helperClass.EVENTLOCATIONS[item.CategoryID];
+    // });
+    // return json;
     return self.promiseWhile(uri, json, 0);
   }).catch(function(err) {
     console.log('Error in api call');
@@ -24,7 +29,7 @@ EventDataHelper.prototype.requestEventData = function(uri, startDate, endDate) {
 EventDataHelper.prototype.calendarEventFind = function(uri, startDate, endDate){
   var options = { method: 'POST',
     url: uri,
-    form:{
+    form: {
       _app_key: process.env.VISIONAPPKEY,
       _format: 'json',
       _method: 'vision.cms.calendarcomponent.event.find',
@@ -39,26 +44,28 @@ EventDataHelper.prototype.calendarEventFind = function(uri, startDate, endDate){
       StartDate: startDate
    }
   };
-  var sign = signAPIRequest(options.form).toUpperCase();
-  options.form._sign = sign;
+  var sign = signAPIRequest(options.form.calendar_find).toUpperCase();
+  options.form.calendar_find._sign = sign;
   return rp(options);
 }
 
 EventDataHelper.prototype.calendarEventGet = function(uri, id){
   var options = { method: 'POST',
     url: uri,
-    form:{
-      _app_key: process.env.VISIONAPPKEY,
-      _format: 'json',
-      _method: 'vision.cms.calendarcomponent.event.get',
-      _timestamp: new Date().toString('yyyy-MM-dd HH:mm:ss'),
-      _v: process.env.VISIONAPPVERSION,
-      Fields: 16,
-      ID: id
+    form: {
+      calendar_get:{
+        _app_key: process.env.VISIONAPPKEY,
+        _format: 'json',
+        _method: 'vision.cms.calendarcomponent.event.get',
+        _timestamp: new Date().toString('yyyy-MM-dd HH:mm:ss'),
+        _v: process.env.VISIONAPPVERSION,
+        Fields: 16,
+        ID: id
+     }
    }
   };
-  var sign = signAPIRequest(options.form).toUpperCase();
-  options.form._sign = sign;
+  var sign = signAPIRequest(options.form.calendar_get).toUpperCase();
+  options.form.calendar_get._sign = sign;
   return rp(options);
 }
 
@@ -75,7 +82,6 @@ function signAPIRequest(params){
 // promise loop to move to insert location into alexa return
 EventDataHelper.prototype.promiseWhile = function(uri, results, i) {
   var self = this;
-  console.log(results);
   return this.calendarEventGet(uri, results.PagingList.Content[i].ID).then(function(response) {
     var json = JSON.parse(response);
     results.PagingList.Content[i].Location = json.Event.Categories[0].Name

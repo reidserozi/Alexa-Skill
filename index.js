@@ -15,7 +15,7 @@ var facts = require('./cary_facts');
 var ESRIENDPOINT = 'https://maps.townofcary.org/arcgis1/rest/services/';
 var ARCGISENDPOINT = 'https://services2.arcgis.com/l4TwMwwoiuEVRPw9/ArcGIS/rest/services/';
 var OPENDATAENDPOINT = 'https://data.townofcary.org/api/records/1.0/search/?';
-var EVENTDATAENDPOINT = 'http://www.townofcary.org/API'; // still waiting on vision to get this set properly
+var EVENTDATAENDPOINT = 'https://www.townofcary.org/API'; // still waiting on vision to get this set properly
 var DISTANCE = 1; //distance for radius search.  currently 1 mile can be adapted later.
 var APP_ID = process.env.ALEXAAPPID;  // TODO replace with your app ID (OPTIONAL).
 var CASENUMBERLENGTH = 8; //the current number of digits in a case number to add leading zeros
@@ -678,7 +678,7 @@ var caseHandlers = Alexa.CreateStateHandler(APP_STATES.CASE, {
       return salesforceHelper.formatNewCaseStatus(response);
     }).then(function(response){
       intentTrackingID.event("Success","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
-      self.emit(':askWithCard', response.prompt, response.prompt, 'Town of Cary Case', response.card);
+      self.emit(':tellWithCard', response.prompt, 'Town of Cary Case', response.card);
     }).catch(function(err) {
       prompt = 'Darn, there was a Salesforce problem, sorry';
       intentTrackingID.event("Failure","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();

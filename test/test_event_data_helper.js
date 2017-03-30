@@ -60,15 +60,11 @@ describe('EventDataHelper', function() {
     context('With a date', function() {
       context('with one or more scheduled events', function() {
         it('Returns an event', function() {
-          this.timeout(10000);
-          var startDate = '2017-03-31T00:00:00';
-          var endDate = '2017-03-31T23:59:59';
-          var test = new Date();
+          this.timeout(5000);
+          var startDate = '2017-03-24T00:00:00';
+          var endDate = '2017-03-24T23:59:59';
           return subject.requestEventData(uri, startDate, endDate).then(function(response){
-            console.log(response.PagingList);
-            expect(response.PagingList.Content[0].ID).to.eq(233);
-            console.log('time elapsed');
-            console.log(test.getElapsed());
+            expect(response.PagingList.Content[0].ID).to.eq(227);
           });
         });
       });
