@@ -10,6 +10,7 @@ var FieldStatusHelper = require('./field_status_helper');
 var HelperClass = require('./helper_functions.js');
 var EventDataHelper = require('./event_data_helper');
 var ua = require('universal-analytics');
+var RSSFeedHelper = require('./rss_feed_helper');
 require('./jsDate.js')();
 var facts = require('./cary_facts');
 var ESRIENDPOINT = 'https://maps.townofcary.org/arcgis1/rest/services/';
@@ -386,13 +387,13 @@ var newSessionHandlers = {
     var intentTrackingID = ua('UA-96121814-20');
     var prompt = '';
 
-    var rssFeedHelper = new rssFeedHelper();
+    var rssFeedHelper = new RSSFeedHelper();
     var self = this;
 
     rssFeedHelper.requestRSSFeed().then(function(response) {
       return rssFeedHelper.formatRSSFeed(response);
     }).then(function(response) {
-      intentTrackingID.event("Success","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.Stringify(self.attributes)).sent();
+      intentTrackingID.event("Success","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
       self.emit(':tell', response);
     }).catch(function(err){
       prompt = 'System down, please try again.';

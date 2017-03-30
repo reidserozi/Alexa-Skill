@@ -675,6 +675,8 @@ RSSFeedIntent what is the latest syndication feed
 RSSFeedIntent what is the latest town news
 RSSFeedIntent what is the latest town update
 RSSFeedIntent what is the latest update
+RSSFeedIntent what is the flash briefing
+RSSFeedIntent what is the news
 
 UpcomingCaryEventsIntent What is happening in cary {Date}
 

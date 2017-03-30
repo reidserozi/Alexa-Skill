@@ -24,6 +24,7 @@ describe('RSSFeedHelper', function() {
       it('returns the parsed rss object', function() {
         this.timeout(10000);
         return subject.requestRSSFeed().then(function(response) {
+          console.log(response);
           expect(response).to.be.a('array');
         });
       });
