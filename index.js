@@ -10,12 +10,14 @@ var FieldStatusHelper = require('./field_status_helper');
 var HelperClass = require('./helper_functions.js');
 var EventDataHelper = require('./event_data_helper');
 var ua = require('universal-analytics');
+var RSSFeedHelper = require('./rss_feed_helper');
 require('./jsDate.js')();
 var facts = require('./cary_facts');
 var ESRIENDPOINT = 'https://maps.townofcary.org/arcgis1/rest/services/';
 var ARCGISENDPOINT = 'https://services2.arcgis.com/l4TwMwwoiuEVRPw9/ArcGIS/rest/services/';
 var OPENDATAENDPOINT = 'https://data.townofcary.org/api/records/1.0/search/?';
-var EVENTDATAENDPOINT = 'https://www.townofcary.org/API'; // still waiting on vision to get this set properly
+var EVENTDATAENDPOINT = 'http://www.townofcary.org/API'; // still waiting on vision to get this set properly
+var RSSFEEDENDPOINT = 'http://www.townofcary.org/Home/Components/RssFeeds/RssFeed/View?ctID=5&cateIDs=1%2c2%2c3%2c4%2c5%2c6%2c10%2c11%2c12%2c13%2c14%2c15%2c16%2c17%2c18%2c19%2c20%2c21%2c22%2c53%2c54%2c55%2c59%2c64';
 var DISTANCE = 1; //distance for radius search.  currently 1 mile can be adapted later.
 var APP_ID = process.env.ALEXAAPPID;  // TODO replace with your app ID (OPTIONAL).
 var CASENUMBERLENGTH = 8; //the current number of digits in a case number to add leading zeros
@@ -379,6 +381,26 @@ var newSessionHandlers = {
     intentTrackingID.event("Success","Slots: " + JSON.stringify(this.event.request.intent.slots) + " Attributes: " + JSON.stringify(this.attributes)).send();
     var prompt = 'I\'m sorry.  I didn\'t catch that.  Can you please repeat the question.';
     this.emit(':ask', prompt, prompt);
+  },
+
+  'RSSFeedIntent': function() {
+    var intentTrackingID = ua('UA-96121814-20');
+    var prompt = '';
+
+    var rssFeedHelper = new RSSFeedHelper();
+    var self = this;
+
+    rssFeedHelper.requestRSSFeed().then(function(response) {
+      return rssFeedHelper.formatRSSFeed(response);
+    }).then(function(response) {
+      intentTrackingID.event("Success","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
+      self.emit(':tell', response);
+    }).catch(function(err){
+      prompt = 'System down, please try again.';
+      console.log(err);
+      intentTrackingID.event("Failure","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
+      self.emit(':tell', prompt);
+    });
   }
 };
 

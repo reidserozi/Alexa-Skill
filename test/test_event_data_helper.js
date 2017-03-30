@@ -55,7 +55,6 @@ describe('EventDataHelper', function() {
        }
      }
 
-
   describe('#formatEventData', function() {
     context('With a date', function() {
       context('with one or more scheduled events', function() {

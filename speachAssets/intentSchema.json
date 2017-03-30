@@ -163,6 +163,10 @@
           "type": "CARY_PARK"
         }
       ]
+    },
+    {
+      "intent": "RSSFeedIntent",
+      "slots":[]
     }
   ]
 }

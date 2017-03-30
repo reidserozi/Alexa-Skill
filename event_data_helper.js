@@ -78,7 +78,6 @@ function signAPIRequest(params){
   });
   return crypto.createHash('md5').update(returnVal).digest("hex");
 }
-
 // promise loop to move to insert location into alexa return
 EventDataHelper.prototype.promiseWhile = function(uri, results, i) {
   var self = this;
