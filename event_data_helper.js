@@ -53,15 +53,13 @@ EventDataHelper.prototype.calendarEventGet = function(uri, id){
   var options = { method: 'POST',
     url: uri,
     form: {
-      calendar_get:{
-        _app_key: process.env.VISIONAPPKEY,
-        _format: 'json',
-        _method: 'vision.cms.calendarcomponent.event.get',
-        _timestamp: new Date().toString('yyyy-MM-dd HH:mm:ss'),
-        _v: process.env.VISIONAPPVERSION,
-        Fields: 16,
-        ID: id
-     }
+      _app_key: process.env.VISIONAPPKEY,
+      _format: 'json',
+      _method: 'vision.cms.calendarcomponent.event.get',
+      _timestamp: new Date().toString('yyyy-MM-dd HH:mm:ss'),
+      _v: process.env.VISIONAPPVERSION,
+      Fields: 16,
+      ID: id
    }
   };
   var sign = signAPIRequest(options.form.calendar_get).toUpperCase();
@@ -78,6 +76,7 @@ function signAPIRequest(params){
   });
   return crypto.createHash('md5').update(returnVal).digest("hex");
 }
+
 // promise loop to move to insert location into alexa return
 EventDataHelper.prototype.promiseWhile = function(uri, results, i) {
   var self = this;
