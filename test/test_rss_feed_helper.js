@@ -6,15 +6,14 @@ var expect = chai.expect;
 var RSSFeedHelper = require('../rss_feed_helper');
 
 var sampleReturnWithEvents =
-[ { title: 'Cary\'s Planning Director Ulma to Retire',
+[ { title: 'Town of Cary\'s Weekend Update',
     description: 'Town of Cary’s Planning Director Jeff Ulma to retire March 31, 2017 after decades of service.\r\n    \r\n    \r\n    Cary will conduct a national recruitment.\r\n    \r\n    \r\n    Allan Cain, Cary’s Fire Chief, will serve as Acting Planning...',
     summary: 'Town of Cary’s Planning Director Jeff Ulma to retire March 31, 2017 after decades of service.\r\n    \r\n    \r\n    Cary will conduct a national recruitment.\r\n    \r\n    \r\n    Allan Cain, Cary’s Fire Chief, will serve as Acting Planning...',
     link: 'http://www.townofcary.org/Home/Components/News/News/13048/',
     guid: 'http://www.townofcary.org/Home/Components/News/News/13048/?date=20170329024251',
     author: null,
     comments: null
-},
-{ title: 'Cary is testing the emergency notification system' }
+}
 ];
 
 describe('RSSFeedHelper', function() {
@@ -24,7 +23,6 @@ describe('RSSFeedHelper', function() {
       it('returns the parsed rss object', function() {
         this.timeout(10000);
         return subject.requestRSSFeed().then(function(response) {
-          console.log(response);
           expect(response).to.be.a('array');
         });
       });

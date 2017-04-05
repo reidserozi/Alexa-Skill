@@ -25,11 +25,16 @@ RSSFeedHelper.prototype.requestRSSFeed = function() {
 
 RSSFeedHelper.prototype.formatRSSFeed = function(feedData) {
   var response = 'The latest Town of Cary News today: ';
-  feedData.forEach(function(item) {
-    response += _.template("${rssTitle}. ")({
-      rssTitle: item.title,
+  if (feedData[0].title == 'Town of Cary\'s Weekend Update') {
+    response = 'Please check Town of Cary dot O R G for the Weekend update';
+  } else {
+    feedData.forEach(function(item) {
+      response += _.template("${rssTitle}. ")({
+        rssTitle: item.title,
+      });
     });
-  });
+  }
+  console.log(response);
   return response;
 };
 
