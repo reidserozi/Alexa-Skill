@@ -12,8 +12,13 @@ function EventDataHelper() { }
 // line 254 index
 EventDataHelper.prototype.requestEventData = function(uri, startDate, endDate) {
   var self = this;
+  var helperClass = new HelperClass();
   return this.calendarEventFind(uri, startDate, endDate).then(function(response) {
     var json = JSON.parse(response);
+    // json.PagingList.Content.forEach(function(item){
+    //   item.Location = helperClass.EVENTLOCATIONS[item.CategoryID];
+    // });
+    // return json;
     return self.promiseWhile(uri, json, 0);
   }).catch(function(err) {
     console.log('Error in api call');
@@ -24,7 +29,7 @@ EventDataHelper.prototype.requestEventData = function(uri, startDate, endDate) {
 EventDataHelper.prototype.calendarEventFind = function(uri, startDate, endDate){
   var options = { method: 'POST',
     url: uri,
-    form:{
+    form: {
       _app_key: process.env.VISIONAPPKEY,
       _format: 'json',
       _method: 'vision.cms.calendarcomponent.event.find',
@@ -47,7 +52,7 @@ EventDataHelper.prototype.calendarEventFind = function(uri, startDate, endDate){
 EventDataHelper.prototype.calendarEventGet = function(uri, id){
   var options = { method: 'POST',
     url: uri,
-    form:{
+    form: {
       _app_key: process.env.VISIONAPPKEY,
       _format: 'json',
       _method: 'vision.cms.calendarcomponent.event.get',
@@ -71,10 +76,10 @@ function signAPIRequest(params){
   });
   return crypto.createHash('md5').update(returnVal).digest("hex");
 }
+
 // promise loop to move to insert location into alexa return
 EventDataHelper.prototype.promiseWhile = function(uri, results, i) {
   var self = this;
-  console.log(results);
   return this.calendarEventGet(uri, results.PagingList.Content[i].ID).then(function(response) {
     var json = JSON.parse(response);
     results.PagingList.Content[i].Location = json.Event.Categories[0].Name

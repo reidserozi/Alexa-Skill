@@ -123,6 +123,7 @@ AllCouncilMembersIntent who makes up the city council
 AllCouncilMembersIntent who makes up the council
 
 AtLargeCouncilMembersIntent who are the at large council members
+AtLargeCouncilMembersIntent who are at large council members
 
 NearbyParksIntent	what parks are near
 NearbyParksIntent	what public parks are near
@@ -148,8 +149,6 @@ NearbyParksIntent	are there parks nearby
 NearbyParksIntent	are there any parks nearby
 NearbyParksIntent	are there public parks nearby
 NearbyParksIntent	are there any public parks nearby
-
-NearbyPublicArtIntent what public art is nearby
 
 CaseStartIntent	to create a case
 CaseStartIntent	to submit a case
@@ -210,6 +209,14 @@ CaseConfirmationIntent	i need schedule a {caseAction} {caseSubject}
 CaseConfirmationIntent	to schedule a {caseAction} {caseSubject}
 CaseConfirmationIntent	i need set up a {caseAction} {caseSubject}
 CaseConfirmationIntent	to set up a {caseAction} {caseSubject}
+CaseConfirmationIntent	i need report an {caseAction} {caseSubject}
+CaseConfirmationIntent	to report an {caseAction} {caseSubject}
+CaseConfirmationIntent	i need help with an {caseAction} {caseSubject}
+CaseConfirmationIntent	to help with an {caseAction} {caseSubject}
+CaseConfirmationIntent	i need schedule an {caseAction} {caseSubject}
+CaseConfirmationIntent	to schedule an {caseAction} {caseSubject}
+CaseConfirmationIntent	i need set up an {caseAction} {caseSubject}
+CaseConfirmationIntent	to set up an {caseAction} {caseSubject}
 CaseConfirmationIntent	i need report {caseAction} {caseSubject} bin
 CaseConfirmationIntent	to report {caseAction} {caseSubject} bin
 CaseConfirmationIntent	i need help with {caseAction} {caseSubject} bin
@@ -226,6 +233,14 @@ CaseConfirmationIntent	i need schedule a {caseAction} {caseSubject} bin
 CaseConfirmationIntent	to schedule a {caseAction} {caseSubject} bin
 CaseConfirmationIntent	i need set up a {caseAction} {caseSubject} bin
 CaseConfirmationIntent	to set up a {caseAction} {caseSubject} bin
+CaseConfirmationIntent	i need report an {caseAction} {caseSubject} bin
+CaseConfirmationIntent	to report an {caseAction} {caseSubject} bin
+CaseConfirmationIntent	i need help with an {caseAction} {caseSubject} bin
+CaseConfirmationIntent	to help with an {caseAction} {caseSubject} bin
+CaseConfirmationIntent	i need schedule an {caseAction} {caseSubject} bin
+CaseConfirmationIntent	to schedule an {caseAction} {caseSubject} bin
+CaseConfirmationIntent	i need set up an {caseAction} {caseSubject} bin
+CaseConfirmationIntent	to set up an {caseAction} {caseSubject} bin
 CaseConfirmationIntent	i need report {caseAction} {caseSubject} cart
 CaseConfirmationIntent	to report {caseAction} {caseSubject} cart
 CaseConfirmationIntent	i need help with {caseAction} {caseSubject} cart
@@ -242,6 +257,14 @@ CaseConfirmationIntent	i need schedule a {caseAction} {caseSubject} cart
 CaseConfirmationIntent	to schedule a {caseAction} {caseSubject} cart
 CaseConfirmationIntent	i need set up a {caseAction} {caseSubject} cart
 CaseConfirmationIntent	to set up a {caseAction} {caseSubject} cart
+CaseConfirmationIntent	i need report an {caseAction} {caseSubject} cart
+CaseConfirmationIntent	to report an {caseAction} {caseSubject} cart
+CaseConfirmationIntent	i need help with an {caseAction} {caseSubject} cart
+CaseConfirmationIntent	to help with an {caseAction} {caseSubject} cart
+CaseConfirmationIntent	i need schedule an {caseAction} {caseSubject} cart
+CaseConfirmationIntent	to schedule an {caseAction} {caseSubject} cart
+CaseConfirmationIntent	i need set up an {caseAction} {caseSubject} cart
+CaseConfirmationIntent	to set up an {caseAction} {caseSubject} cart
 CaseConfirmationIntent	I need to report {caseAction} {caseSubject}
 CaseConfirmationIntent	I need to arrange {caseAction} {caseSubject}
 CaseConfirmationIntent	I need to schedule {caseAction} {caseSubject}
@@ -252,6 +275,11 @@ CaseConfirmationIntent	I need to arrange a {caseAction} {caseSubject}
 CaseConfirmationIntent	I need to schedule a {caseAction} {caseSubject}
 CaseConfirmationIntent	I need to set up a {caseAction} {caseSubject}
 CaseConfirmationIntent	I need to reserve a {caseAction} {caseSubject}
+CaseConfirmationIntent	I need to report an {caseAction} {caseSubject}
+CaseConfirmationIntent	I need to arrange an {caseAction} {caseSubject}
+CaseConfirmationIntent	I need to schedule an {caseAction} {caseSubject}
+CaseConfirmationIntent	I need to set up an {caseAction} {caseSubject}
+CaseConfirmationIntent	I need to reserve an {caseAction} {caseSubject}
 CaseConfirmationIntent	I need to report {caseAction} {caseSubject} bin
 CaseConfirmationIntent	I need to arrange {caseAction} {caseSubject} bin
 CaseConfirmationIntent	I need to schedule {caseAction} {caseSubject} bin
@@ -262,6 +290,11 @@ CaseConfirmationIntent	I need to arrange a {caseAction} {caseSubject} bin
 CaseConfirmationIntent	I need to schedule a {caseAction} {caseSubject} bin
 CaseConfirmationIntent	I need to set up a {caseAction} {caseSubject} bin
 CaseConfirmationIntent	I need to reserve a {caseAction} {caseSubject} bin
+CaseConfirmationIntent	I need to report an {caseAction} {caseSubject} bin
+CaseConfirmationIntent	I need to arrange an {caseAction} {caseSubject} bin
+CaseConfirmationIntent	I need to schedule an {caseAction} {caseSubject} bin
+CaseConfirmationIntent	I need to set up an {caseAction} {caseSubject} bin
+CaseConfirmationIntent	I need to reserve an {caseAction} {caseSubject} bin
 CaseConfirmationIntent	I need to report {caseAction} {caseSubject} cart
 CaseConfirmationIntent	I need to arrange {caseAction} {caseSubject} cart
 CaseConfirmationIntent	I need to schedule {caseAction} {caseSubject} cart
@@ -272,6 +305,11 @@ CaseConfirmationIntent	I need to arrange a {caseAction} {caseSubject} cart
 CaseConfirmationIntent	I need to schedule a {caseAction} {caseSubject} cart
 CaseConfirmationIntent	I need to set up a {caseAction} {caseSubject} cart
 CaseConfirmationIntent	I need to reserve a {caseAction} {caseSubject} cart
+CaseConfirmationIntent	I need to report an {caseAction} {caseSubject} cart
+CaseConfirmationIntent	I need to arrange an {caseAction} {caseSubject} cart
+CaseConfirmationIntent	I need to schedule an {caseAction} {caseSubject} cart
+CaseConfirmationIntent	I need to set up an {caseAction} {caseSubject} cart
+CaseConfirmationIntent	I need to reserve an {caseAction} {caseSubject} cart
 CaseConfirmationIntent	i need report {caseSubject} {caseAction}
 CaseConfirmationIntent	to report {caseSubject} {caseAction}
 CaseConfirmationIntent	i need help with {caseSubject} {caseAction}
@@ -288,6 +326,14 @@ CaseConfirmationIntent	i need schedule a {caseSubject} {caseAction}
 CaseConfirmationIntent	to schedule a {caseSubject} {caseAction}
 CaseConfirmationIntent	i need set up a {caseSubject} {caseAction}
 CaseConfirmationIntent	to set up a {caseSubject} {caseAction}
+CaseConfirmationIntent	i need report an {caseSubject} {caseAction}
+CaseConfirmationIntent	to report an {caseSubject} {caseAction}
+CaseConfirmationIntent	i need help with an {caseSubject} {caseAction}
+CaseConfirmationIntent	to help with an {caseSubject} {caseAction}
+CaseConfirmationIntent	i need schedule an {caseSubject} {caseAction}
+CaseConfirmationIntent	to schedule an {caseSubject} {caseAction}
+CaseConfirmationIntent	i need set up an {caseSubject} {caseAction}
+CaseConfirmationIntent	to set up an {caseSubject} {caseAction}
 CaseConfirmationIntent	i need report {caseSubject} {caseAction} bin
 CaseConfirmationIntent	to report {caseSubject} {caseAction} bin
 CaseConfirmationIntent	i need help with {caseSubject} {caseAction} bin
@@ -304,6 +350,14 @@ CaseConfirmationIntent	i need schedule a {caseSubject} {caseAction} bin
 CaseConfirmationIntent	to schedule a {caseSubject} {caseAction} bin
 CaseConfirmationIntent	i need set up a {caseSubject} {caseAction} bin
 CaseConfirmationIntent	to set up a {caseSubject} {caseAction} bin
+CaseConfirmationIntent	i need report an {caseSubject} {caseAction} bin
+CaseConfirmationIntent	to report an {caseSubject} {caseAction} bin
+CaseConfirmationIntent	i need help with an {caseSubject} {caseAction} bin
+CaseConfirmationIntent	to help with an {caseSubject} {caseAction} bin
+CaseConfirmationIntent	i need schedule an {caseSubject} {caseAction} bin
+CaseConfirmationIntent	to schedule an {caseSubject} {caseAction} bin
+CaseConfirmationIntent	i need set up an {caseSubject} {caseAction} bin
+CaseConfirmationIntent	to set up an {caseSubject} {caseAction} bin
 CaseConfirmationIntent	i need report {caseSubject} {caseAction} cart
 CaseConfirmationIntent	to report {caseSubject} {caseAction} cart
 CaseConfirmationIntent	i need help with {caseSubject} {caseAction} cart
@@ -320,6 +374,14 @@ CaseConfirmationIntent	i need schedule a {caseSubject} {caseAction} cart
 CaseConfirmationIntent	to schedule a {caseSubject} {caseAction} cart
 CaseConfirmationIntent	i need set up a {caseSubject} {caseAction} cart
 CaseConfirmationIntent	to set up a {caseSubject} {caseAction} cart
+CaseConfirmationIntent	i need report an {caseSubject} {caseAction} cart
+CaseConfirmationIntent	to report an {caseSubject} {caseAction} cart
+CaseConfirmationIntent	i need help with an {caseSubject} {caseAction} cart
+CaseConfirmationIntent	to help with an {caseSubject} {caseAction} cart
+CaseConfirmationIntent	i need schedule an {caseSubject} {caseAction} cart
+CaseConfirmationIntent	to schedule an {caseSubject} {caseAction} cart
+CaseConfirmationIntent	i need set up an {caseSubject} {caseAction} cart
+CaseConfirmationIntent	to set up an {caseSubject} {caseAction} cart
 CaseConfirmationIntent	I need to report {caseSubject} {caseAction}
 CaseConfirmationIntent	I need to arrange {caseSubject} {caseAction}
 CaseConfirmationIntent	I need to schedule {caseSubject} {caseAction}
@@ -330,6 +392,11 @@ CaseConfirmationIntent	I need to arrange a {caseSubject} {caseAction}
 CaseConfirmationIntent	I need to schedule a {caseSubject} {caseAction}
 CaseConfirmationIntent	I need to set up a {caseSubject} {caseAction}
 CaseConfirmationIntent	I need to reserve a {caseSubject} {caseAction}
+CaseConfirmationIntent	I need to report an {caseSubject} {caseAction}
+CaseConfirmationIntent	I need to arrange an {caseSubject} {caseAction}
+CaseConfirmationIntent	I need to schedule an {caseSubject} {caseAction}
+CaseConfirmationIntent	I need to set up an {caseSubject} {caseAction}
+CaseConfirmationIntent	I need to reserve an {caseSubject} {caseAction}
 CaseConfirmationIntent	I need to report {caseSubject} {caseAction} bin
 CaseConfirmationIntent	I need to arrange {caseSubject} {caseAction} bin
 CaseConfirmationIntent	I need to schedule {caseSubject} {caseAction} bin
@@ -340,6 +407,11 @@ CaseConfirmationIntent	I need to arrange a {caseSubject} {caseAction} bin
 CaseConfirmationIntent	I need to schedule a {caseSubject} {caseAction} bin
 CaseConfirmationIntent	I need to set up a {caseSubject} {caseAction} bin
 CaseConfirmationIntent	I need to reserve a {caseSubject} {caseAction} bin
+CaseConfirmationIntent	I need to report an {caseSubject} {caseAction} bin
+CaseConfirmationIntent	I need to arrange an {caseSubject} {caseAction} bin
+CaseConfirmationIntent	I need to schedule an {caseSubject} {caseAction} bin
+CaseConfirmationIntent	I need to set up an {caseSubject} {caseAction} bin
+CaseConfirmationIntent	I need to reserve an {caseSubject} {caseAction} bin
 CaseConfirmationIntent	I need to report {caseSubject} {caseAction} cart
 CaseConfirmationIntent	I need to arrange {caseSubject} {caseAction} cart
 CaseConfirmationIntent	I need to schedule {caseSubject} {caseAction} cart
@@ -350,6 +422,11 @@ CaseConfirmationIntent	I need to arrange a {caseSubject} {caseAction} cart
 CaseConfirmationIntent	I need to schedule a {caseSubject} {caseAction} cart
 CaseConfirmationIntent	I need to set up a {caseSubject} {caseAction} cart
 CaseConfirmationIntent	I need to reserve a {caseSubject} {caseAction} cart
+CaseConfirmationIntent	I need to report an {caseSubject} {caseAction} cart
+CaseConfirmationIntent	I need to arrange an {caseSubject} {caseAction} cart
+CaseConfirmationIntent	I need to schedule an {caseSubject} {caseAction} cart
+CaseConfirmationIntent	I need to set up an {caseSubject} {caseAction} cart
+CaseConfirmationIntent	I need to reserve an {caseSubject} {caseAction} cart
 CaseConfirmationIntent	you missed my {caseSubject}
 CaseConfirmationIntent	missed my {caseSubject}
 CaseConfirmationIntent	you forgot my {caseSubject}
@@ -370,6 +447,14 @@ CaseConfirmationIntent	i need schedule a {caseSubject}
 CaseConfirmationIntent	to schedule a {caseSubject}
 CaseConfirmationIntent	i need set up a {caseSubject}
 CaseConfirmationIntent	to set up a {caseSubject}
+CaseConfirmationIntent	i need report an {caseSubject}
+CaseConfirmationIntent	to report an {caseSubject}
+CaseConfirmationIntent	i need help with an {caseSubject}
+CaseConfirmationIntent	to help with an {caseSubject}
+CaseConfirmationIntent	i need schedule an {caseSubject}
+CaseConfirmationIntent	to schedule an {caseSubject}
+CaseConfirmationIntent	i need set up an {caseSubject}
+CaseConfirmationIntent	to set up an {caseSubject}
 CaseConfirmationIntent	I need to report {caseSubject}
 CaseConfirmationIntent	I need to arrange {caseSubject}
 CaseConfirmationIntent	I need to schedule {caseSubject}
@@ -380,6 +465,11 @@ CaseConfirmationIntent	I need to arrange a {caseSubject}
 CaseConfirmationIntent	I need to schedule a {caseSubject}
 CaseConfirmationIntent	I need to set up a {caseSubject}
 CaseConfirmationIntent	I need to reserve a {caseSubject}
+CaseConfirmationIntent	I need to report an {caseSubject}
+CaseConfirmationIntent	I need to arrange an {caseSubject}
+CaseConfirmationIntent	I need to schedule an {caseSubject}
+CaseConfirmationIntent	I need to set up an {caseSubject}
+CaseConfirmationIntent	I need to reserve an {caseSubject}
 CaseConfirmationIntent	i need report {caseSubject}
 CaseConfirmationIntent	to report {caseSubject}
 CaseConfirmationIntent	i need help with {caseSubject}
@@ -396,6 +486,14 @@ CaseConfirmationIntent	i need schedule a {caseSubject}
 CaseConfirmationIntent	to schedule a {caseSubject}
 CaseConfirmationIntent	i need set up a {caseSubject}
 CaseConfirmationIntent	to set up a {caseSubject}
+CaseConfirmationIntent	i need report an {caseSubject}
+CaseConfirmationIntent	to report an {caseSubject}
+CaseConfirmationIntent	i need help with an {caseSubject}
+CaseConfirmationIntent	to help with an {caseSubject}
+CaseConfirmationIntent	i need schedule an {caseSubject}
+CaseConfirmationIntent	to schedule an {caseSubject}
+CaseConfirmationIntent	i need set up an {caseSubject}
+CaseConfirmationIntent	to set up an {caseSubject}
 CaseConfirmationIntent	I need to report {caseSubject}
 CaseConfirmationIntent	I need to arrange {caseSubject}
 CaseConfirmationIntent	I need to schedule {caseSubject}
@@ -406,6 +504,11 @@ CaseConfirmationIntent	I need to arrange a {caseSubject}
 CaseConfirmationIntent	I need to schedule a {caseSubject}
 CaseConfirmationIntent	I need to set up a {caseSubject}
 CaseConfirmationIntent	I need to reserve a {caseSubject}
+CaseConfirmationIntent	I need to report an {caseSubject}
+CaseConfirmationIntent	I need to arrange an {caseSubject}
+CaseConfirmationIntent	I need to schedule an {caseSubject}
+CaseConfirmationIntent	I need to set up an {caseSubject}
+CaseConfirmationIntent	I need to reserve an {caseSubject}
 
 MyCaseStatusIntent	what is my problem
 MyCaseStatusIntent	what is my case
@@ -681,6 +784,8 @@ RSSFeedIntent what is the news
 UpcomingCaryEventsIntent What is happening in cary {Date}
 
 
+AMAZON.YesIntent that is correct
+
 Strings used to generate utterances:
 '{what|when} are the open gym {|times} {|on|for} {-|Date}', 'How many open gym {|times} are {|there} on {-|Date}', '{what|when} are the open gym {|times} {|on|for} {-|Date} at {-|location} {|community center}', '{what|when} are the open gym {|times} at {-|location} {|community center} {|on|for} {-|Date}', 'How many open gym {|times} are {|there} on {-|Date} at {-|location} {|community center}', 'How many open gym {|times} are {|there} at {-|location} {|community center} on {-|Date}', 'How many open gym {|times} are {|there} at {-|location} {|community center}', '{what|when} are the open gym {|times} at {-|location} {|community center}'
 
@@ -688,7 +793,7 @@ Strings used to generate utterances:
 
 to {create|submit|help with} a {|new} {case|service request|request|problem|work order|issue}'
 
-'{-|caseAction} {-|caseSubject} {|bin|cart}', '{-|caseSubject} {-|caseAction} {|bin|cart}', '{i need|to} {report|help with|schedule|set up} {|a} {-|caseAction} {-|caseSubject} {|bin|cart}', '{I need} to {report|arrange|schedule|set up|reserve} {|a} {-|caseAction} {-|caseSubject} {|bin|cart}', '{i need|to} {report|help with|schedule|set up} {|a} {-|caseSubject} {-|caseAction} {|bin|cart}', '{I need} to {report|arrange|schedule|set up|reserve} {|a} {-|caseSubject} {-|caseAction} {|bin|cart}', '{you|} {missed|forgot} my {-|caseSubject}', '{i need|to} {report|help with|schedule|set up} {|a} {-|caseSubject}', '{I need} to {report|arrange|schedule|set up|reserve} {|a} {-|caseSubject}', '{i need|to} {report|help with|schedule|set up} {|a} {-|caseSubject}', '{I need} to {report|arrange|schedule|set up|reserve} {|a} {-|caseSubject}'
+'{-|caseAction} {-|caseSubject} {|bin|cart}', '{-|caseSubject} {-|caseAction} {|bin|cart}', '{i need|to} {report|help with|schedule|set up} {|a|an} {-|caseAction} {-|caseSubject} {|bin|cart}', '{I need} to {report|arrange|schedule|set up|reserve} {|a|an} {-|caseAction} {-|caseSubject} {|bin|cart}', '{i need|to} {report|help with|schedule|set up} {|a|an} {-|caseSubject} {-|caseAction} {|bin|cart}', '{I need} to {report|arrange|schedule|set up|reserve} {|a|an} {-|caseSubject} {-|caseAction} {|bin|cart}', '{you|} {missed|forgot} my {-|caseSubject}', '{i need|to} {report|help with|schedule|set up} {|a|an} {-|caseSubject}', '{I need} to {report|arrange|schedule|set up|reserve} {|a|an} {-|caseSubject}', '{i need|to} {report|help with|schedule|set up} {|a|an} {-|caseSubject}', '{I need} to {report|arrange|schedule|set up|reserve} {|a|an} {-|caseSubject}'
 
 'what is my {problem|case} {|condition|status}', 'what is the {|current} status of my {case|problem}', '{|to} lookup the {|current} {condition|status} of my {problem|case}', 'what is the {|current} status of {|my} {-|caseAction} {-|caseSubject} {|bin|cart}', 'what is my {-|caseAction} {-|caseSubject} {|bin|cart} {|current} {condition|status}', 'what is the {|current} status of {|my} {-|caseSubject} {-|caseAction} {|bin|cart}', 'what is my {-|caseSubject} {-|caseAction} {|bin|cart} {|current} {condition|status}'
 
