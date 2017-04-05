@@ -44,8 +44,8 @@ EventDataHelper.prototype.calendarEventFind = function(uri, startDate, endDate){
       StartDate: startDate
    }
   };
-  var sign = signAPIRequest(options.form.calendar_find).toUpperCase();
-  options.form.calendar_find._sign = sign;
+  var sign = signAPIRequest(options.form).toUpperCase();
+  options.form._sign = sign;
   return rp(options);
 }
 
@@ -62,8 +62,8 @@ EventDataHelper.prototype.calendarEventGet = function(uri, id){
       ID: id
    }
   };
-  var sign = signAPIRequest(options.form.calendar_get).toUpperCase();
-  options.form.calendar_get._sign = sign;
+  var sign = signAPIRequest(options.form).toUpperCase();
+  options.form._sign = sign;
   return rp(options);
 }
 

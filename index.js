@@ -54,7 +54,7 @@ exports.handler = function(event, context, callback) {
 var newSessionHandlers = {
   'LaunchRequest': function () {
     var intentTrackingID = ua('UA-96121814-2');
-    intentTrackingID.event("Success","Slots: " + JSON.stringify(this.event.request.intent.slots) + " Attributes: " + JSON.stringify(this.attributes)).send();
+    intentTrackingID.event("Success","Launch Request").send();
     this.emit(':ask', welcomeMessage, welcomeReprompt);
   },
 
@@ -352,6 +352,26 @@ var newSessionHandlers = {
     });
   },
 
+  'RSSFeedIntent': function() {
+    var intentTrackingID = ua('UA-96121814-20');
+    var prompt = '';
+
+    var rssFeedHelper = new RSSFeedHelper();
+    var self = this;
+
+    rssFeedHelper.requestRSSFeed().then(function(response) {
+      return rssFeedHelper.formatRSSFeed(response);
+    }).then(function(response) {
+      intentTrackingID.event("Success","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
+      self.emit(':tell', response);
+    }).catch(function(err){
+      prompt = 'System down, please try again.';
+      console.log(err);
+      intentTrackingID.event("Failure","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
+      self.emit(':tell', prompt);
+    });
+  },
+
   'AMAZON.RepeatIntent': function () {
       var intentTrackingID = ua('UA-96121814-15');
       intentTrackingID.event("Success","Slots: " + JSON.stringify(this.event.request.intent.slots) + " Attributes: " + JSON.stringify(this.attributes)).send();
@@ -378,29 +398,9 @@ var newSessionHandlers = {
 
   'Unhandled': function () {
     var intentTrackingID = ua('UA-96121814-19');
-    intentTrackingID.event("Success","Slots: " + JSON.stringify(this.event.request.intent.slots) + " Attributes: " + JSON.stringify(this.attributes)).send();
+    intentTrackingID.event("Success","Unhandled").send();
     var prompt = 'I\'m sorry.  I didn\'t catch that.  Can you please repeat the question.';
     this.emit(':ask', prompt, prompt);
-  },
-
-  'RSSFeedIntent': function() {
-    var intentTrackingID = ua('UA-96121814-20');
-    var prompt = '';
-
-    var rssFeedHelper = new RSSFeedHelper();
-    var self = this;
-
-    rssFeedHelper.requestRSSFeed().then(function(response) {
-      return rssFeedHelper.formatRSSFeed(response);
-    }).then(function(response) {
-      intentTrackingID.event("Success","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
-      self.emit(':tell', response);
-    }).catch(function(err){
-      prompt = 'System down, please try again.';
-      console.log(err);
-      intentTrackingID.event("Failure","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
-      self.emit(':tell', prompt);
-    });
   }
 };
 
@@ -491,7 +491,7 @@ var councilHandlers = Alexa.CreateStateHandler(APP_STATES.COUNCIL, {
 
   'Unhandled': function () {
     var intentTrackingID = ua('UA-96187564-9');
-    intentTrackingID.event("Success","Slots: " + JSON.stringify(this.event.request.intent.slots) + " Attributes: " + JSON.stringify(this.attributes)).send();
+    intentTrackingID.event("Success","Unhandled").send();
     var prompt = 'I\'m sorry.  I didn\'t catch that.  Can you please repeat that.';
     this.emit(':ask', prompt, prompt);
   }
@@ -586,7 +586,7 @@ var parkHandlers = Alexa.CreateStateHandler(APP_STATES.PARKS, {
 
   'Unhandled': function () {
     var intentTrackingID = ua('UA-96098494-9');
-    intentTrackingID.event("Success","Slots: " + JSON.stringify(this.event.request.intent.slots) + " Attributes: " + JSON.stringify(this.attributes)).send();
+    intentTrackingID.event("Success","Unhandled").send();
     var prompt = 'I\'m sorry.  I didn\'t catch that.  Can you please repeat that.';
     this.emit(':ask', prompt, prompt);
   }
@@ -680,7 +680,7 @@ var artHandlers = Alexa.CreateStateHandler(APP_STATES.ART, {
 
   'Unhandled': function () {
     var intentTrackingID = ua('UA-96124235-9');
-    intentTrackingID.event("Success","Slots: " + JSON.stringify(this.event.request.intent.slots) + " Attributes: " + JSON.stringify(this.attributes)).send();
+    intentTrackingID.event("Success","Unhandled").send();
     var prompt = 'I\'m sorry.  I didn\'t catch that.  Can you please repeat the question.';
     this.emit(':ask', prompt, prompt);
   }
@@ -766,7 +766,7 @@ var caseHandlers = Alexa.CreateStateHandler(APP_STATES.CASE, {
 
   'Unhandled': function () {
     var intentTrackingID = ua('UA-96098495-8');
-    intentTrackingID.event("Success","Slots: " + JSON.stringify(this.event.request.intent.slots) + " Attributes: " + JSON.stringify(this.attributes)).send();
+    intentTrackingID.event("Success","Unhandled").send();
     var prompt = 'I\'m sorry.  I didn\'t catch that.  Can you please repeat your problem.';
     this.emit(':ask', prompt, prompt);
   }
@@ -858,7 +858,7 @@ var trashHandlers = Alexa.CreateStateHandler(APP_STATES.TRASH, {
 
   'Unhandled': function () {
     var intentTrackingID = ua('UA-96121926-9');
-    intentTrackingID.event("Success","Slots: " + JSON.stringify(this.event.request.intent.slots) + " Attributes: " + JSON.stringify(this.attributes)).send();
+    intentTrackingID.event("Success","Unhandled").send();
     var prompt = 'I\'m sorry.  I didn\'t catch that.  Can you please repeat the question.';
     this.emit(':ask', prompt, prompt);
   }
