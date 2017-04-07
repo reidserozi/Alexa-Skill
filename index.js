@@ -47,7 +47,7 @@ exports.handler = function(event, context, callback) {
   var alexa = Alexa.handler(event, context);
   alexa.appId = APP_ID;
 
-  alexa.registerHandlers(newSessionHandlers, councilHandlers, parkHandlers, artHandlers, caseHandlers, trashHandlers);
+  alexa.registerHandlers(newSessionHandlers); //, councilHandlers, parkHandlers, artHandlers, caseHandlers, trashHandlers);
   alexa.execute();
 };
 
@@ -288,7 +288,7 @@ var newSessionHandlers = {
     var self = this;
     if(date.search(/^\d{4}-\d{2}-\d{2}$/) == -1){
       var prompt = 'Please choose a single day for town hall hours.';
-      intentTrackingID.event("TownHallHoursIntent", "Wrong Input",,"Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+      intentTrackingID.event("TownHallHoursIntent", "Wrong Input","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
       self.emit(':ask', prompt);
       return;
     }
@@ -305,14 +305,13 @@ var newSessionHandlers = {
     });
   },
 
-
   'UpcomingCaryEventsIntent': function() {
     var intentTrackingID = ua('UA-97014541-1', this.event.session.user.userId, {strictCidFormat: false, https: true});
     var date = this.event.request.intent.slots.Date.value || Date.yyyymmdd(Date.today());
     var self = this;
     if(date.search(/^\d{4}-\d{2}-\d{2}$/) == -1){
       var prompt = 'Please choose a single day for a list of events.';
-      intentTrackingID.event("UpcomingCaryEventsIntent", "Wrong Input",,"Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+      intentTrackingID.event("UpcomingCaryEventsIntent", "Wrong Input","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
       self.emit(':ask', prompt);
       return;
     }
@@ -343,7 +342,7 @@ var newSessionHandlers = {
     var self = this;
     if(helperClass.FIELDNAMEPAIRINGS[parkName] === undefined){
       prompt = 'I\'m sorry I did not recognize that field name.';
-      intentTrackingID.event("FieldStatusIntent", "Wrong Input",,"Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+      intentTrackingID.event("FieldStatusIntent", "Wrong Input","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
       self.emit(':tell', prompt);
     }
     var fieldStatusHelper = new FieldStatusHelper();
@@ -382,25 +381,25 @@ var newSessionHandlers = {
 
   'AMAZON.RepeatIntent': function () {
       var intentTrackingID = ua('UA-97014541-1', this.event.session.user.userId, {strictCidFormat: false, https: true});
-      intentTrackingID.event("AMAZON.RepeatIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+      intentTrackingID.event('AMAZON.RepeatIntent',"Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
       this.emit(':ask', this.attributes['speechOutput'], this.attributes['repromptText']);
   },
 
   'AMAZON.HelpIntent': function() {
     var intentTrackingID = ua('UA-97014541-1', this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("AMAZON.HelpIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event('AMAZON.HelpIntent',"Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
       this.emit(':askWithCard', helpMessage, helpMessageReprompt, 'Town of Cary Help Index', helpMesssageCard);
   },
 
   'AMAZON.StopIntent': function () {
     var intentTrackingID = ua('UA-97014541-1', this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("AMAZON.StopIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event('AMAZON.StopIntent',"Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
     this.emit(':tell', 'Goodbye');
   },
 
   'AMAZON.CancelIntent': function () {
     var intentTrackingID = ua('UA-97014541-1', this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("AMAZON.CancelIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event('AMAZON.CancelIntent',"Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
     this.emit(':tell', 'Goodbye');
   },
 
@@ -474,26 +473,26 @@ var councilHandlers = Alexa.CreateStateHandler(APP_STATES.COUNCIL, {
 
   'AMAZON.RepeatIntent': function () {
     var intentTrackingID = ua('UA-97014541-2', this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("AMAZON.RepeatIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event('AMAZON.RepeatIntent',"Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
     this.emit(':ask', this.attributes['speechOutput'], this.attributes['repromptText']);
   },
 
   'AMAZON.HelpIntent': function() {
     var intentTrackingID = ua('UA-97014541-2', this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("AMAZON.HelpIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event('AMAZON.HelpIntent',"Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
     var prompt = 'Please tell me your house number and street for me to look up your council information.'
     this.emit(':ask', prompt, prompt);
   },
 
   'AMAZON.StopIntent': function () {
     var intentTrackingID = ua('UA-97014541-2', this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("AMAZON.StopIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event('AMAZON.StopIntent',"Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
     this.emit(':tell', 'Goodbye');
   },
 
   'AMAZON.CancelIntent': function () {
     var intentTrackingID = ua('UA-97014541-2', this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("AMAZON.CancelIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event('AMAZON.CancelIntent',"Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
     this.emit(':tell', 'Goodbye');
   },
 
@@ -569,26 +568,26 @@ var parkHandlers = Alexa.CreateStateHandler(APP_STATES.PARKS, {
 
   'AMAZON.RepeatIntent': function () {
     var intentTrackingID = ua('UA-97014541-3', this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("AMAZON.RepeatIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event('AMAZON.RepeatIntent',"Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
     this.emit(':ask', this.attributes['speechOutput'], this.attributes['repromptText']);
   },
 
   'AMAZON.HelpIntent': function() {
     var intentTrackingID = ua('UA-97014541-3', this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("AMAZON.HelpIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event('AMAZON.HelpIntent',"Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
     var prompt = 'Please tell me a house number and street for me to look up nearby parks.'
     this.emit(':ask', prompt, prompt);
   },
 
   'AMAZON.StopIntent': function () {
     var intentTrackingID = ua('UA-97014541-3', this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("AMAZON.StopIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event('AMAZON.StopIntent',"Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
     this.emit(':tell', 'Goodbye');
   },
 
   'AMAZON.CancelIntent': function () {
     var intentTrackingID = ua('UA-97014541-3', this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("AMAZON.CancelIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event('AMAZON.CancelIntent',"Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
     this.emit(':tell', 'Goodbye');
   },
 
@@ -663,26 +662,26 @@ var artHandlers = Alexa.CreateStateHandler(APP_STATES.ART, {
 
   'AMAZON.RepeatIntent': function () {
     var intentTrackingID = ua('UA-97014541-4', this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("AMAZON.RepeatIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event('AMAZON.RepeatIntent',"Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
     this.emit(':ask', this.attributes['speechOutput'], this.attributes['repromptText']);
   },
 
   'AMAZON.HelpIntent': function() {
     var intentTrackingID = ua('UA-97014541-4', this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("AMAZON.HelpIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event('AMAZON.HelpIntent',"Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
     var prompt = 'Please tell me your house number and street for me to look up nearby public art.'
     this.emit(':ask', prompt, prompt);
   },
 
   'AMAZON.StopIntent': function () {
     var intentTrackingID = ua('UA-97014541-4', this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("AMAZON.StopIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event('AMAZON.StopIntent',"Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
     this.emit(':tell', 'Goodbye');
   },
 
   'AMAZON.CancelIntent': function () {
     var intentTrackingID = ua('UA-97014541-4', this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("AMAZON.CancelIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event('AMAZON.CancelIntent',"Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
     this.emit(':tell', 'Goodbye');
   },
 
@@ -753,7 +752,7 @@ var caseHandlers = Alexa.CreateStateHandler(APP_STATES.CASE, {
 
   'AMAZON.HelpIntent': function() {
     var intentTrackingID = ua('UA-97014541-5', this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("AMAZON.HelpIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event('AMAZON.HelpIntent',"Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
     var prompt = 'To create a new case you can say I need help with a problem.  For a full list of current cases please check the card in your alexa app.  What can I help you with today?';
     var reprompt = 'What can I help you with today?';
     var cardMessage = 'Current case types you can submit to the Town of Cary:\nBroken Recycling Cart\nBroken Trash Cart\nCardboard Collection\nLeaf Collection\nMissed Recycling\nMissed Trash\nMissed Yard Waste\nOil Collection\nUpgrade Recycling Cart\nUpgrade Trash Cart';
@@ -762,13 +761,13 @@ var caseHandlers = Alexa.CreateStateHandler(APP_STATES.CASE, {
 
   'AMAZON.StopIntent': function () {
     var intentTrackingID = ua('UA-97014541-5', this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("AMAZON.StopIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event('AMAZON.StopIntent',"Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
     this.emit(':tell', 'Goodbye');
   },
 
   'AMAZON.CancelIntent': function () {
     var intentTrackingID = ua('UA-97014541-5', this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("AMAZON.CancelIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event('AMAZON.CancelIntent',"Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
     this.emit(':tell', 'Goodbye');
   },
 
@@ -841,26 +840,26 @@ var trashHandlers = Alexa.CreateStateHandler(APP_STATES.TRASH, {
 
   'AMAZON.RepeatIntent': function () {
     var intentTrackingID = ua('UA-97014541-6', this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("AMAZON.RepeatIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event('AMAZON.RepeatIntent',"Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
     this.emit(':ask', this.attributes['speechOutput'], this.attributes['repromptText']);
   },
 
   'AMAZON.HelpIntent': function() {
     var intentTrackingID = ua('UA-97014541-6', this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("AMAZON.HelpIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event('AMAZON.HelpIntent',"Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
     var prompt = 'Please tell me your house number and street for me to look your next trash and recycle day.'
     this.emit(':ask', prompt, prompt);
   },
 
   'AMAZON.StopIntent': function () {
     var intentTrackingID = ua('UA-97014541-6', this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("AMAZON.StopIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event('AMAZON.StopIntent',"Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
     this.emit(':tell', 'Goodbye');
   },
 
   'AMAZON.CancelIntent': function () {
     var intentTrackingID = ua('UA-97014541-6', this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("AMAZON.CancelIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event('AMAZON.CancelIntent',"Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
     this.emit(':tell', 'Goodbye');
   },
 
