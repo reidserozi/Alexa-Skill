@@ -738,13 +738,13 @@ var caseHandlers = Alexa.CreateStateHandler(APP_STATES.CASE, {
     var prompt = _.template('You wish to create a new case for ${caseIssue}.  Is that correct?')({
       caseIssue: caseIssue
     });
-    intentTrackingID.event("CaseConfirmationIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event("CaseConfirmationIntent","Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
     this.emit(':ask', prompt, prompt);
   },
 
   'AMAZON.YesIntent': function() {
     var intentTrackingID = ua(GOOGLE_STATE_IDS.CASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("AMAZON.YesIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event("AMAZON.YesIntent","Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
     //I'm not sure if the attributes will be maintaned between Intents so reassigning it just incase.
     this.attributes["caseIssue"] = this.attributes["caseIssue"];
     this.emitWithState('CreateCaseIntent', true);
