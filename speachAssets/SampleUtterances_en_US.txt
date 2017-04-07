@@ -94,6 +94,8 @@ OpenGymTimesIntent	what are the open gym at {location} community center
 OpenGymTimesIntent	when are the open gym at {location} community center
 OpenGymTimesIntent	what are the open gym times at {location} community center
 OpenGymTimesIntent	when are the open gym times at {location} community center
+OpenGymTimesIntent  what gym can I go to {Date}
+OpenGymTimesIntent  the gym times
 
 MyCouncilMemberIntent	who is my council
 MyCouncilMemberIntent	who represents me in council
@@ -116,6 +118,7 @@ MyMayorIntent who is the mayor
 MyMayorIntent who is the mayor of cary
 MyMayorIntent who is the mayor of the town of cary
 MyMayorIntent who is carys mayor
+MyMayorIntent who the mayor is
 
 AllCouncilMembersIntent who is on the city council
 AllCouncilMembersIntent who is on the council
@@ -677,6 +680,7 @@ TownHallHoursIntent	is town hall open
 TownHallHoursIntent	when is town hall open
 TownHallHoursIntent	is the town hall open
 TownHallHoursIntent	when is the town hall open
+
 
 TrashDayIntent	when is my trash day
 TrashDayIntent	what day is my trash day

@@ -93,13 +93,13 @@ SalesforceHelper.prototype.formatExistingCase = function(caseInfo) {
 	var response = {};
 	var helperClass = new HelperClass();
 	if (caseInfo.length > 0) {
-		var prompt = _.template('The status of your case is ${caseStatus}, and it was last modified on ${lastModifiedDate}.');
+		var prompt = _.template('Your case was last modified on ${lastModifiedDate}.'); // The status of your case is ${caseStatus}, and it
 		var lmDate = Date.parse(caseInfo[0].LastModifiedDate).toString();
 	  response.prompt = prompt({
 			caseStatus: caseInfo[0].Status,
 			lastModifiedDate: helperClass.formatDateTime(Date.parse(caseInfo[0].LastModifiedDate)) //helperClass.formatDateTime(lmDate.slice(0, lmDate.indexOf('GMT')))
 		});
-		var card = _.template('Your case for ${caseIssue} has a case number of ${caseNumber} an expected completion date of ${finishDate}');
+		var card = _.template('Your case for ${caseIssue} has a case number of ${caseNumber}'); //  an expected completion date of ${finishDate}
 		response.card = card({
 			caseIssue: caseInfo[0].CaseIssue__r.Name,
 			caseNumber: caseInfo[0].CaseNumber,
@@ -115,12 +115,12 @@ SalesforceHelper.prototype.formatExistingCase = function(caseInfo) {
 SalesforceHelper.prototype.formatNewCaseStatus = function(caseInfo) {
 	var response = {};
 	var helperClass = new HelperClass();
-  var prompt = _.template('I\'ve created a new case for ${caseIssue}.  The case number is ${caseNumber}.');
+  var prompt = _.template('I\'ve created a new case for ${caseIssue}.  The case number is ${caseNumber}. You can view the case on your Alexa App.');
 	response.prompt = prompt({
 		caseIssue: caseInfo.CaseIssue__r.Name,
 		caseNumber: caseInfo.CaseNumber
 	});
-	var card = _.template('Your new case for ${caseIssue} has a case number of ${caseNumber} an expected completion date of ${finishDate}');
+	var card = _.template('Your new case for ${caseIssue} has a case number of ${caseNumber}'); // an expected completion date of ${finishDate}
 	response.card = card({
 		caseIssue: caseInfo.CaseIssue__r.Name,
 		caseNumber: caseInfo.CaseNumber,
