@@ -102,7 +102,7 @@ describe('OpenDataHelper', function() {
     };
     context('with multiple gym times', function() {
       it('formats the status as expected', function() {
-        expect(subject.formatGymTimes(status)).to.eq('There are 2 open gym times on Fri Jan 06. 03:30:00 PM to 05:30:00 PM at BOND PARK for Basketball. 09:00:00 AM to 12:30:00 PM at BOND PARK for Pickleball.');
+        expect(subject.formatGymTimes(status)).to.eq('There are 2 open gym times on Fri Jan 06. At BOND PARK the times are: 03:30:00 PM to 05:30:00 PM for Basketball. 09:00:00 AM to 12:30:00 PM for Pickleball.');
       });
     });
     context('with no gym times', function() {
