@@ -29,16 +29,30 @@ OpenDataHelper.prototype.getOpenData = function(uri) {
 OpenDataHelper.prototype.formatGymTimes = function(gymTimes) {
   var times = '';
   var helperClass = new HelperClass();
-  gymTimes.records.forEach(function buildtemplate(item,index){
-    var startTime = new Date(item.fields.open_gym_start);
-    var endTime = new Date(item.fields.open_gym_end);
-    times += _.template(' ${startTime} to ${endTime} at ${location} for ${sport}.')({
-      startTime: helperClass.formatTimeString(startTime),
-      endTime: helperClass.formatTimeString(endTime),
-      location: helperClass.FIELDNAMEPAIRINGS[item.fields.facility_title.toUpperCase()],
-      sport: item.fields.open_gym
-    });
+  var sortedGyms = {}
+  gymTimes.records.forEach(function(item){
+    var newKey = helperClass.FIELDNAMEPAIRINGS[item.fields.facility_title.toUpperCase()]
+    if(sortedGyms[newKey] === undefined){
+      sortedGyms[newKey] = [];
+    }
+    sortedGyms[newKey].push(item.fields);
   });
+  for (var key in sortedGyms) {
+    if (sortedGyms.hasOwnProperty(key)) {
+      times += _.template(' At ${park} the times are:')({
+        park: key
+      });
+      sortedGyms[key].forEach(function(item){
+        var startTime = new Date(item.open_gym_start);
+        var endTime = new Date(item.open_gym_end);
+        times += _.template(' ${startTime} to ${endTime} for ${sport}.')({
+          startTime: helperClass.formatTimeString(startTime),
+          endTime: helperClass.formatTimeString(endTime),
+          sport: item.open_gym
+        });
+      });
+    }
+  }
   if(gymTimes.records.length > 0) {
     var response = _.template('There are ${numTimes} open gym times on ${date}.${times}');
     return response({

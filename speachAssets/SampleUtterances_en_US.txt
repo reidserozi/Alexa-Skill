@@ -94,6 +94,8 @@ OpenGymTimesIntent	what are the open gym at {location} community center
 OpenGymTimesIntent	when are the open gym at {location} community center
 OpenGymTimesIntent	what are the open gym times at {location} community center
 OpenGymTimesIntent	when are the open gym times at {location} community center
+OpenGymTimesIntent  what gym can I go to {Date}
+OpenGymTimesIntent  the gym times
 
 MyCouncilMemberIntent	who is my council
 MyCouncilMemberIntent	who represents me in council
@@ -116,6 +118,7 @@ MyMayorIntent who is the mayor
 MyMayorIntent who is the mayor of cary
 MyMayorIntent who is the mayor of the town of cary
 MyMayorIntent who is carys mayor
+MyMayorIntent who the mayor is
 
 AllCouncilMembersIntent who is on the city council
 AllCouncilMembersIntent who is on the council
@@ -510,130 +513,6 @@ CaseConfirmationIntent	I need to schedule an {caseSubject}
 CaseConfirmationIntent	I need to set up an {caseSubject}
 CaseConfirmationIntent	I need to reserve an {caseSubject}
 
-MyCaseStatusIntent	what is my problem
-MyCaseStatusIntent	what is my case
-MyCaseStatusIntent	what is my problem condition
-MyCaseStatusIntent	what is my case condition
-MyCaseStatusIntent	what is my problem status
-MyCaseStatusIntent	what is my case status
-MyCaseStatusIntent	what is the status of my case
-MyCaseStatusIntent	what is the current status of my case
-MyCaseStatusIntent	what is the status of my problem
-MyCaseStatusIntent	what is the current status of my problem
-MyCaseStatusIntent	lookup the condition of my problem
-MyCaseStatusIntent	to lookup the condition of my problem
-MyCaseStatusIntent	lookup the current condition of my problem
-MyCaseStatusIntent	to lookup the current condition of my problem
-MyCaseStatusIntent	lookup the status of my problem
-MyCaseStatusIntent	to lookup the status of my problem
-MyCaseStatusIntent	lookup the current status of my problem
-MyCaseStatusIntent	to lookup the current status of my problem
-MyCaseStatusIntent	lookup the condition of my case
-MyCaseStatusIntent	to lookup the condition of my case
-MyCaseStatusIntent	lookup the current condition of my case
-MyCaseStatusIntent	to lookup the current condition of my case
-MyCaseStatusIntent	lookup the status of my case
-MyCaseStatusIntent	to lookup the status of my case
-MyCaseStatusIntent	lookup the current status of my case
-MyCaseStatusIntent	to lookup the current status of my case
-MyCaseStatusIntent	what is the status of {caseAction} {caseSubject}
-MyCaseStatusIntent	what is the current status of {caseAction} {caseSubject}
-MyCaseStatusIntent	what is the status of my {caseAction} {caseSubject}
-MyCaseStatusIntent	what is the current status of my {caseAction} {caseSubject}
-MyCaseStatusIntent	what is the status of {caseAction} {caseSubject} bin
-MyCaseStatusIntent	what is the current status of {caseAction} {caseSubject} bin
-MyCaseStatusIntent	what is the status of my {caseAction} {caseSubject} bin
-MyCaseStatusIntent	what is the current status of my {caseAction} {caseSubject} bin
-MyCaseStatusIntent	what is the status of {caseAction} {caseSubject} cart
-MyCaseStatusIntent	what is the current status of {caseAction} {caseSubject} cart
-MyCaseStatusIntent	what is the status of my {caseAction} {caseSubject} cart
-MyCaseStatusIntent	what is the current status of my {caseAction} {caseSubject} cart
-MyCaseStatusIntent	what is my {caseAction} {caseSubject} condition
-MyCaseStatusIntent	what is my {caseAction} {caseSubject} bin condition
-MyCaseStatusIntent	what is my {caseAction} {caseSubject} cart condition
-MyCaseStatusIntent	what is my {caseAction} {caseSubject} current condition
-MyCaseStatusIntent	what is my {caseAction} {caseSubject} bin current condition
-MyCaseStatusIntent	what is my {caseAction} {caseSubject} cart current condition
-MyCaseStatusIntent	what is my {caseAction} {caseSubject} status
-MyCaseStatusIntent	what is my {caseAction} {caseSubject} bin status
-MyCaseStatusIntent	what is my {caseAction} {caseSubject} cart status
-MyCaseStatusIntent	what is my {caseAction} {caseSubject} current status
-MyCaseStatusIntent	what is my {caseAction} {caseSubject} bin current status
-MyCaseStatusIntent	what is my {caseAction} {caseSubject} cart current status
-MyCaseStatusIntent	what is the status of {caseSubject} {caseAction}
-MyCaseStatusIntent	what is the current status of {caseSubject} {caseAction}
-MyCaseStatusIntent	what is the status of my {caseSubject} {caseAction}
-MyCaseStatusIntent	what is the current status of my {caseSubject} {caseAction}
-MyCaseStatusIntent	what is the status of {caseSubject} {caseAction} bin
-MyCaseStatusIntent	what is the current status of {caseSubject} {caseAction} bin
-MyCaseStatusIntent	what is the status of my {caseSubject} {caseAction} bin
-MyCaseStatusIntent	what is the current status of my {caseSubject} {caseAction} bin
-MyCaseStatusIntent	what is the status of {caseSubject} {caseAction} cart
-MyCaseStatusIntent	what is the current status of {caseSubject} {caseAction} cart
-MyCaseStatusIntent	what is the status of my {caseSubject} {caseAction} cart
-MyCaseStatusIntent	what is the current status of my {caseSubject} {caseAction} cart
-MyCaseStatusIntent	what is my {caseSubject} {caseAction} condition
-MyCaseStatusIntent	what is my {caseSubject} {caseAction} bin condition
-MyCaseStatusIntent	what is my {caseSubject} {caseAction} cart condition
-MyCaseStatusIntent	what is my {caseSubject} {caseAction} current condition
-MyCaseStatusIntent	what is my {caseSubject} {caseAction} bin current condition
-MyCaseStatusIntent	what is my {caseSubject} {caseAction} cart current condition
-MyCaseStatusIntent	what is my {caseSubject} {caseAction} status
-MyCaseStatusIntent	what is my {caseSubject} {caseAction} bin status
-MyCaseStatusIntent	what is my {caseSubject} {caseAction} cart status
-MyCaseStatusIntent	what is my {caseSubject} {caseAction} current status
-MyCaseStatusIntent	what is my {caseSubject} {caseAction} bin current status
-MyCaseStatusIntent	what is my {caseSubject} {caseAction} cart current status
-
-CaseStatusIntent	lookup the status of {CaseNumber}
-CaseStatusIntent	what is the status of {CaseNumber}
-CaseStatusIntent	lookup the current status of {CaseNumber}
-CaseStatusIntent	what is the current status of {CaseNumber}
-CaseStatusIntent	lookup the condition of {CaseNumber}
-CaseStatusIntent	what is the condition of {CaseNumber}
-CaseStatusIntent	lookup the current condition of {CaseNumber}
-CaseStatusIntent	what is the current condition of {CaseNumber}
-CaseStatusIntent	lookup the status of the {CaseNumber}
-CaseStatusIntent	what is the status of the {CaseNumber}
-CaseStatusIntent	lookup the current status of the {CaseNumber}
-CaseStatusIntent	what is the current status of the {CaseNumber}
-CaseStatusIntent	lookup the condition of the {CaseNumber}
-CaseStatusIntent	what is the condition of the {CaseNumber}
-CaseStatusIntent	lookup the current condition of the {CaseNumber}
-CaseStatusIntent	what is the current condition of the {CaseNumber}
-CaseStatusIntent	lookup the status of case {CaseNumber}
-CaseStatusIntent	what is the status of case {CaseNumber}
-CaseStatusIntent	lookup the current status of case {CaseNumber}
-CaseStatusIntent	what is the current status of case {CaseNumber}
-CaseStatusIntent	lookup the condition of case {CaseNumber}
-CaseStatusIntent	what is the condition of case {CaseNumber}
-CaseStatusIntent	lookup the current condition of case {CaseNumber}
-CaseStatusIntent	what is the current condition of case {CaseNumber}
-CaseStatusIntent	lookup the status of the case {CaseNumber}
-CaseStatusIntent	what is the status of the case {CaseNumber}
-CaseStatusIntent	lookup the current status of the case {CaseNumber}
-CaseStatusIntent	what is the current status of the case {CaseNumber}
-CaseStatusIntent	lookup the condition of the case {CaseNumber}
-CaseStatusIntent	what is the condition of the case {CaseNumber}
-CaseStatusIntent	lookup the current condition of the case {CaseNumber}
-CaseStatusIntent	what is the current condition of the case {CaseNumber}
-CaseStatusIntent	lookup the status of case number {CaseNumber}
-CaseStatusIntent	what is the status of case number {CaseNumber}
-CaseStatusIntent	lookup the current status of case number {CaseNumber}
-CaseStatusIntent	what is the current status of case number {CaseNumber}
-CaseStatusIntent	lookup the condition of case number {CaseNumber}
-CaseStatusIntent	what is the condition of case number {CaseNumber}
-CaseStatusIntent	lookup the current condition of case number {CaseNumber}
-CaseStatusIntent	what is the current condition of case number {CaseNumber}
-CaseStatusIntent	lookup the status of the case number {CaseNumber}
-CaseStatusIntent	what is the status of the case number {CaseNumber}
-CaseStatusIntent	lookup the current status of the case number {CaseNumber}
-CaseStatusIntent	what is the current status of the case number {CaseNumber}
-CaseStatusIntent	lookup the condition of the case number {CaseNumber}
-CaseStatusIntent	what is the condition of the case number {CaseNumber}
-CaseStatusIntent	lookup the current condition of the case number {CaseNumber}
-CaseStatusIntent	what is the current condition of the case number {CaseNumber}
-
 GetCaryFactsIntent	tell me a fact about cary
 GetCaryFactsIntent	what is a fact about cary
 GetCaryFactsIntent	tell me a cary fact
@@ -677,6 +556,7 @@ TownHallHoursIntent	is town hall open
 TownHallHoursIntent	when is town hall open
 TownHallHoursIntent	is the town hall open
 TownHallHoursIntent	when is the town hall open
+
 
 TrashDayIntent	when is my trash day
 TrashDayIntent	what day is my trash day
@@ -804,3 +684,127 @@ to {create|submit|help with} a {|new} {case|service request|request|problem|work
 '{when|what day} is my {|next} {trash|recycle|garbage} {day|pickup|collection|date}', 'is my {trash|recycle|garbage} {day|pickup|collection|date} this week'
 
 'what is the {field status at|status of} {-|park}', 'are the fileds {open|closed|shut down} at {-|park}', 'Is {-|park} {open|closed|shut down} {|today}', 'Are games at {-|park} {on for|canceled|postponed|being played} {|today}', 'Are games {on|canceled|postponed|being played} at {-|park} {|today}'
+
+MyCaseStatusIntent	what is my problem
+MyCaseStatusIntent	what is my case
+MyCaseStatusIntent	what is my problem condition
+MyCaseStatusIntent	what is my case condition
+MyCaseStatusIntent	what is my problem status
+MyCaseStatusIntent	what is my case status
+MyCaseStatusIntent	what is the status of my case
+MyCaseStatusIntent	what is the current status of my case
+MyCaseStatusIntent	what is the status of my problem
+MyCaseStatusIntent	what is the current status of my problem
+MyCaseStatusIntent	lookup the condition of my problem
+MyCaseStatusIntent	to lookup the condition of my problem
+MyCaseStatusIntent	lookup the current condition of my problem
+MyCaseStatusIntent	to lookup the current condition of my problem
+MyCaseStatusIntent	lookup the status of my problem
+MyCaseStatusIntent	to lookup the status of my problem
+MyCaseStatusIntent	lookup the current status of my problem
+MyCaseStatusIntent	to lookup the current status of my problem
+MyCaseStatusIntent	lookup the condition of my case
+MyCaseStatusIntent	to lookup the condition of my case
+MyCaseStatusIntent	lookup the current condition of my case
+MyCaseStatusIntent	to lookup the current condition of my case
+MyCaseStatusIntent	lookup the status of my case
+MyCaseStatusIntent	to lookup the status of my case
+MyCaseStatusIntent	lookup the current status of my case
+MyCaseStatusIntent	to lookup the current status of my case
+MyCaseStatusIntent	what is the status of {caseAction} {caseSubject}
+MyCaseStatusIntent	what is the current status of {caseAction} {caseSubject}
+MyCaseStatusIntent	what is the status of my {caseAction} {caseSubject}
+MyCaseStatusIntent	what is the current status of my {caseAction} {caseSubject}
+MyCaseStatusIntent	what is the status of {caseAction} {caseSubject} bin
+MyCaseStatusIntent	what is the current status of {caseAction} {caseSubject} bin
+MyCaseStatusIntent	what is the status of my {caseAction} {caseSubject} bin
+MyCaseStatusIntent	what is the current status of my {caseAction} {caseSubject} bin
+MyCaseStatusIntent	what is the status of {caseAction} {caseSubject} cart
+MyCaseStatusIntent	what is the current status of {caseAction} {caseSubject} cart
+MyCaseStatusIntent	what is the status of my {caseAction} {caseSubject} cart
+MyCaseStatusIntent	what is the current status of my {caseAction} {caseSubject} cart
+MyCaseStatusIntent	what is my {caseAction} {caseSubject} condition
+MyCaseStatusIntent	what is my {caseAction} {caseSubject} bin condition
+MyCaseStatusIntent	what is my {caseAction} {caseSubject} cart condition
+MyCaseStatusIntent	what is my {caseAction} {caseSubject} current condition
+MyCaseStatusIntent	what is my {caseAction} {caseSubject} bin current condition
+MyCaseStatusIntent	what is my {caseAction} {caseSubject} cart current condition
+MyCaseStatusIntent	what is my {caseAction} {caseSubject} status
+MyCaseStatusIntent	what is my {caseAction} {caseSubject} bin status
+MyCaseStatusIntent	what is my {caseAction} {caseSubject} cart status
+MyCaseStatusIntent	what is my {caseAction} {caseSubject} current status
+MyCaseStatusIntent	what is my {caseAction} {caseSubject} bin current status
+MyCaseStatusIntent	what is my {caseAction} {caseSubject} cart current status
+MyCaseStatusIntent	what is the status of {caseSubject} {caseAction}
+MyCaseStatusIntent	what is the current status of {caseSubject} {caseAction}
+MyCaseStatusIntent	what is the status of my {caseSubject} {caseAction}
+MyCaseStatusIntent	what is the current status of my {caseSubject} {caseAction}
+MyCaseStatusIntent	what is the status of {caseSubject} {caseAction} bin
+MyCaseStatusIntent	what is the current status of {caseSubject} {caseAction} bin
+MyCaseStatusIntent	what is the status of my {caseSubject} {caseAction} bin
+MyCaseStatusIntent	what is the current status of my {caseSubject} {caseAction} bin
+MyCaseStatusIntent	what is the status of {caseSubject} {caseAction} cart
+MyCaseStatusIntent	what is the current status of {caseSubject} {caseAction} cart
+MyCaseStatusIntent	what is the status of my {caseSubject} {caseAction} cart
+MyCaseStatusIntent	what is the current status of my {caseSubject} {caseAction} cart
+MyCaseStatusIntent	what is my {caseSubject} {caseAction} condition
+MyCaseStatusIntent	what is my {caseSubject} {caseAction} bin condition
+MyCaseStatusIntent	what is my {caseSubject} {caseAction} cart condition
+MyCaseStatusIntent	what is my {caseSubject} {caseAction} current condition
+MyCaseStatusIntent	what is my {caseSubject} {caseAction} bin current condition
+MyCaseStatusIntent	what is my {caseSubject} {caseAction} cart current condition
+MyCaseStatusIntent	what is my {caseSubject} {caseAction} status
+MyCaseStatusIntent	what is my {caseSubject} {caseAction} bin status
+MyCaseStatusIntent	what is my {caseSubject} {caseAction} cart status
+MyCaseStatusIntent	what is my {caseSubject} {caseAction} current status
+MyCaseStatusIntent	what is my {caseSubject} {caseAction} bin current status
+MyCaseStatusIntent	what is my {caseSubject} {caseAction} cart current status
+
+CaseStatusIntent	lookup the status of {CaseNumber}
+CaseStatusIntent	what is the status of {CaseNumber}
+CaseStatusIntent	lookup the current status of {CaseNumber}
+CaseStatusIntent	what is the current status of {CaseNumber}
+CaseStatusIntent	lookup the condition of {CaseNumber}
+CaseStatusIntent	what is the condition of {CaseNumber}
+CaseStatusIntent	lookup the current condition of {CaseNumber}
+CaseStatusIntent	what is the current condition of {CaseNumber}
+CaseStatusIntent	lookup the status of the {CaseNumber}
+CaseStatusIntent	what is the status of the {CaseNumber}
+CaseStatusIntent	lookup the current status of the {CaseNumber}
+CaseStatusIntent	what is the current status of the {CaseNumber}
+CaseStatusIntent	lookup the condition of the {CaseNumber}
+CaseStatusIntent	what is the condition of the {CaseNumber}
+CaseStatusIntent	lookup the current condition of the {CaseNumber}
+CaseStatusIntent	what is the current condition of the {CaseNumber}
+CaseStatusIntent	lookup the status of case {CaseNumber}
+CaseStatusIntent	what is the status of case {CaseNumber}
+CaseStatusIntent	lookup the current status of case {CaseNumber}
+CaseStatusIntent	what is the current status of case {CaseNumber}
+CaseStatusIntent	lookup the condition of case {CaseNumber}
+CaseStatusIntent	what is the condition of case {CaseNumber}
+CaseStatusIntent	lookup the current condition of case {CaseNumber}
+CaseStatusIntent	what is the current condition of case {CaseNumber}
+CaseStatusIntent	lookup the status of the case {CaseNumber}
+CaseStatusIntent	what is the status of the case {CaseNumber}
+CaseStatusIntent	lookup the current status of the case {CaseNumber}
+CaseStatusIntent	what is the current status of the case {CaseNumber}
+CaseStatusIntent	lookup the condition of the case {CaseNumber}
+CaseStatusIntent	what is the condition of the case {CaseNumber}
+CaseStatusIntent	lookup the current condition of the case {CaseNumber}
+CaseStatusIntent	what is the current condition of the case {CaseNumber}
+CaseStatusIntent	lookup the status of case number {CaseNumber}
+CaseStatusIntent	what is the status of case number {CaseNumber}
+CaseStatusIntent	lookup the current status of case number {CaseNumber}
+CaseStatusIntent	what is the current status of case number {CaseNumber}
+CaseStatusIntent	lookup the condition of case number {CaseNumber}
+CaseStatusIntent	what is the condition of case number {CaseNumber}
+CaseStatusIntent	lookup the current condition of case number {CaseNumber}
+CaseStatusIntent	what is the current condition of case number {CaseNumber}
+CaseStatusIntent	lookup the status of the case number {CaseNumber}
+CaseStatusIntent	what is the status of the case number {CaseNumber}
+CaseStatusIntent	lookup the current status of the case number {CaseNumber}
+CaseStatusIntent	what is the current status of the case number {CaseNumber}
+CaseStatusIntent	lookup the condition of the case number {CaseNumber}
+CaseStatusIntent	what is the condition of the case number {CaseNumber}
+CaseStatusIntent	lookup the current condition of the case number {CaseNumber}
+CaseStatusIntent	what is the current condition of the case number {CaseNumber}

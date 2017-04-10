@@ -33,6 +33,15 @@ var APP_STATES = {
   TRASH: '_TRASH'
 };
 
+var GOOGLE_STATE_IDS = {
+  BASE: 'UA-97014541-1',
+  COUNCIL: 'UA-97014541-2',
+  PARKS: 'UA-97014541-3',
+  ART: 'UA-97014541-4',
+  CASE: 'UA-97014541-5',
+  TRASH: 'UA-97014541-6'
+};
+
 var welcomeMessage = 'Welcome to the Town of Cary Alexa skill.  If you need help with your options please say help. What can I help you with today?';
 var welcomeReprompt = 'If you need help with your options please say help.  What can I do for you today?';
 
@@ -53,13 +62,13 @@ exports.handler = function(event, context, callback) {
 
 var newSessionHandlers = {
   'LaunchRequest': function () {
-    var intentTrackingID = ua('UA-97014541-1', this.event.session.user.userId, {strictCidFormat: false, https: true});
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.BASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
     intentTrackingID.event("LaunchIntent","Success", this.event.session).send();
     this.emit(':ask', welcomeMessage, welcomeReprompt);
   },
 
   'OpenGymTimesIntent': function () {
-    var intentTrackingID = ua('UA-97014541-1', this.event.session.user.userId, {strictCidFormat: false, https: true});
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.BASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
     var self = this;
     var gymTimeDate = this.event.request.intent.slots.Date.value || Date.yyyymmdd(Date.today());
     var location = this.event.request.intent.slots.location.value;
@@ -94,39 +103,39 @@ var newSessionHandlers = {
   },
 
   'GetCaryFactsIntent': function () {
-    var intentTrackingID = ua('UA-97014541-1', this.event.session.user.userId, {strictCidFormat: false, https: true});
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.BASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
     var index = Math.floor(Math.random() * facts['facts'].length);
     var prompt = facts['facts'][index];
-    intentTrackingID.event("GetCaryFactsIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event("GetCaryFactsIntent","Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
     this.emit(':tell', prompt);
   },
 
   'MyCouncilMemberIntent': function() {
-    var intentTrackingID = ua('UA-97014541-1', this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("MyCouncilMemberIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.BASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
+    intentTrackingID.event("MyCouncilMemberIntent","Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
     getUserAddress(this.event.session.user.accessToken, APP_STATES.COUNCIL, 'GetCouncilInfoIntent', this);
   },
 
   'NearbyParksIntent': function() {
-    var intentTrackingID = ua('UA-97014541-1', this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("NearbyParksIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.BASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
+    intentTrackingID.event("NearbyParksIntent","Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
     getUserAddress(this.event.session.user.accessToken, APP_STATES.PARKS, 'GetParkInfoIntent', this);
   },
 
   'NearbyPublicArtIntent': function() {
-    var intentTrackingID = ua('UA-97014541-1', this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("NearbyPublicArtIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.BASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
+    intentTrackingID.event("NearbyPublicArtIntent","Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
     getUserAddress(this.event.session.user.accessToken, APP_STATES.ART, 'GetPublicArtInfoIntent', this);
   },
 
   'TrashDayIntent': function(){
-    var intentTrackingID = ua('UA-97014541-1', this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("TrashDayIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.BASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
+    intentTrackingID.event("TrashDayIntent","Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
     getUserAddress(this.event.session.user.accessToken, APP_STATES.TRASH, 'GetTrashDayIntent', this);
   },
 
   'AllCouncilMembersIntent': function() {
-    var intentTrackingID = ua('UA-97014541-1', this.event.session.user.userId, {strictCidFormat: false, https: true});
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.BASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
     var prompt = '';
     var self = this;
     var openDataHelper = new OpenDataHelper();
@@ -145,7 +154,7 @@ var newSessionHandlers = {
   },
 
   'AtLargeCouncilMembersIntent': function() {
-    var intentTrackingID = ua('UA-97014541-1', this.event.session.user.userId, {strictCidFormat: false, https: true});
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.BASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
     var prompt = '';
     var self = this;
     var openDataHelper = new OpenDataHelper();
@@ -164,7 +173,7 @@ var newSessionHandlers = {
   },
 
   'MyMayorIntent': function() {
-    var intentTrackingID = ua('UA-97014541-1', this.event.session.user.userId, {strictCidFormat: false, https: true});
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.BASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
     var prompt = '';
     var self = this;
     var openDataHelper = new OpenDataHelper();
@@ -183,7 +192,7 @@ var newSessionHandlers = {
   },
 
   'CaseStartIntent': function() {
-    var intentTrackingID = ua('UA-97014541-1', this.event.session.user.userId, {strictCidFormat: false, https: true});
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.BASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
     var self = this;
     if(ACCOUNT_LINKING_REQUIRED == true && self.event.session.user.accessToken == undefined) {
   		var speechOutput = "You must link your account before accessing this skill.";
@@ -199,7 +208,7 @@ var newSessionHandlers = {
   },
 
   'CaseConfirmationIntent': function() {
-    var intentTrackingID = ua('UA-97014541-1', this.event.session.user.userId, {strictCidFormat: false, https: true});
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.BASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
     var helperClass = new HelperClass();
     var self = this;
     if(ACCOUNT_LINKING_REQUIRED == true && self.event.session.user.accessToken == undefined) {
@@ -217,7 +226,7 @@ var newSessionHandlers = {
   },
 
   'MyCaseStatusIntent': function() {
-    var intentTrackingID = ua('UA-97014541-1', this.event.session.user.userId, {strictCidFormat: false, https: true});
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.BASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
     var self = this;
     var helperClass = new HelperClass();
     if(ACCOUNT_LINKING_REQUIRED == true && this.event.session.user.accessToken == undefined) {
@@ -246,7 +255,7 @@ var newSessionHandlers = {
   },
 
   'CaseStatusIntent': function() {
-    var intentTrackingID = ua('UA-97014541-1', this.event.session.user.userId, {strictCidFormat: false, https: true});
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.BASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
     var self = this;
     if(ACCOUNT_LINKING_REQUIRED == true && this.event.session.user.accessToken == undefined) {
   		var speechOutput = "You must link your account before accessing this skill.";
@@ -281,14 +290,14 @@ var newSessionHandlers = {
   },
 
   'TownHallHoursIntent': function(){
-    var intentTrackingID = ua('UA-97014541-1', this.event.session.user.userId, {strictCidFormat: false, https: true});
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.BASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
     var userToken = this.event.session.user.accessToken;
     var salesforceHelper = new SalesforceHelper();
     var date = this.event.request.intent.slots.Date.value || Date.yyyymmdd(Date.today());
     var self = this;
     if(date.search(/^\d{4}-\d{2}-\d{2}$/) == -1){
       var prompt = 'Please choose a single day for town hall hours.';
-      intentTrackingID.event("TownHallHoursIntent", "Wrong Input",,"Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+      intentTrackingID.event("TownHallHoursIntent", "Wrong Input","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
       self.emit(':ask', prompt);
       return;
     }
@@ -305,14 +314,13 @@ var newSessionHandlers = {
     });
   },
 
-
   'UpcomingCaryEventsIntent': function() {
-    var intentTrackingID = ua('UA-97014541-1', this.event.session.user.userId, {strictCidFormat: false, https: true});
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.BASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
     var date = this.event.request.intent.slots.Date.value || Date.yyyymmdd(Date.today());
     var self = this;
     if(date.search(/^\d{4}-\d{2}-\d{2}$/) == -1){
       var prompt = 'Please choose a single day for a list of events.';
-      intentTrackingID.event("UpcomingCaryEventsIntent", "Wrong Input",,"Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+      intentTrackingID.event("UpcomingCaryEventsIntent", "Wrong Input","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
       self.emit(':ask', prompt);
       return;
     }
@@ -336,14 +344,14 @@ var newSessionHandlers = {
   },
 
   'FieldStatusIntent': function() {
-    var intentTrackingID = ua('UA-97014541-1', this.event.session.user.userId, {strictCidFormat: false, https: true});
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.BASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
     var helperClass = new HelperClass();
     var parkName = this.event.request.intent.slots.park.value.toUpperCase();
     var prompt = '';
     var self = this;
     if(helperClass.FIELDNAMEPAIRINGS[parkName] === undefined){
       prompt = 'I\'m sorry I did not recognize that field name.';
-      intentTrackingID.event("FieldStatusIntent", "Wrong Input",,"Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+      intentTrackingID.event("FieldStatusIntent", "Wrong Input","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
       self.emit(':tell', prompt);
     }
     var fieldStatusHelper = new FieldStatusHelper();
@@ -361,7 +369,7 @@ var newSessionHandlers = {
   },
 
   'RSSFeedIntent': function() {
-    var intentTrackingID = ua('UA-97014541-1', this.event.session.user.userId, {strictCidFormat: false, https: true});
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.BASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
     var prompt = '';
 
     var rssFeedHelper = new RSSFeedHelper();
@@ -381,31 +389,31 @@ var newSessionHandlers = {
   },
 
   'AMAZON.RepeatIntent': function () {
-      var intentTrackingID = ua('UA-97014541-1', this.event.session.user.userId, {strictCidFormat: false, https: true});
-      intentTrackingID.event("AMAZON.RepeatIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+      var intentTrackingID = ua(GOOGLE_STATE_IDS.BASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
+      intentTrackingID.event('AMAZON.RepeatIntent',"Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
       this.emit(':ask', this.attributes['speechOutput'], this.attributes['repromptText']);
   },
 
   'AMAZON.HelpIntent': function() {
-    var intentTrackingID = ua('UA-97014541-1', this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("AMAZON.HelpIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.BASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
+    intentTrackingID.event('AMAZON.HelpIntent',"Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
       this.emit(':askWithCard', helpMessage, helpMessageReprompt, 'Town of Cary Help Index', helpMesssageCard);
   },
 
   'AMAZON.StopIntent': function () {
-    var intentTrackingID = ua('UA-97014541-1', this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("AMAZON.StopIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.BASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
+    intentTrackingID.event('AMAZON.StopIntent',"Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
     this.emit(':tell', 'Goodbye');
   },
 
   'AMAZON.CancelIntent': function () {
-    var intentTrackingID = ua('UA-97014541-1', this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("AMAZON.CancelIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.BASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
+    intentTrackingID.event('AMAZON.CancelIntent',"Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
     this.emit(':tell', 'Goodbye');
   },
 
   'Unhandled': function () {
-    var intentTrackingID = ua('UA-97014541-1', this.event.session.user.userId, {strictCidFormat: false, https: true});
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.BASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
     intentTrackingID.event("Unhandled","Success", this.event.session).send();
     var prompt = 'I\'m sorry.  I didn\'t catch that.  Can you please repeat the question.';
     this.emit(':ask', prompt, prompt);
@@ -415,7 +423,7 @@ var newSessionHandlers = {
 var councilHandlers = Alexa.CreateStateHandler(APP_STATES.COUNCIL, {
 
   'GetByAddressIntent': function() {
-    var intentTrackingID = ua('UA-97014541-2', this.event.session.user.userId, {strictCidFormat: false, https: true});
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.COUNCIL, this.event.session.user.userId, {strictCidFormat: false, https: true});
     var esriDataHelper = new EsriDataHelper();
     var self = this;
     var street_number = this.event.request.intent.slots.street_number.value;
@@ -439,7 +447,7 @@ var councilHandlers = Alexa.CreateStateHandler(APP_STATES.COUNCIL, {
   },
 
   'GetCouncilInfoIntent': function() {
-    var intentTrackingID = ua('UA-97014541-2', this.event.session.user.userId, {strictCidFormat: false, https: true});
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.COUNCIL, this.event.session.user.userId, {strictCidFormat: false, https: true});
     var esriDataHelper = new EsriDataHelper();
     var self = this;
     var address = this.attributes['address'];
@@ -459,46 +467,46 @@ var councilHandlers = Alexa.CreateStateHandler(APP_STATES.COUNCIL, {
   },
 
   'AMAZON.YesIntnet': function() {
-    var intentTrackingID = ua('UA-97014541-2', this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("AMAZON.YesIntnet","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.COUNCIL, this.event.session.user.userId, {strictCidFormat: false, https: true});
+    intentTrackingID.event("AMAZON.YesIntnet","Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
     var prompt = 'Please tell me an address so I can look up your council information';
     this.emit(':ask', prompt, prompt);
   },
 
   'AMAZON.NoIntent': function() {
-    var intentTrackingID = ua('UA-97014541-2', this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("AMAZON.NoIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.COUNCIL, this.event.session.user.userId, {strictCidFormat: false, https: true});
+    intentTrackingID.event("AMAZON.NoIntent","Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
     var prompt = 'OK, Have a nice day';
     this.emit(':tell', prompt);
   },
 
   'AMAZON.RepeatIntent': function () {
-    var intentTrackingID = ua('UA-97014541-2', this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("AMAZON.RepeatIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.COUNCIL, this.event.session.user.userId, {strictCidFormat: false, https: true});
+    intentTrackingID.event('AMAZON.RepeatIntent',"Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
     this.emit(':ask', this.attributes['speechOutput'], this.attributes['repromptText']);
   },
 
   'AMAZON.HelpIntent': function() {
-    var intentTrackingID = ua('UA-97014541-2', this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("AMAZON.HelpIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.COUNCIL, this.event.session.user.userId, {strictCidFormat: false, https: true});
+    intentTrackingID.event('AMAZON.HelpIntent',"Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
     var prompt = 'Please tell me your house number and street for me to look up your council information.'
     this.emit(':ask', prompt, prompt);
   },
 
   'AMAZON.StopIntent': function () {
-    var intentTrackingID = ua('UA-97014541-2', this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("AMAZON.StopIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.COUNCIL, this.event.session.user.userId, {strictCidFormat: false, https: true});
+    intentTrackingID.event('AMAZON.StopIntent',"Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
     this.emit(':tell', 'Goodbye');
   },
 
   'AMAZON.CancelIntent': function () {
-    var intentTrackingID = ua('UA-97014541-2', this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("AMAZON.CancelIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.COUNCIL, this.event.session.user.userId, {strictCidFormat: false, https: true});
+    intentTrackingID.event('AMAZON.CancelIntent',"Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
     this.emit(':tell', 'Goodbye');
   },
 
   'Unhandled': function () {
-    var intentTrackingID = ua('UA-97014541-2', this.event.session.user.userId, {strictCidFormat: false, https: true});
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.COUNCIL, this.event.session.user.userId, {strictCidFormat: false, https: true});
     intentTrackingID.event("Unhandled","Success", this.event.session).send();
     var prompt = 'I\'m sorry.  I didn\'t catch that.  Can you please repeat that.';
     this.emit(':ask', prompt, prompt);
@@ -508,7 +516,7 @@ var councilHandlers = Alexa.CreateStateHandler(APP_STATES.COUNCIL, {
 var parkHandlers = Alexa.CreateStateHandler(APP_STATES.PARKS, {
 
   'GetByAddressIntent': function() {
-    var intentTrackingID = ua('UA-97014541-3', this.event.session.user.userId, {strictCidFormat: false, https: true});
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.PARKS, this.event.session.user.userId, {strictCidFormat: false, https: true});
     var esriDataHelper = new EsriDataHelper();
     var self = this;
     var reprompt = 'Please tell me your address so I can look up nearby parks.';
@@ -532,7 +540,7 @@ var parkHandlers = Alexa.CreateStateHandler(APP_STATES.PARKS, {
   },
 
   'GetParkInfoIntent': function() {
-    var intentTrackingID = ua('UA-97014541-3', this.event.session.user.userId, {strictCidFormat: false, https: true});
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.PARKS, this.event.session.user.userId, {strictCidFormat: false, https: true});
     var esriDataHelper = new EsriDataHelper();
     var self = this;
     var address = this.attributes['address'];
@@ -554,46 +562,46 @@ var parkHandlers = Alexa.CreateStateHandler(APP_STATES.PARKS, {
   },
 
   'AMAZON.YesIntnet': function() {
-    var intentTrackingID = ua('UA-97014541-3', this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("AMAZON.YesIntnet","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.PARKS, this.event.session.user.userId, {strictCidFormat: false, https: true});
+    intentTrackingID.event("AMAZON.YesIntnet","Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
     var prompt = 'Please tell me an address so I can look up nearby parks';
     this.emit(':ask', prompt, prompt);
   },
 
   'AMAZON.NoIntent': function() {
-    var intentTrackingID = ua('UA-97014541-3', this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("AMAZON.NoIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.PARKS, this.event.session.user.userId, {strictCidFormat: false, https: true});
+    intentTrackingID.event("AMAZON.NoIntent","Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
     var prompt = 'OK, Have a nice day';
     this.emit(':tell', prompt);
   },
 
   'AMAZON.RepeatIntent': function () {
-    var intentTrackingID = ua('UA-97014541-3', this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("AMAZON.RepeatIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.PARKS, this.event.session.user.userId, {strictCidFormat: false, https: true});
+    intentTrackingID.event('AMAZON.RepeatIntent',"Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
     this.emit(':ask', this.attributes['speechOutput'], this.attributes['repromptText']);
   },
 
   'AMAZON.HelpIntent': function() {
-    var intentTrackingID = ua('UA-97014541-3', this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("AMAZON.HelpIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.PARKS, this.event.session.user.userId, {strictCidFormat: false, https: true});
+    intentTrackingID.event('AMAZON.HelpIntent',"Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
     var prompt = 'Please tell me a house number and street for me to look up nearby parks.'
     this.emit(':ask', prompt, prompt);
   },
 
   'AMAZON.StopIntent': function () {
-    var intentTrackingID = ua('UA-97014541-3', this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("AMAZON.StopIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.PARKS, this.event.session.user.userId, {strictCidFormat: false, https: true});
+    intentTrackingID.event('AMAZON.StopIntent',"Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
     this.emit(':tell', 'Goodbye');
   },
 
   'AMAZON.CancelIntent': function () {
-    var intentTrackingID = ua('UA-97014541-3', this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("AMAZON.CancelIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.PARKS, this.event.session.user.userId, {strictCidFormat: false, https: true});
+    intentTrackingID.event('AMAZON.CancelIntent',"Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
     this.emit(':tell', 'Goodbye');
   },
 
   'Unhandled': function () {
-    var intentTrackingID = ua('UA-97014541-3', this.event.session.user.userId, {strictCidFormat: false, https: true});
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.PARKS, this.event.session.user.userId, {strictCidFormat: false, https: true});
     intentTrackingID.event("Unhandled","Success", this.event.session).send();
     var prompt = 'I\'m sorry.  I didn\'t catch that.  Can you please repeat that.';
     this.emit(':ask', prompt, prompt);
@@ -603,7 +611,7 @@ var parkHandlers = Alexa.CreateStateHandler(APP_STATES.PARKS, {
 var artHandlers = Alexa.CreateStateHandler(APP_STATES.ART, {
 
   'GetByAddressIntent': function() {
-    var intentTrackingID = ua('UA-97014541-4', this.event.session.user.userId, {strictCidFormat: false, https: true});
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.ART, this.event.session.user.userId, {strictCidFormat: false, https: true});
     var esriDataHelper = new EsriDataHelper();
     var self = this;
     var reprompt = 'Please tell me your address so I can look up nearby public art.';
@@ -627,7 +635,7 @@ var artHandlers = Alexa.CreateStateHandler(APP_STATES.ART, {
   },
 
   'GetPublicArtInfoIntent': function() {
-    var intentTrackingID = ua('UA-97014541-4', this.event.session.user.userId, {strictCidFormat: false, https: true});
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.ART, this.event.session.user.userId, {strictCidFormat: false, https: true});
     var esriDataHelper = new EsriDataHelper();
     var self = this;
     var address = this.attributes['address'];
@@ -648,46 +656,46 @@ var artHandlers = Alexa.CreateStateHandler(APP_STATES.ART, {
   },
 
   'AMAZON.YesIntnet': function() {
-    var intentTrackingID = ua('UA-97014541-4', this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("AMAZON.YesIntnet","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.ART, this.event.session.user.userId, {strictCidFormat: false, https: true});
+    intentTrackingID.event("AMAZON.YesIntnet","Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
     var prompt = 'Please tell me an address so I can look up nearby public art';
     this.emit(':ask', prompt, prompt);
   },
 
   'AMAZON.NoIntent': function() {
-    var intentTrackingID = ua('UA-97014541-4', this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("AMAZON.NoIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.ART, this.event.session.user.userId, {strictCidFormat: false, https: true});
+    intentTrackingID.event("AMAZON.NoIntent","Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
     var prompt = 'OK, Have a nice day';
     this.emit(':tell', prompt);
   },
 
   'AMAZON.RepeatIntent': function () {
-    var intentTrackingID = ua('UA-97014541-4', this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("AMAZON.RepeatIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.ART, this.event.session.user.userId, {strictCidFormat: false, https: true});
+    intentTrackingID.event('AMAZON.RepeatIntent',"Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
     this.emit(':ask', this.attributes['speechOutput'], this.attributes['repromptText']);
   },
 
   'AMAZON.HelpIntent': function() {
-    var intentTrackingID = ua('UA-97014541-4', this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("AMAZON.HelpIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.ART, this.event.session.user.userId, {strictCidFormat: false, https: true});
+    intentTrackingID.event('AMAZON.HelpIntent',"Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
     var prompt = 'Please tell me your house number and street for me to look up nearby public art.'
     this.emit(':ask', prompt, prompt);
   },
 
   'AMAZON.StopIntent': function () {
-    var intentTrackingID = ua('UA-97014541-4', this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("AMAZON.StopIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.ART, this.event.session.user.userId, {strictCidFormat: false, https: true});
+    intentTrackingID.event('AMAZON.StopIntent',"Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
     this.emit(':tell', 'Goodbye');
   },
 
   'AMAZON.CancelIntent': function () {
-    var intentTrackingID = ua('UA-97014541-4', this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("AMAZON.CancelIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.ART, this.event.session.user.userId, {strictCidFormat: false, https: true});
+    intentTrackingID.event('AMAZON.CancelIntent',"Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
     this.emit(':tell', 'Goodbye');
   },
 
   'Unhandled': function () {
-    var intentTrackingID = ua('UA-97014541-4', this.event.session.user.userId, {strictCidFormat: false, https: true});
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.ART, this.event.session.user.userId, {strictCidFormat: false, https: true});
     intentTrackingID.event("Unhandled","Success", this.event.session).send();
     var prompt = 'I\'m sorry.  I didn\'t catch that.  Can you please repeat the question.';
     this.emit(':ask', prompt, prompt);
@@ -696,7 +704,7 @@ var artHandlers = Alexa.CreateStateHandler(APP_STATES.ART, {
 
 var caseHandlers = Alexa.CreateStateHandler(APP_STATES.CASE, {
   'CreateCaseIntent': function () {
-    var intentTrackingID = ua('UA-97014541-5', this.event.session.user.userId, {strictCidFormat: false, https: true});
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.CASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
     var userToken = this.event.session.user.accessToken;
     var salesforceHelper = new SalesforceHelper();
     var caseIssue =  this.attributes["caseIssue"];
@@ -718,7 +726,7 @@ var caseHandlers = Alexa.CreateStateHandler(APP_STATES.CASE, {
   },
 
   'CaseConfirmationIntent': function () {
-    var intentTrackingID = ua('UA-97014541-5', this.event.session.user.userId, {strictCidFormat: false, https: true});
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.CASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
     var helperClass = new HelperClass();
     var caseIssue = this.attributes["caseIssue"];
     if(caseIssue === undefined){
@@ -730,30 +738,30 @@ var caseHandlers = Alexa.CreateStateHandler(APP_STATES.CASE, {
     var prompt = _.template('You wish to create a new case for ${caseIssue}.  Is that correct?')({
       caseIssue: caseIssue
     });
-    intentTrackingID.event("CaseConfirmationIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    intentTrackingID.event("CaseConfirmationIntent","Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
     this.emit(':ask', prompt, prompt);
   },
 
   'AMAZON.YesIntent': function() {
-    var intentTrackingID = ua('UA-97014541-5', this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("AMAZON.YesIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.CASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
+    intentTrackingID.event("AMAZON.YesIntent","Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
     //I'm not sure if the attributes will be maintaned between Intents so reassigning it just incase.
     this.attributes["caseIssue"] = this.attributes["caseIssue"];
     this.emitWithState('CreateCaseIntent', true);
   },
 
   'AMAZON.NoIntent': function() {
-    var intentTrackingID = ua('UA-97014541-5', this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("AMAZON.NoIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
-    this.attributes = {};
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.CASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
+    intentTrackingID.event("AMAZON.NoIntent","Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
+    this.attributes["caseIssue"] = undefined;
     var prompt = 'Ok, what typt of case would you like to submit?'
     var reprompt = 'For a list of options please say help.  What do you need help with?';
     this.emit(':ask', prompt, reprompt);
   },
 
   'AMAZON.HelpIntent': function() {
-    var intentTrackingID = ua('UA-97014541-5', this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("AMAZON.HelpIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.CASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
+    intentTrackingID.event('AMAZON.HelpIntent',"Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
     var prompt = 'To create a new case you can say I need help with a problem.  For a full list of current cases please check the card in your alexa app.  What can I help you with today?';
     var reprompt = 'What can I help you with today?';
     var cardMessage = 'Current case types you can submit to the Town of Cary:\nBroken Recycling Cart\nBroken Trash Cart\nCardboard Collection\nLeaf Collection\nMissed Recycling\nMissed Trash\nMissed Yard Waste\nOil Collection\nUpgrade Recycling Cart\nUpgrade Trash Cart';
@@ -761,19 +769,19 @@ var caseHandlers = Alexa.CreateStateHandler(APP_STATES.CASE, {
   },
 
   'AMAZON.StopIntent': function () {
-    var intentTrackingID = ua('UA-97014541-5', this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("AMAZON.StopIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.CASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
+    intentTrackingID.event('AMAZON.StopIntent',"Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
     this.emit(':tell', 'Goodbye');
   },
 
   'AMAZON.CancelIntent': function () {
-    var intentTrackingID = ua('UA-97014541-5', this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("AMAZON.CancelIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.CASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
+    intentTrackingID.event('AMAZON.CancelIntent',"Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
     this.emit(':tell', 'Goodbye');
   },
 
   'Unhandled': function () {
-    var intentTrackingID = ua('UA-97014541-5', this.event.session.user.userId, {strictCidFormat: false, https: true});
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.CASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
     intentTrackingID.event("Unhandled","Success", this.event.session).send();
     var prompt = 'I\'m sorry.  I didn\'t catch that.  Can you please repeat your problem.';
     this.emit(':ask', prompt, prompt);
@@ -783,7 +791,7 @@ var caseHandlers = Alexa.CreateStateHandler(APP_STATES.CASE, {
 var trashHandlers = Alexa.CreateStateHandler(APP_STATES.TRASH, {
 
   'GetByAddressIntent': function() {
-    var intentTrackingID = ua('UA-97014541-6', this.event.session.user.userId, {strictCidFormat: false, https: true});
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.TRASH, this.event.session.user.userId, {strictCidFormat: false, https: true});
     var esriDataHelper = new EsriDataHelper();
     var self = this;
     var reprompt = 'Please tell me your address so I can look up nearby public art.';
@@ -806,7 +814,7 @@ var trashHandlers = Alexa.CreateStateHandler(APP_STATES.TRASH, {
   },
 
   'GetTrashDayIntent': function() {
-    var intentTrackingID = ua('UA-97014541-6', this.event.session.user.userId, {strictCidFormat: false, https: true});
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.TRASH, this.event.session.user.userId, {strictCidFormat: false, https: true});
     var esriDataHelper = new EsriDataHelper();
     var self = this;
     var address = this.attributes['address'];
@@ -826,46 +834,46 @@ var trashHandlers = Alexa.CreateStateHandler(APP_STATES.TRASH, {
   },
 
   'AMAZON.YesIntnet': function() {
-    var intentTrackingID = ua('UA-97014541-6', this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("AMAZON.YesIntnet","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.TRASH, this.event.session.user.userId, {strictCidFormat: false, https: true});
+    intentTrackingID.event("AMAZON.YesIntnet","Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
     var prompt = 'Please tell me an address so I can look up your next trash and recycle day.';
     this.emit(':ask', prompt, prompt);
   },
 
   'AMAZON.NoIntent': function() {
-    var intentTrackingID = ua('UA-97014541-6', this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("AMAZON.NoIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.TRASH, this.event.session.user.userId, {strictCidFormat: false, https: true});
+    intentTrackingID.event("AMAZON.NoIntent","Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
     var prompt = 'OK, Have a nice day';
     this.emit(':tell', prompt);
   },
 
   'AMAZON.RepeatIntent': function () {
-    var intentTrackingID = ua('UA-97014541-6', this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("AMAZON.RepeatIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.TRASH, this.event.session.user.userId, {strictCidFormat: false, https: true});
+    intentTrackingID.event('AMAZON.RepeatIntent',"Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
     this.emit(':ask', this.attributes['speechOutput'], this.attributes['repromptText']);
   },
 
   'AMAZON.HelpIntent': function() {
-    var intentTrackingID = ua('UA-97014541-6', this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("AMAZON.HelpIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.TRASH, this.event.session.user.userId, {strictCidFormat: false, https: true});
+    intentTrackingID.event('AMAZON.HelpIntent',"Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
     var prompt = 'Please tell me your house number and street for me to look your next trash and recycle day.'
     this.emit(':ask', prompt, prompt);
   },
 
   'AMAZON.StopIntent': function () {
-    var intentTrackingID = ua('UA-97014541-6', this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("AMAZON.StopIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.TRASH, this.event.session.user.userId, {strictCidFormat: false, https: true});
+    intentTrackingID.event('AMAZON.StopIntent',"Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
     this.emit(':tell', 'Goodbye');
   },
 
   'AMAZON.CancelIntent': function () {
-    var intentTrackingID = ua('UA-97014541-6', this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("AMAZON.CancelIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.TRASH, this.event.session.user.userId, {strictCidFormat: false, https: true});
+    intentTrackingID.event('AMAZON.CancelIntent',"Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
     this.emit(':tell', 'Goodbye');
   },
 
   'Unhandled': function () {
-    var intentTrackingID = ua('UA-97014541-6', this.event.session.user.userId, {strictCidFormat: false, https: true});
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.TRASH, this.event.session.user.userId, {strictCidFormat: false, https: true});
     intentTrackingID.event("Unhandled","Success", this.event.session).send();
     var prompt = 'I\'m sorry.  I didn\'t catch that.  Can you please repeat the question.';
     this.emit(':ask', prompt, prompt);
