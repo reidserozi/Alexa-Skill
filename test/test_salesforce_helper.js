@@ -9,7 +9,7 @@ chai.config.includeStack = true;
 
 describe('SalesforceHelper', function() {
   var subject = new SalesforceHelper();
-  var accessToken = '00D7A0000000P0o!AQMAQJ_K52y.Q1B2PR.Tu9LVW4Wi5Gi8i4LwqVSOM4oQ4vWVn0_rLeadInw0Op5NGnFcM7B1z8CZ_wBugetdI9tR_Z_kj2iY';
+  var accessToken = '00D7A0000000P0o!AQMAQPHkfx7oWL0xO6UpWw4OaTkofP_ZGHQsHVyDCpEJ5ql0lZVr4WSQkIQ6Y4_RS9X9DvurXJ7xQTr62DW0sXxCjG85pC5Y';
   var address = { x: -78.78019524656116, y: 35.7892128286608 };
   describe('#getUserAddress', function() {
     context('with a user access token', function() {
@@ -17,7 +17,7 @@ describe('SalesforceHelper', function() {
         var value = subject.getUserAddress(accessToken).then(function(results){
           return results.x;
         }).catch(function(err){
-          console.log('Error in connecting to salesforce');
+          console.log('Error in connecting to salesforce testing address');
           console.log(err);
         });
         return expect(value).to.eventually.eq(address.x);
@@ -31,7 +31,7 @@ describe('SalesforceHelper', function() {
         var value = subject.getTownHallHours(accessToken,date).then(function(results){
           return results.start;
         }).catch(function(err){
-          console.log('Error in connecting to salesforce');
+          console.log('Error in connecting to salesforce testing hours');
           console.log(err);
         });
         return expect(value).to.eventually.eq("8 am");
@@ -43,7 +43,7 @@ describe('SalesforceHelper', function() {
         var value = subject.getTownHallHours(accessToken, date).then(function(results) {
           return results.closed;
         }).catch(function(err){
-          console.log('Error in connecting to salesforce');
+          console.log('Error in connecting to salesforce testing hours with holiday');
           console.log(err);
         });
         return expect(value).to.eventually.eq(true);
@@ -57,7 +57,7 @@ describe('SalesforceHelper', function() {
         var value = subject.getTownHallHours(accessToken, date).then(function(results) {
           return results.closed;
         }).catch(function(err){
-          console.log('Error in connecting to salesforce');
+          console.log('Error in connecting to salesforce testing hours with weekend');
           console.log(err);
         });
         return expect(value).to.eventually.eq(true);

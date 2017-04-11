@@ -73,6 +73,7 @@ var newSessionHandlers = {
     var gymTimeDate = this.event.request.intent.slots.Date.value || Date.yyyymmdd(Date.today());
     var location = this.event.request.intent.slots.location.value;
     var prompt = '';
+
     if(gymTimeDate.search(/^\d{4}-\d{2}-\d{2}$/) == -1){
       prompt = 'Please choose a single day for open gym times.';
       intentTrackingID.event("OpenGymTimesIntent","Wrong Input","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)  + " Err: " + err).send();

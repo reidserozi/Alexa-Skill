@@ -114,4 +114,31 @@ HelperClass.prototype.addFieldResults = promise.method(function (body, results) 
   return results;
 });
 
+//next two functions are from Amazon's calendar reader on github used to parse the Amazon.Date slot type.
+HelperClass.prototype.getWeekendData = function (res) {
+    if (res.length === 3) {
+        var saturdayIndex = 5;
+        var sundayIndex = 6;
+        var weekNumber = res[1].substring(1);
+
+        var weekStart = w2date(res[0], weekNumber, saturdayIndex);
+        var weekEnd = w2date(res[0], weekNumber, sundayIndex);
+
+        return Dates = {
+            startDate: weekStart,
+            endDate: weekEnd,
+        };
+    }
+}
+
+var w2date = function (year, wn, dayNb) {
+    var day = 86400000;
+
+    var j10 = new Date(year, 0, 10, 12, 0, 0),
+        j4 = new Date(year, 0, 4, 12, 0, 0),
+        mon1 = j4.getTime() - j10.getDay() * day;
+    return new Date(mon1 + ((wn - 1) * 7 + dayNb) * day);
+};
+
+
 module.exports = HelperClass;

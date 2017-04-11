@@ -25,11 +25,8 @@ SalesforceHelper.prototype.createCaseInSalesforce = function(userToken, caseIssu
 		accessToken : userToken,
 		version:'39.0'
 	});
-  return getUserId(userToken).then(function(results){
-    return conn.query("Select ContactId from User where Id = '" + results.body.id + "'");
-	}).then(function(results){
-      var userRecord = results.records[0];
-      obj.ContactId = userRecord.ContactId;
+  return getContactId(userToken).then(function(results){
+      obj.ContactId = results
       return conn.query("Select Id from Case_Issue__c where Name LIKE '%" + caseIssue + "%'");
 	}).then(function(results) {
 		var caseIssueRecord = results.records[0];
@@ -55,15 +52,12 @@ SalesforceHelper.prototype.findLatestCaseStatus = function(userToken, caseIssue)
 		accessToken : userToken,
 		version:'39.0'
 	});
-	return getUserId(userToken).then(function(results){
-		return conn.query("Select ContactId from User where Id = '" + results.body.id + "'")
-	}).then(function(results){
+	return getContactId(userToken).then(function(results){
 		var q = '';
-		var userContactId = results.records[0].ContactId;
 		if(caseIssue == undefined){
-			q = "ContactId = '" + userContactId + "'";
+			q = "ContactId = '" + results + "'";
 		} else {
-			q = "ContactId = '" + userContactId + "' AND CaseIssue__r.Name LIKE '%" + caseIssue + "%'";
+			q = "ContactId = '" + results + "' AND CaseIssue__r.Name LIKE '%" + caseIssue + "%'";
 		}
 		console.log(q);
 		return conn.query("Select Status, CaseNumber, Expected_Completion_Date__c, CreatedDate, ClosedDate, LastModifiedDate, CaseIssue__r.Name from Case where " +  q + " order by createdDate DESC Limit 1");
@@ -134,10 +128,8 @@ SalesforceHelper.prototype.getUserAddress = function(userToken) {
 		instanceUrl : INSTANCE_URL,
 		accessToken : userToken
 	});
-	return getUserId(userToken).then(function(results){
-		return conn.query("Select ContactId from User where Id = '" + results.body.id + "'");
-	}).then(function(results){
-		return conn.query("Select MailingStreet, MailingLatitude, MailingLongitude From Contact Where Id = '" + results.records[0].ContactId +"'" );
+	return getContactId(userToken).then(function(results){
+		return conn.query("Select MailingStreet, MailingLatitude, MailingLongitude From Contact Where Id = '" + results +"'" );
 	}).then(function(results){
 		if(results.records[0].MailingLatitude == null || results.records[0].MailingLongitude == null){
 			var esriDataHelper = new EsriDataHelper();
@@ -183,7 +175,6 @@ SalesforceHelper.prototype.getTownHallHours = function(userToken, date) {
 SalesforceHelper.prototype.formatTownHallHours = function(timeInfo, date) {
 	var prompt = '';
 	var helperClass = new HelperClass();
-	console.log(Date.parse(date));
 	if(timeInfo.closed){
 		prompt = _.template('The Town Hall is closed on ${closedDate}')({
 			closedDate: helperClass.formatDate(Date.parse(date))
@@ -198,12 +189,12 @@ SalesforceHelper.prototype.formatTownHallHours = function(timeInfo, date) {
 	return prompt;
 };
 
-function getUserId(userToken){
+function getContactId(userToken){
   var options = {
-    uri: INSTANCE_URL + '/services/data/v29.0/connect/communities/' + COMMUNITY_ID + '/chatter/users/me/',
+    //uri: INSTANCE_URL + '/services/data/v29.0/connect/communities/' + COMMUNITY_ID + '/chatter/users/me/',
+		uri: INSTANCE_URL + '/services/apexrest/CommunityContact/',
     qs: {}, //Query string data
     method: 'GET', //Specify the method
-    resolveWithFullResponse: true,
     json: true,
     timeout: 3000,
     headers: { //We can define headers too
