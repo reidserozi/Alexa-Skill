@@ -9,14 +9,12 @@ chai.config.includeStack = true;
 
 describe('OpenDataHelper', function() {
   var subject = new OpenDataHelper();
-  var open_gym_date;
-  var today;
   describe('#getOpenGymTimes', function() {
     context('with a date', function() {
       it('returns gym times on current date', function() {
-        today = new Date('2017-03-24');
-        open_gym_date = today.toISOString().substring(0,10);
-        var uri = OPENDATAENDPOINT + 'dataset=open-gym&q=open_gym_start==' + open_gym_date + '&facet=facility_title&facet=pass_type&facet=community_center&facet=open_gym&facet=group&facet=date_scanned&timezone=UTC';
+        var today = new Date('2017-03-24');
+        var open_gym_date = today.toISOString().substring(0,10);
+        var uri = OPENDATAENDPOINT + 'dataset=open-gym&q=open_gym_start==' + open_gym_date + '&facet=community_center&timezone=America/New_York&exclude.community_center=CAC';
         var value = subject.requestOpenData(uri).then(function(obj) {
           return obj.records[0].fields.date_scanned;
         });
@@ -27,10 +25,10 @@ describe('OpenDataHelper', function() {
   describe('#getOpenGymTimes', function() {
     context('with a date and location', function() {
       it('returns gym times on date only for BPCC', function() {
-        today = new Date('2017-01-10');
-        open_gym_date = today.toISOString().substring(0,10);
+        var today = new Date('2017-01-10');
+        var open_gym_date = today.toISOString().substring(0,10);
         var location = 'BPCC';
-        var uri = OPENDATAENDPOINT + 'dataset=open-gym&q=open_gym_start==' + open_gym_date + ' AND community_center==' + location +  '&facet=facility_title&facet=pass_type&facet=community_center&facet=open_gym&facet=group&facet=date_scanned&timezone=UTC';
+        var uri = OPENDATAENDPOINT + 'dataset=open-gym&q=open_gym_start==' + open_gym_date + ' AND community_center==' + location +  '&facet=community_center&timezone=America/New_York&exclude.community_center=CAC';
         var value = subject.requestOpenData(uri).then(function(obj) {
           return obj.records.length;
         });
@@ -115,6 +113,7 @@ describe('OpenDataHelper', function() {
   describe('#requestCityInformation', function() {
     context('normal call to function', function() {
       it('returns the name of the mayor', function() {
+        this.timeout(5000);
         var uri = OPENDATAENDPOINT + 'dataset=council-districts&q=county==wake&sort=name&facet=at_large_representatives'
         var value = subject.requestOpenData(uri).then(function(obj) {
           return obj.records[0].fields.mayor;
@@ -265,6 +264,102 @@ describe('OpenDataHelper', function() {
     context('return call from open data', function() {
       it('formats the status as expected', function() {
         expect(subject.formatAtLargeCouncilMembers(cityInfo)).to.eq(responseText);
+      });
+    });
+  });
+  describe('#getOpenStudioTimes', function() {
+    context('with a date where there is a session', function() {
+      it('returns studio times on date', function() {
+        var today = new Date('2017-04-12');
+        var open_gym_date = today.toISOString().substring(0,10);
+        var uri = OPENDATAENDPOINT + 'dataset=open-gym&q=open_gym_start==' + open_gym_date + '&facet=community_center&timezone=America/New_York&refine.community_center=CAC';
+        return subject.requestOpenData(uri).then(function(obj) {
+          return expect(obj.records.length).to.eq(1) && expect(obj.records[0].fields.facility_title).to.eq('Cary Arts Center');
+        });
+      });
+    });
+  });
+  describe('#getNextStudioTime', function() {
+    context('with a date where there is a session', function() {
+      it('returns studio times on date', function() {
+        var today = new Date('2017-04-12');
+        var open_gym_date = today.toISOString().substring(0,10);
+        var uri = OPENDATAENDPOINT + 'dataset=open-gym&q=open_gym_start>=' + open_gym_date + '&facet=community_center&rows=1&sort=-date_scanned&timezone=America/New_York&refine.community_center=CAC';
+        return subject.requestOpenData(uri).then(function(obj) {
+          return expect(obj.records[0].fields.date_scanned).to.eq('2017-04-12') && expect(obj.records.length).to.eq(1);
+        });
+      });
+    });
+    context('with a date where there is no session', function() {
+      it('returns the next date when there is a session', function() {
+        var today = new Date('2017-04-14');
+        var open_gym_date = today.toISOString().substring(0,10);
+        var uri = OPENDATAENDPOINT + 'dataset=open-gym&q=open_gym_start>=' + open_gym_date + '&facet=community_center&rows=1&sort=-date_scanned&timezone=America/New_York&refine.community_center=CAC';
+        return subject.requestOpenData(uri).then(function(obj) {
+          return expect(obj.records.length).to.eq(1) && expect(obj.records[0].fields.date_scanned).to.eq('2017-04-18');
+        });
+      });
+    });
+  });
+  describe('#formatStudioTimes', function() {
+    var response = {
+      "records":[
+        {
+          "datasetid":"open-gym",
+          "recordid":"8dbb614642a46eaecb3967f2b38e726567ef4922",
+          "fields":{
+            "postal_code1":"27511",
+            "open_gym_start":"2017-04-12T13:00:00-04:00",
+            "date_scanned":"2017-04-12",
+            "open_gym_end":"2017-04-12T15:00:00-04:00",
+            "community_center":"CAC",
+            "location":"Principals Hall",
+            "province_code1":"NC",
+            "open_gym":"Open Studio",
+            "address11":"101 Dry AVE",
+            "total":0,
+            "facility_title":"Cary Arts Center",
+            "pass_type":"Open Studio Programs"
+          },
+          "record_timestamp":"2017-03-08T08:47:00-05:00"
+        }
+      ]
+    };
+    context('return call from open data', function() {
+      var responseText = 'There is 1 open studio times on Wed Apr 12 from 01:00:00 PM to 03:00:00 PM.'
+      it('formats the status as expected', function() {
+        expect(subject.formatStudioTimes(response)).to.eq(responseText);
+      });
+    });
+  });
+  describe('#formatNextStudioTime', function() {
+    var response = {
+      "records":[
+        {
+          "datasetid":"open-gym",
+          "recordid":"e0ff02a898d29a6059262fda02d88a027f21fe5e",
+          "fields":{
+            "postal_code1":"27511",
+            "open_gym_start":"2017-04-18T17:00:00-04:00",
+            "date_scanned":"2017-04-18",
+            "open_gym_end":"2017-04-18T21:00:00-04:00",
+            "community_center":"CAC",
+            "location":"Studio M50",
+            "province_code1":"NC",
+            "open_gym":"Open Studio",
+            "address11":"101 Dry AVE",
+            "total":0,
+            "facility_title":"Cary Arts Center",
+            "pass_type":"Open Studio Programs"
+          },
+          "record_timestamp":"2017-03-08T08:47:00-05:00"
+        }
+      ]
+    };
+    context('return call from open data', function() {
+      var responseText = 'The next open studio time is on Tue Apr 18 at CARY ARTS CENTER.'
+      it('formats the status as expected', function() {
+        expect(subject.formatNextStudioTime(response)).to.eq(responseText);
       });
     });
   });

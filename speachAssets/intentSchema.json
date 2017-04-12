@@ -32,6 +32,20 @@
       ]
     },
     {
+      "intent": "OpenStudioTimesIntent",
+      "slots": [
+        {
+          "name": "Date",
+          "type": "AMAZON.DATE"
+        }
+      ]
+    },
+    {
+      "intent": "NextOpenStudioIntent",
+      "slots": [
+      ]
+    },
+    {
     	"intent": "MyCouncilMemberIntent",
       	"slots": []
     },
