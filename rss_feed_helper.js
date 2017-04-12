@@ -1,7 +1,6 @@
 'use strict';
 var _ = require('lodash');
 var rp = require('request-promise');
-var request = require('request');
 require('./jsDate.js')();
 require('datejs');
 const feedparser = require('feedparser-promised');
