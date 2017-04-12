@@ -93,7 +93,7 @@ SalesforceHelper.prototype.formatExistingCase = function(caseInfo) {
 	var response = {};
 	var helperClass = new HelperClass();
 	if (caseInfo.length > 0) {
-		var prompt = _.template('Your case was last modified on ${lastModifiedDate}.'); // The status of your case is ${caseStatus}, and it
+		var prompt = _.template('Your case for ${caseIssue} was last modified on ${lastModifiedDate}.'); // The status of your case is ${caseStatus}, and it
 		var lmDate = Date.parse(caseInfo[0].LastModifiedDate).toString();
 	  response.prompt = prompt({
 			caseStatus: caseInfo[0].Status,
