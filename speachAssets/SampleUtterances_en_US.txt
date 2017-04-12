@@ -97,6 +97,29 @@ OpenGymTimesIntent	when are the open gym times at {location} community center
 OpenGymTimesIntent  what gym can I go to {Date}
 OpenGymTimesIntent  the gym times
 
+OpenStudioTimesIntent	what are the open studio {Date}
+OpenStudioTimesIntent	when are the open studio {Date}
+OpenStudioTimesIntent	what are the open studio times {Date}
+OpenStudioTimesIntent	when are the open studio times {Date}
+OpenStudioTimesIntent	what are the open studio on {Date}
+OpenStudioTimesIntent	when are the open studio on {Date}
+OpenStudioTimesIntent	what are the open studio times on {Date}
+OpenStudioTimesIntent	when are the open studio times on {Date}
+OpenStudioTimesIntent	what are the open studio for {Date}
+OpenStudioTimesIntent	when are the open studio for {Date}
+OpenStudioTimesIntent	what are the open studio times for {Date}
+OpenStudioTimesIntent	when are the open studio times for {Date}
+OpenStudioTimesIntent	How many open studio are {Date}
+OpenStudioTimesIntent	How many open studio times are {Date}
+OpenStudioTimesIntent	How many open studio are there on {Date}
+OpenStudioTimesIntent	How many open studio times are there on {Date}
+OpenStudioTimesIntent	How many open studio are on {Date}
+OpenStudioTimesIntent	How many open studio times are on {Date}
+
+NextOpenStudioIntent	where is the next open studio
+NextOpenStudioIntent	when is the next open studio
+NextOpenStudioIntent	how soon until the next open studio
+
 MyCouncilMemberIntent	who is my council
 MyCouncilMemberIntent	who represents me in council
 MyCouncilMemberIntent	who represents me in the city council
