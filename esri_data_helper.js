@@ -90,11 +90,12 @@ EsriDataHelper.prototype.formatMyCouncilMember = function(councilInfo) {
   var prompt = '';
   councilInfo.results.forEach(function(item){
     if (typeof item.attributes["Council Distict"] != 'undefined'){
-      prompt = _.template('You belong to District ${district}, and your Council Member is ${member}. Your at large council members are ${atLarge1}, and ${atLarge2}.')({
+      prompt = _.template('You belong to District ${district}, and your Council Member is ${member}. Your at large council members are ${atLarge1}, and ${atLarge2}. The mayor is ${mayor}.')({
         district: item.attributes["Council Distict"],
         member: item.attributes["Representative Name"],
         atLarge1: item.attributes["At Large Representative 1"],
-        atLarge2: item.attributes["At Large Representative 2"]
+        atLarge2: item.attributes["At Large Representative 2"],
+        mayor: item.attributes["Mayor"]
       });
     }
   });
