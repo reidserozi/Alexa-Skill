@@ -17,6 +17,7 @@ RSSFeedHelper.prototype.requestRSSFeed = function() {
   var feedData = '';
   return feedparser.parse(encodeURI(url)).then( (items) => {
     return feedData = items.filter(dateFilter);
+
   }).catch( (error) => {
     console.log('error: ', error);
   });
@@ -26,6 +27,8 @@ RSSFeedHelper.prototype.formatRSSFeed = function(feedData) {
   var response = 'The latest Town of Cary News today: ';
   if (feedData[0].title == 'Town of Cary\'s Weekend Update') {
     response = 'Please check Town of Cary dot O R G for the Weekend update';
+  } else if(feedData[0].title == undefined) {
+    response = 'There are no news items to report at this time.';
   } else {
     feedData.forEach(function(item) {
       response += _.template("${rssTitle}. ")({

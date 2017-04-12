@@ -432,7 +432,7 @@ var newSessionHandlers = {
       intentTrackingID.event("RSSFeedIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
       self.emit(':tell', response);
     }).catch(function(err){
-      prompt = 'System down, please try again.';
+      prompt = 'I\'m sorry, there seems to be a problem with the connection right now.';
       console.log(err);
       intentTrackingID.event("RSSFeedIntent","Failure","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes) + " Err: " + err).send();
       self.emit(':tell', prompt);
