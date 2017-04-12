@@ -163,12 +163,12 @@ var newSessionHandlers = {
     openDataHelper.requestOpenData(uri).then(function(response) {
        return openDataHelper.formatAtLargeCouncilMembers(response);
     }).then(function(response){
-      intentTrackingID.event("RSSFeedIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+      intentTrackingID.event("AtLargeCouncilMembersIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
       self.emit(':tell', response);
     }).catch(function(err) {
       prompt = 'There seems to be a problem with the connection right now.  Please try again later';
       console.log(err);
-      intentTrackingID.event("Failure","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)  + " Err: " + err).send();
+      intentTrackingID.event('AtLargeCouncilMembersIntent', "Failure","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)  + " Err: " + err).send();
       self.emit(':tell', prompt);
     });
   },

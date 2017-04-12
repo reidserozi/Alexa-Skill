@@ -39,8 +39,13 @@ OpenDataHelper.prototype.formatGymTimes = function(gymTimes) {
   });
   for (var key in sortedGyms) {
     if (sortedGyms.hasOwnProperty(key)) {
-      times += _.template(' At ${park} the times are:')({
-        park: key
+      var jensPreposition = 'is';
+      if(sortedGyms[key].length > 1){
+        jensPreposition = 'are';
+      }
+      times += _.template(' At ${park} the times ${prep}:')({
+        park: key,
+        prep: jensPreposition
       });
       sortedGyms[key].forEach(function(item){
         var startTime = new Date(item.open_gym_start);
