@@ -6,12 +6,6 @@ var EsriDataHelper = require('./esri_data_helper');
 var HelperClass = require('./helper_functions.js');
 var ESRIENDPOINT = 'https://maps.townofcary.org/arcgis1/rest/services/';
 require('datejs');
-
-// the salesforce community Id (only needed when Account linking is required)
-// to get the ID go to Salesforce org -> Setup -> search for 'community' in the Quick Find section and click on the Communities->All Communities and hover over
-// your org community. In the URL shown after hovering you will see a parameter 'networkId' starting with 0DB. Coppy that one in the below variable.
-var COMMUNITY_ID = '0DB7A0000008OStWAM';
-
 //salesforce community login URL
 var INSTANCE_URL = 'https://311test-onecary.cs44.force.com/OneCary';
 
