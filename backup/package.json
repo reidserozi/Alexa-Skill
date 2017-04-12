@@ -10,20 +10,11 @@
   "license": "ISC",
   "dependencies": {
     "alexa-sdk": "^1.0.6",
-    "bluebird": "^3.5.0",
     "chai": "^3.5.0",
     "chai-as-promised": "^6.0.0",
-    "datejs": "^1.0.0-rc3",
-    "feedparser-promised": "^1.2.1",
-    "jsforce": "^1.7.1",
     "lodash": "^4.17.4",
     "mocha": "^3.2.0",
     "request": "^2.79.0",
-    "request-promise": "^4.1.1",
-    "universal-analytics": "^0.4.13"
-  },
-  "devDependencies": {
-    "chai": "^3.2.0",
-    "chai-http": "^1.0.0"
+    "request-promise": "^4.1.1"
   }
 }

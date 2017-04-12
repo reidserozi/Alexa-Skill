@@ -1,13 +1,172 @@
 {
   "intents": [
     {
-      "intent": "opengymtimes",
+      "intent": "AMAZON.HelpIntent"
+    },
+    {
+      "intent": "AMAZON.YesIntent"
+    },
+    {
+      "intent": "AMAZON.NoIntent"
+    },
+    {
+      "intent": "AMAZON.StopIntent"
+    },
+    {
+      "intent": "AMAZON.CancelIntent"
+    },
+    {
+      "intent": "AMAZON.RepeatIntent"
+    },
+    {
+      "intent": "OpenGymTimesIntent",
       "slots": [
         {
           "name": "Date",
           "type": "AMAZON.DATE"
+        },
+        {
+          "name": "location",
+          "type": "GYM_NAME"
         }
       ]
+    },
+    {
+    	"intent": "MyCouncilMemberIntent",
+      	"slots": []
+    },
+    {
+     	"intent": "GetByAddressIntent",
+     	"slots": [
+          {
+            "name": "street_number",
+            "type": "AMAZON.NUMBER"
+          },
+          {
+     		"name": "street",
+          	"type": "CARY_STREET"
+          }
+     	]
+    },
+    {
+    	"intent": "AllCouncilMembersIntent",
+      	"slots": []
+    },
+    {
+    	"intent": "MyMayorIntent",
+      	"slots": []
+    },
+    {
+    	"intent": "AtLargeCouncilMembersIntent",
+      	"slots": []
+    },
+    {
+    	"intent": "NearbyParksIntent",
+      	"slots": []
+    },
+    {
+    	"intent": "NearbyPublicArtIntent",
+      	"slots": []
+    },
+    {
+      "intent": "CaseStartIntent",
+      "slots": []
+    },
+    {
+      "intent": "MyCaseStatusIntent",
+      "slots": [
+        {
+          "name": "caseSubject",
+          "type": "CASE_SUBJECT"
+        },
+        {
+          "name": "caseAction",
+          "type": "CASE_ACTION"
+        }
+      ]
+    },
+    {
+      "intent": "GetCouncilInfoIntent",
+      "slots": []
+    },
+    {
+      "intent": "CaseStatusIntent",
+      "slots": [
+        {
+          "name": "CaseNumber",
+          "type": "AMAZON.NUMBER"
+        }
+      ]
+    },
+    {
+     "intent": "CaseConfirmationIntent",
+     "slots":[
+        {
+          "name": "caseSubject",
+          "type": "CASE_SUBJECT"
+        },
+       {
+          "name": "caseAction",
+          "type": "CASE_ACTION"
+        }
+      ]
+    },
+    {
+      "intent": "GetCaryFactsIntent",
+      "slots": []
+    },
+    {
+      "intent": "TownHallHoursIntent",
+      "slots": [
+         {
+          "name": "Date",
+          "type": "AMAZON.DATE"
+        }
+      ]
+    },
+    {
+      "intent": "TrashDayIntent",
+      "slots": []
+    },
+    {
+      "intent": "UpcomingCaryEventsIntent",
+      "slots":[
+        {
+          "name": "Date",
+          "type": "AMAZON.Date"
+        }
+      ]
+    },
+    {
+      "intent": "UpcomingTheCaryShowsIntent",
+      "slots":[
+        {
+          "name": "Date",
+          "type": "AMAZON.Date"
+        }
+      ]
+    },
+    {
+      "intent": "KokoBoothIntent",
+      "slots":[
+        {
+          "name": "Date",
+          "type": "AMAZON.Date"
+        }
+      ]
+    },
+    {
+      "intent": "FieldStatusIntent",
+      "slots":[
+        {
+          "name": "park",
+          "type": "CARY_PARK"
+        }
+      ]
+    },
+    {
+      "intent": "RSSFeedIntent",
+      "slots":[]
     }
   ]
 }

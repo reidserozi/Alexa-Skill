@@ -4,6 +4,7 @@ var chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 var expect = chai.expect;
 var OpenDataHelper = require('../open_data_helper');
+var OPENDATAENDPOINT = 'https://data.townofcary.org/api/records/1.0/search/?';
 chai.config.includeStack = true;
 
 describe('OpenDataHelper', function() {
@@ -13,40 +14,55 @@ describe('OpenDataHelper', function() {
   describe('#getOpenGymTimes', function() {
     context('with a date', function() {
       it('returns gym times on current date', function() {
-        today = new Date('2017-01-09');
+        today = new Date('2017-03-24');
         open_gym_date = today.toISOString().substring(0,10);
-        var value = subject.requestOpenGymTime(open_gym_date).then(function(obj) {
+        var uri = OPENDATAENDPOINT + 'dataset=open-gym&q=open_gym_start==' + open_gym_date + '&facet=facility_title&facet=pass_type&facet=community_center&facet=open_gym&facet=group&facet=date_scanned&timezone=UTC';
+        var value = subject.requestOpenData(uri).then(function(obj) {
           return obj.records[0].fields.date_scanned;
         });
         return expect(value).to.eventually.eq(open_gym_date);
       });
     });
   });
+  describe('#getOpenGymTimes', function() {
+    context('with a date and location', function() {
+      it('returns gym times on date only for BPCC', function() {
+        today = new Date('2017-01-10');
+        open_gym_date = today.toISOString().substring(0,10);
+        var location = 'BPCC';
+        var uri = OPENDATAENDPOINT + 'dataset=open-gym&q=open_gym_start==' + open_gym_date + ' AND community_center==' + location +  '&facet=facility_title&facet=pass_type&facet=community_center&facet=open_gym&facet=group&facet=date_scanned&timezone=UTC';
+        var value = subject.requestOpenData(uri).then(function(obj) {
+          return obj.records.length;
+        });
+        return expect(value).to.eventually.eq(2);
+      });
+    });
+  });
   describe('#formatGymTimes', function() {
     var status = {
-        "nhits": 4,
-        "parameters": {
+      "nhits": 4,
+      "parameters": {
         "dataset": [
-        "open-gym"
+          "open-gym"
         ],
         "timezone": "UTC",
         "q": "open_gym_start == '2017-01-06",
         "rows": 10,
         "format": "json",
         "facet": [
-        "facility_title",
-        "pass_type",
-        "community_center",
-        "open_gym",
-        "group",
-        "date_scanned"
+          "facility_title",
+          "pass_type",
+          "community_center",
+          "open_gym",
+          "group",
+          "date_scanned"
         ]
-        },
-        "records": [
-          {
-            "datasetid": "open-gym",
-            "recordid": "705ddb95b54abd49df7d7c1786013ea24d66bc99",
-            "fields": {
+      },
+      "records": [
+        {
+          "datasetid": "open-gym",
+          "recordid": "705ddb95b54abd49df7d7c1786013ea24d66bc99",
+          "fields": {
             "postal_code1": "27513",
             "open_gym_start": "2017-01-06T20:30:00+00:00",
             "group": "Youth/Teen",
@@ -62,11 +78,11 @@ describe('OpenDataHelper', function() {
             "pass_type": "Open Gym - Youth/Teen BB"
           },
           "record_timestamp": "2016-08-15T14:54:00+00:00"
-          },
-          {
-            "datasetid": "open-gym",
-            "recordid": "efa1b60dfa7d3560042afc2eed8f3e50b9551951",
-            "fields": {
+        },
+        {
+          "datasetid": "open-gym",
+          "recordid": "efa1b60dfa7d3560042afc2eed8f3e50b9551951",
+          "fields": {
             "postal_code1": "27513",
             "open_gym_start": "2017-01-06T14:00:00+00:00",
             "date_scanned": "2017-01-06",
@@ -81,12 +97,12 @@ describe('OpenDataHelper', function() {
             "pass_type": "Open Gym - Pickleball"
           },
           "record_timestamp": "2016-08-15T14:54:00+00:00"
-          },
-        ]
-      };
+        }
+      ]
+    };
     context('with multiple gym times', function() {
       it('formats the status as expected', function() {
-        expect(subject.formatGymTimes(status)).to.eq('There are 2 open gym times on 2017-01-06. 03:30:00 PM to 05:30:00 PM at Bond Park Community Center for Basketball. 09:00:00 AM to 12:30:00 PM at Bond Park Community Center for Pickleball.');
+        expect(subject.formatGymTimes(status)).to.eq('There are 2 open gym times on Fri Jan 06. At BOND PARK the times are: 03:30:00 PM to 05:30:00 PM for Basketball. 09:00:00 AM to 12:30:00 PM for Pickleball.');
       });
     });
     context('with no gym times', function() {
@@ -95,5 +111,161 @@ describe('OpenDataHelper', function() {
         expect(subject.formatGymTimes(status)).to.eq('There are no open gym times for that date.');
       });
     });
- });
+  });
+  describe('#requestCityInformation', function() {
+    context('normal call to function', function() {
+      it('returns the name of the mayor', function() {
+        var uri = OPENDATAENDPOINT + 'dataset=council-districts&q=county==wake&sort=name&facet=at_large_representatives'
+        var value = subject.requestOpenData(uri).then(function(obj) {
+          return obj.records[0].fields.mayor;
+        });
+        return expect(value).to.eventually.eq("Harold Weinbrecht");
+      });
+    });
+  });
+  var cityInfo = {
+    "nhits": 4,
+    "parameters": {
+      "dataset": [
+        "council-districts"
+      ],
+      "timezone": "UTC",
+      "q": "county==wake",
+      "rows": 10,
+      "sort": "name",
+      "format": "json",
+      "facet": [
+        "at_large_representatives"
+      ]
+    },
+    "records": [
+      {
+        "datasetid": "council-districts",
+        "recordid": "f2f82d0a480b0a3d83ec20530ed9c5fb92388871",
+        "fields": {
+          "name": "A",
+          "repname": "Jennifer Robinson",
+          "districturl": "http://www.townofcary.org/Town_Council/Cary_Town_Council.htm",
+          "at_large_representatives": "Lori Bush,Ed Yerha",
+          "geo_point_2d": [],
+          "county": "wake",
+          "shape_stlength": 553309.7411049065,
+          "districtcounty": "Wake",
+          "boeurl": "http://www.wakegov.com/elections/Pages/default.aspx",
+          "geo_shape": {},
+          "squaremiles": 17.07883638623223,
+          "shape_starea": 476130632.3099365,
+          "mayor": "Harold Weinbrecht"
+        },
+        "geometry": {},
+        "record_timestamp": "2017-01-11T14:24:05+00:00"
+      },
+      {
+        "datasetid": "council-districts",
+        "recordid": "90ac3503fea437bacc5e3832d0421ac8ac55457e",
+        "fields": {
+          "name": "B",
+          "repname": "Don Frantz",
+          "districturl": "http://www.townofcary.org/Town_Council/Cary_Town_Council.htm",
+          "at_large_representatives": "Lori Bush,Ed Yerha",
+          "geo_point_2d": [],
+          "county": "wake",
+          "shape_stlength": 314712.7772780101,
+          "districtcounty": "Wake",
+          "boeurl": "http://www.wakegov.com/elections/Pages/default.aspx",
+          "geo_shape": {},
+          "squaremiles": 13.129356251165778,
+          "shape_starea": 366025445.3125,
+          "mayor": "Harold Weinbrecht"
+        },
+        "geometry": {},
+        "record_timestamp": "2017-01-11T14:24:05+00:00"
+      },
+      {
+        "datasetid": "council-districts",
+        "recordid": "162e417851f4e50dfa8bb450817e63082d91d432",
+        "fields": {
+          "name": "C",
+          "repname": "Jack Smith",
+          "districturl": "http://www.townofcary.org/Town_Council/Cary_Town_Council.htm",
+          "at_large_representatives": "Lori Bush,Ed Yerha",
+          "geo_point_2d": [],
+          "county": "wake",
+          "shape_stlength": 348317.8036133578,
+          "districtcounty": "Wake",
+          "boeurl": "http://www.wakegov.com/elections/Pages/default.aspx",
+          "geo_shape": {},
+          "squaremiles": 17.563985942559466,
+          "shape_starea": 489655825.7010498,
+          "mayor": "Harold Weinbrecht"
+        },
+        "geometry": {},
+        "record_timestamp": "2017-01-11T14:24:05+00:00"
+      },
+      {
+        "datasetid": "council-districts",
+        "recordid": "d30fd7e1548a21bc7cdf54706425b20fc7973c3f",
+        "fields": {
+          "name": "D",
+          "repname": "Ken George",
+          "districturl": "http://www.townofcary.org/Town_Council/Cary_Town_Council.htm",
+          "at_large_representatives": "Lori Bush,Ed Yerha",
+          "geo_point_2d": [],
+          "county": "wake",
+          "shape_stlength": 143265.29463668674,
+          "districtcounty": "Wake",
+          "boeurl": "http://www.wakegov.com/elections/Pages/default.aspx",
+          "geo_shape": {},
+          "squaremiles": 9.904823089556698,
+          "shape_starea": 276130620.01989746,
+          "mayor": "Harold Weinbrecht"
+        },
+        "geometry": {},
+        "record_timestamp": "2017-01-11T14:24:05+00:00"
+      }
+    ],
+    "facet_groups": [
+      {
+        "name": "at_large_representatives",
+        "facets": [
+          {
+            "name": "Ed Yerha",
+            "path": "Ed Yerha",
+            "count": 4,
+            "state": "displayed"
+          },
+          {
+            "name": "Lori Bush",
+            "path": "Lori Bush",
+            "count": 4,
+            "state": "displayed"
+          }
+        ]
+      }
+    ]
+  };
+  describe('#formatMayor', function() {
+    context('return call from open data', function() {
+      it('formats the status as expected', function() {
+        expect(subject.formatMayor(cityInfo)).to.eq('The mayor of Cary is Harold Weinbrecht.');
+      });
+    });
+  });
+  describe('#formatAllCouncilMembers', function() {
+    var responseText = 'The council member for district A, is Jennifer Robinson. The council member for district B, is Don Frantz. The council member for district C, is Jack Smith. ' +
+        'The council member for district D, is Ken George. The at large representatives are Ed Yerha, and Lori Bush and the mayor is Harold Weinbrecht.'
+    context('return call from open data', function() {
+      it('formats the status as expected', function() {
+        expect(subject.formatAllCouncilMembers(cityInfo)).to.eq(responseText);
+      });
+    });
+  });
+  describe('#formatAtLargeCouncilMembers', function() {
+    var responseText = 'Your at large representatives are Ed Yerha, Lori Bush, and Harold Weinbrecht is the mayor.'
+    context('return call from open data', function() {
+      it('formats the status as expected', function() {
+        expect(subject.formatAtLargeCouncilMembers(cityInfo)).to.eq(responseText);
+      });
+    });
+  });
 });

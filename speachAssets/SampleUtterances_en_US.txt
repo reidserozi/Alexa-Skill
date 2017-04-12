@@ -1,9 +1,810 @@
-opengymtimes	what are the open gym times for {Date}
-opengymtimes	what open gym times for {Date}
-opengymtimes	how many open gym times for {Date}
-opengymtimes	what are the open gym times are there {Date}
-opengymtimes	what open gym times are there {Date}
-opengymtimes	how many open gym times are there {Date}
-opengymtimes	what are the open gym times are there on {Date}
-opengymtimes	what open gym times are there on {Date}
-opengymtimes	how many open gym times are there on {Date}
+OpenGymTimesIntent	what are the open gym {Date}
+OpenGymTimesIntent	when are the open gym {Date}
+OpenGymTimesIntent	what are the open gym times {Date}
+OpenGymTimesIntent	when are the open gym times {Date}
+OpenGymTimesIntent	what are the open gym on {Date}
+OpenGymTimesIntent	when are the open gym on {Date}
+OpenGymTimesIntent	what are the open gym times on {Date}
+OpenGymTimesIntent	when are the open gym times on {Date}
+OpenGymTimesIntent	what are the open gym for {Date}
+OpenGymTimesIntent	when are the open gym for {Date}
+OpenGymTimesIntent	what are the open gym times for {Date}
+OpenGymTimesIntent	when are the open gym times for {Date}
+OpenGymTimesIntent	How many open gym are on {Date}
+OpenGymTimesIntent	How many open gym times are on {Date}
+OpenGymTimesIntent	How many open gym are there on {Date}
+OpenGymTimesIntent	How many open gym times are there on {Date}
+OpenGymTimesIntent	what are the open gym {Date} at {location}
+OpenGymTimesIntent	when are the open gym {Date} at {location}
+OpenGymTimesIntent	what are the open gym times {Date} at {location}
+OpenGymTimesIntent	when are the open gym times {Date} at {location}
+OpenGymTimesIntent	what are the open gym on {Date} at {location}
+OpenGymTimesIntent	when are the open gym on {Date} at {location}
+OpenGymTimesIntent	what are the open gym times on {Date} at {location}
+OpenGymTimesIntent	when are the open gym times on {Date} at {location}
+OpenGymTimesIntent	what are the open gym for {Date} at {location}
+OpenGymTimesIntent	when are the open gym for {Date} at {location}
+OpenGymTimesIntent	what are the open gym times for {Date} at {location}
+OpenGymTimesIntent	when are the open gym times for {Date} at {location}
+OpenGymTimesIntent	what are the open gym {Date} at {location} community center
+OpenGymTimesIntent	when are the open gym {Date} at {location} community center
+OpenGymTimesIntent	what are the open gym times {Date} at {location} community center
+OpenGymTimesIntent	when are the open gym times {Date} at {location} community center
+OpenGymTimesIntent	what are the open gym on {Date} at {location} community center
+OpenGymTimesIntent	when are the open gym on {Date} at {location} community center
+OpenGymTimesIntent	what are the open gym times on {Date} at {location} community center
+OpenGymTimesIntent	when are the open gym times on {Date} at {location} community center
+OpenGymTimesIntent	what are the open gym for {Date} at {location} community center
+OpenGymTimesIntent	when are the open gym for {Date} at {location} community center
+OpenGymTimesIntent	what are the open gym times for {Date} at {location} community center
+OpenGymTimesIntent	when are the open gym times for {Date} at {location} community center
+OpenGymTimesIntent	what are the open gym at {location} {Date}
+OpenGymTimesIntent	when are the open gym at {location} {Date}
+OpenGymTimesIntent	what are the open gym times at {location} {Date}
+OpenGymTimesIntent	when are the open gym times at {location} {Date}
+OpenGymTimesIntent	what are the open gym at {location} community center {Date}
+OpenGymTimesIntent	when are the open gym at {location} community center {Date}
+OpenGymTimesIntent	what are the open gym times at {location} community center {Date}
+OpenGymTimesIntent	when are the open gym times at {location} community center {Date}
+OpenGymTimesIntent	what are the open gym at {location} on {Date}
+OpenGymTimesIntent	when are the open gym at {location} on {Date}
+OpenGymTimesIntent	what are the open gym times at {location} on {Date}
+OpenGymTimesIntent	when are the open gym times at {location} on {Date}
+OpenGymTimesIntent	what are the open gym at {location} community center on {Date}
+OpenGymTimesIntent	when are the open gym at {location} community center on {Date}
+OpenGymTimesIntent	what are the open gym times at {location} community center on {Date}
+OpenGymTimesIntent	when are the open gym times at {location} community center on {Date}
+OpenGymTimesIntent	what are the open gym at {location} for {Date}
+OpenGymTimesIntent	when are the open gym at {location} for {Date}
+OpenGymTimesIntent	what are the open gym times at {location} for {Date}
+OpenGymTimesIntent	when are the open gym times at {location} for {Date}
+OpenGymTimesIntent	what are the open gym at {location} community center for {Date}
+OpenGymTimesIntent	when are the open gym at {location} community center for {Date}
+OpenGymTimesIntent	what are the open gym times at {location} community center for {Date}
+OpenGymTimesIntent	when are the open gym times at {location} community center for {Date}
+OpenGymTimesIntent	How many open gym are on {Date} at {location}
+OpenGymTimesIntent	How many open gym times are on {Date} at {location}
+OpenGymTimesIntent	How many open gym are there on {Date} at {location}
+OpenGymTimesIntent	How many open gym times are there on {Date} at {location}
+OpenGymTimesIntent	How many open gym are on {Date} at {location} community center
+OpenGymTimesIntent	How many open gym times are on {Date} at {location} community center
+OpenGymTimesIntent	How many open gym are there on {Date} at {location} community center
+OpenGymTimesIntent	How many open gym times are there on {Date} at {location} community center
+OpenGymTimesIntent	How many open gym are at {location} on {Date}
+OpenGymTimesIntent	How many open gym times are at {location} on {Date}
+OpenGymTimesIntent	How many open gym are there at {location} on {Date}
+OpenGymTimesIntent	How many open gym times are there at {location} on {Date}
+OpenGymTimesIntent	How many open gym are at {location} community center on {Date}
+OpenGymTimesIntent	How many open gym times are at {location} community center on {Date}
+OpenGymTimesIntent	How many open gym are there at {location} community center on {Date}
+OpenGymTimesIntent	How many open gym times are there at {location} community center on {Date}
+OpenGymTimesIntent	How many open gym are at {location}
+OpenGymTimesIntent	How many open gym times are at {location}
+OpenGymTimesIntent	How many open gym are there at {location}
+OpenGymTimesIntent	How many open gym times are there at {location}
+OpenGymTimesIntent	How many open gym are at {location} community center
+OpenGymTimesIntent	How many open gym times are at {location} community center
+OpenGymTimesIntent	How many open gym are there at {location} community center
+OpenGymTimesIntent	How many open gym times are there at {location} community center
+OpenGymTimesIntent	what are the open gym at {location}
+OpenGymTimesIntent	when are the open gym at {location}
+OpenGymTimesIntent	what are the open gym times at {location}
+OpenGymTimesIntent	when are the open gym times at {location}
+OpenGymTimesIntent	what are the open gym at {location} community center
+OpenGymTimesIntent	when are the open gym at {location} community center
+OpenGymTimesIntent	what are the open gym times at {location} community center
+OpenGymTimesIntent	when are the open gym times at {location} community center
+OpenGymTimesIntent  what gym can I go to {Date}
+OpenGymTimesIntent  the gym times
+
+MyCouncilMemberIntent	who is my council
+MyCouncilMemberIntent	who represents me in council
+MyCouncilMemberIntent	who represents me in the city council
+MyCouncilMemberIntent	who is my council member
+MyCouncilMemberIntent	who represents me in council member
+MyCouncilMemberIntent	who is my council representative
+MyCouncilMemberIntent	who represents me in council representative
+MyCouncilMemberIntent	who represents my district
+MyCouncilMemberIntent	who represents my district in council
+MyCouncilMemberIntent	who represents my district in the city council
+
+GetByAddressIntent my address is {street_number} {street}
+GetByAddressIntent {street_number} {street}
+GetByAddressIntent {street_number} {street} is my address
+GetByAddressIntent {street_number} {street} is where I live
+GetByAddressIntent I live at {street_number} {street}
+
+MyMayorIntent who is the mayor
+MyMayorIntent who is the mayor of cary
+MyMayorIntent who is the mayor of the town of cary
+MyMayorIntent who is carys mayor
+MyMayorIntent who the mayor is
+
+AllCouncilMembersIntent who is on the city council
+AllCouncilMembersIntent who is on the council
+AllCouncilMembersIntent who makes up the city council
+AllCouncilMembersIntent who makes up the council
+
+AtLargeCouncilMembersIntent who are the at large council members
+AtLargeCouncilMembersIntent who are at large council members
+
+NearbyParksIntent	what parks are near
+NearbyParksIntent	what public parks are near
+NearbyParksIntent	what parks are there near
+NearbyParksIntent	what public parks are there near
+NearbyParksIntent	what parks are near me
+NearbyParksIntent	what public parks are near me
+NearbyParksIntent	what parks are there near me
+NearbyParksIntent	what public parks are there near me
+NearbyParksIntent	what parks are nearby
+NearbyParksIntent	what public parks are nearby
+NearbyParksIntent	what parks are there nearby
+NearbyParksIntent	what public parks are there nearby
+NearbyParksIntent	are there parks near
+NearbyParksIntent	are there any parks near
+NearbyParksIntent	are there public parks near
+NearbyParksIntent	are there any public parks near
+NearbyParksIntent	are there parks near me
+NearbyParksIntent	are there any parks near me
+NearbyParksIntent	are there public parks near me
+NearbyParksIntent	are there any public parks near me
+NearbyParksIntent	are there parks nearby
+NearbyParksIntent	are there any parks nearby
+NearbyParksIntent	are there public parks nearby
+NearbyParksIntent	are there any public parks nearby
+
+CaseStartIntent	to create a case
+CaseStartIntent	to submit a case
+CaseStartIntent	to help with a case
+CaseStartIntent	to create a new case
+CaseStartIntent	to submit a new case
+CaseStartIntent	to help with a new case
+CaseStartIntent	to create a service request
+CaseStartIntent	to submit a service request
+CaseStartIntent	to help with a service request
+CaseStartIntent	to create a new service request
+CaseStartIntent	to submit a new service request
+CaseStartIntent	to help with a new service request
+CaseStartIntent	to create a request
+CaseStartIntent	to submit a request
+CaseStartIntent	to help with a request
+CaseStartIntent	to create a new request
+CaseStartIntent	to submit a new request
+CaseStartIntent	to help with a new request
+CaseStartIntent	to create a problem
+CaseStartIntent	to submit a problem
+CaseStartIntent	to help with a problem
+CaseStartIntent	to create a new problem
+CaseStartIntent	to submit a new problem
+CaseStartIntent	to help with a new problem
+CaseStartIntent	to create a work order
+CaseStartIntent	to submit a work order
+CaseStartIntent	to help with a work order
+CaseStartIntent	to create a new work order
+CaseStartIntent	to submit a new work order
+CaseStartIntent	to help with a new work order
+CaseStartIntent	to create a issue
+CaseStartIntent	to submit a issue
+CaseStartIntent	to help with a issue
+CaseStartIntent	to create a new issue
+CaseStartIntent	to submit a new issue
+CaseStartIntent	to help with a new issue
+
+CaseConfirmationIntent	{caseAction} {caseSubject}
+CaseConfirmationIntent	{caseAction} {caseSubject} bin
+CaseConfirmationIntent	{caseAction} {caseSubject} cart
+CaseConfirmationIntent	{caseSubject} {caseAction}
+CaseConfirmationIntent	{caseSubject} {caseAction} bin
+CaseConfirmationIntent	{caseSubject} {caseAction} cart
+CaseConfirmationIntent	i need report {caseAction} {caseSubject}
+CaseConfirmationIntent	to report {caseAction} {caseSubject}
+CaseConfirmationIntent	i need help with {caseAction} {caseSubject}
+CaseConfirmationIntent	to help with {caseAction} {caseSubject}
+CaseConfirmationIntent	i need schedule {caseAction} {caseSubject}
+CaseConfirmationIntent	to schedule {caseAction} {caseSubject}
+CaseConfirmationIntent	i need set up {caseAction} {caseSubject}
+CaseConfirmationIntent	to set up {caseAction} {caseSubject}
+CaseConfirmationIntent	i need report a {caseAction} {caseSubject}
+CaseConfirmationIntent	to report a {caseAction} {caseSubject}
+CaseConfirmationIntent	i need help with a {caseAction} {caseSubject}
+CaseConfirmationIntent	to help with a {caseAction} {caseSubject}
+CaseConfirmationIntent	i need schedule a {caseAction} {caseSubject}
+CaseConfirmationIntent	to schedule a {caseAction} {caseSubject}
+CaseConfirmationIntent	i need set up a {caseAction} {caseSubject}
+CaseConfirmationIntent	to set up a {caseAction} {caseSubject}
+CaseConfirmationIntent	i need report an {caseAction} {caseSubject}
+CaseConfirmationIntent	to report an {caseAction} {caseSubject}
+CaseConfirmationIntent	i need help with an {caseAction} {caseSubject}
+CaseConfirmationIntent	to help with an {caseAction} {caseSubject}
+CaseConfirmationIntent	i need schedule an {caseAction} {caseSubject}
+CaseConfirmationIntent	to schedule an {caseAction} {caseSubject}
+CaseConfirmationIntent	i need set up an {caseAction} {caseSubject}
+CaseConfirmationIntent	to set up an {caseAction} {caseSubject}
+CaseConfirmationIntent	i need report {caseAction} {caseSubject} bin
+CaseConfirmationIntent	to report {caseAction} {caseSubject} bin
+CaseConfirmationIntent	i need help with {caseAction} {caseSubject} bin
+CaseConfirmationIntent	to help with {caseAction} {caseSubject} bin
+CaseConfirmationIntent	i need schedule {caseAction} {caseSubject} bin
+CaseConfirmationIntent	to schedule {caseAction} {caseSubject} bin
+CaseConfirmationIntent	i need set up {caseAction} {caseSubject} bin
+CaseConfirmationIntent	to set up {caseAction} {caseSubject} bin
+CaseConfirmationIntent	i need report a {caseAction} {caseSubject} bin
+CaseConfirmationIntent	to report a {caseAction} {caseSubject} bin
+CaseConfirmationIntent	i need help with a {caseAction} {caseSubject} bin
+CaseConfirmationIntent	to help with a {caseAction} {caseSubject} bin
+CaseConfirmationIntent	i need schedule a {caseAction} {caseSubject} bin
+CaseConfirmationIntent	to schedule a {caseAction} {caseSubject} bin
+CaseConfirmationIntent	i need set up a {caseAction} {caseSubject} bin
+CaseConfirmationIntent	to set up a {caseAction} {caseSubject} bin
+CaseConfirmationIntent	i need report an {caseAction} {caseSubject} bin
+CaseConfirmationIntent	to report an {caseAction} {caseSubject} bin
+CaseConfirmationIntent	i need help with an {caseAction} {caseSubject} bin
+CaseConfirmationIntent	to help with an {caseAction} {caseSubject} bin
+CaseConfirmationIntent	i need schedule an {caseAction} {caseSubject} bin
+CaseConfirmationIntent	to schedule an {caseAction} {caseSubject} bin
+CaseConfirmationIntent	i need set up an {caseAction} {caseSubject} bin
+CaseConfirmationIntent	to set up an {caseAction} {caseSubject} bin
+CaseConfirmationIntent	i need report {caseAction} {caseSubject} cart
+CaseConfirmationIntent	to report {caseAction} {caseSubject} cart
+CaseConfirmationIntent	i need help with {caseAction} {caseSubject} cart
+CaseConfirmationIntent	to help with {caseAction} {caseSubject} cart
+CaseConfirmationIntent	i need schedule {caseAction} {caseSubject} cart
+CaseConfirmationIntent	to schedule {caseAction} {caseSubject} cart
+CaseConfirmationIntent	i need set up {caseAction} {caseSubject} cart
+CaseConfirmationIntent	to set up {caseAction} {caseSubject} cart
+CaseConfirmationIntent	i need report a {caseAction} {caseSubject} cart
+CaseConfirmationIntent	to report a {caseAction} {caseSubject} cart
+CaseConfirmationIntent	i need help with a {caseAction} {caseSubject} cart
+CaseConfirmationIntent	to help with a {caseAction} {caseSubject} cart
+CaseConfirmationIntent	i need schedule a {caseAction} {caseSubject} cart
+CaseConfirmationIntent	to schedule a {caseAction} {caseSubject} cart
+CaseConfirmationIntent	i need set up a {caseAction} {caseSubject} cart
+CaseConfirmationIntent	to set up a {caseAction} {caseSubject} cart
+CaseConfirmationIntent	i need report an {caseAction} {caseSubject} cart
+CaseConfirmationIntent	to report an {caseAction} {caseSubject} cart
+CaseConfirmationIntent	i need help with an {caseAction} {caseSubject} cart
+CaseConfirmationIntent	to help with an {caseAction} {caseSubject} cart
+CaseConfirmationIntent	i need schedule an {caseAction} {caseSubject} cart
+CaseConfirmationIntent	to schedule an {caseAction} {caseSubject} cart
+CaseConfirmationIntent	i need set up an {caseAction} {caseSubject} cart
+CaseConfirmationIntent	to set up an {caseAction} {caseSubject} cart
+CaseConfirmationIntent	I need to report {caseAction} {caseSubject}
+CaseConfirmationIntent	I need to arrange {caseAction} {caseSubject}
+CaseConfirmationIntent	I need to schedule {caseAction} {caseSubject}
+CaseConfirmationIntent	I need to set up {caseAction} {caseSubject}
+CaseConfirmationIntent	I need to reserve {caseAction} {caseSubject}
+CaseConfirmationIntent	I need to report a {caseAction} {caseSubject}
+CaseConfirmationIntent	I need to arrange a {caseAction} {caseSubject}
+CaseConfirmationIntent	I need to schedule a {caseAction} {caseSubject}
+CaseConfirmationIntent	I need to set up a {caseAction} {caseSubject}
+CaseConfirmationIntent	I need to reserve a {caseAction} {caseSubject}
+CaseConfirmationIntent	I need to report an {caseAction} {caseSubject}
+CaseConfirmationIntent	I need to arrange an {caseAction} {caseSubject}
+CaseConfirmationIntent	I need to schedule an {caseAction} {caseSubject}
+CaseConfirmationIntent	I need to set up an {caseAction} {caseSubject}
+CaseConfirmationIntent	I need to reserve an {caseAction} {caseSubject}
+CaseConfirmationIntent	I need to report {caseAction} {caseSubject} bin
+CaseConfirmationIntent	I need to arrange {caseAction} {caseSubject} bin
+CaseConfirmationIntent	I need to schedule {caseAction} {caseSubject} bin
+CaseConfirmationIntent	I need to set up {caseAction} {caseSubject} bin
+CaseConfirmationIntent	I need to reserve {caseAction} {caseSubject} bin
+CaseConfirmationIntent	I need to report a {caseAction} {caseSubject} bin
+CaseConfirmationIntent	I need to arrange a {caseAction} {caseSubject} bin
+CaseConfirmationIntent	I need to schedule a {caseAction} {caseSubject} bin
+CaseConfirmationIntent	I need to set up a {caseAction} {caseSubject} bin
+CaseConfirmationIntent	I need to reserve a {caseAction} {caseSubject} bin
+CaseConfirmationIntent	I need to report an {caseAction} {caseSubject} bin
+CaseConfirmationIntent	I need to arrange an {caseAction} {caseSubject} bin
+CaseConfirmationIntent	I need to schedule an {caseAction} {caseSubject} bin
+CaseConfirmationIntent	I need to set up an {caseAction} {caseSubject} bin
+CaseConfirmationIntent	I need to reserve an {caseAction} {caseSubject} bin
+CaseConfirmationIntent	I need to report {caseAction} {caseSubject} cart
+CaseConfirmationIntent	I need to arrange {caseAction} {caseSubject} cart
+CaseConfirmationIntent	I need to schedule {caseAction} {caseSubject} cart
+CaseConfirmationIntent	I need to set up {caseAction} {caseSubject} cart
+CaseConfirmationIntent	I need to reserve {caseAction} {caseSubject} cart
+CaseConfirmationIntent	I need to report a {caseAction} {caseSubject} cart
+CaseConfirmationIntent	I need to arrange a {caseAction} {caseSubject} cart
+CaseConfirmationIntent	I need to schedule a {caseAction} {caseSubject} cart
+CaseConfirmationIntent	I need to set up a {caseAction} {caseSubject} cart
+CaseConfirmationIntent	I need to reserve a {caseAction} {caseSubject} cart
+CaseConfirmationIntent	I need to report an {caseAction} {caseSubject} cart
+CaseConfirmationIntent	I need to arrange an {caseAction} {caseSubject} cart
+CaseConfirmationIntent	I need to schedule an {caseAction} {caseSubject} cart
+CaseConfirmationIntent	I need to set up an {caseAction} {caseSubject} cart
+CaseConfirmationIntent	I need to reserve an {caseAction} {caseSubject} cart
+CaseConfirmationIntent	i need report {caseSubject} {caseAction}
+CaseConfirmationIntent	to report {caseSubject} {caseAction}
+CaseConfirmationIntent	i need help with {caseSubject} {caseAction}
+CaseConfirmationIntent	to help with {caseSubject} {caseAction}
+CaseConfirmationIntent	i need schedule {caseSubject} {caseAction}
+CaseConfirmationIntent	to schedule {caseSubject} {caseAction}
+CaseConfirmationIntent	i need set up {caseSubject} {caseAction}
+CaseConfirmationIntent	to set up {caseSubject} {caseAction}
+CaseConfirmationIntent	i need report a {caseSubject} {caseAction}
+CaseConfirmationIntent	to report a {caseSubject} {caseAction}
+CaseConfirmationIntent	i need help with a {caseSubject} {caseAction}
+CaseConfirmationIntent	to help with a {caseSubject} {caseAction}
+CaseConfirmationIntent	i need schedule a {caseSubject} {caseAction}
+CaseConfirmationIntent	to schedule a {caseSubject} {caseAction}
+CaseConfirmationIntent	i need set up a {caseSubject} {caseAction}
+CaseConfirmationIntent	to set up a {caseSubject} {caseAction}
+CaseConfirmationIntent	i need report an {caseSubject} {caseAction}
+CaseConfirmationIntent	to report an {caseSubject} {caseAction}
+CaseConfirmationIntent	i need help with an {caseSubject} {caseAction}
+CaseConfirmationIntent	to help with an {caseSubject} {caseAction}
+CaseConfirmationIntent	i need schedule an {caseSubject} {caseAction}
+CaseConfirmationIntent	to schedule an {caseSubject} {caseAction}
+CaseConfirmationIntent	i need set up an {caseSubject} {caseAction}
+CaseConfirmationIntent	to set up an {caseSubject} {caseAction}
+CaseConfirmationIntent	i need report {caseSubject} {caseAction} bin
+CaseConfirmationIntent	to report {caseSubject} {caseAction} bin
+CaseConfirmationIntent	i need help with {caseSubject} {caseAction} bin
+CaseConfirmationIntent	to help with {caseSubject} {caseAction} bin
+CaseConfirmationIntent	i need schedule {caseSubject} {caseAction} bin
+CaseConfirmationIntent	to schedule {caseSubject} {caseAction} bin
+CaseConfirmationIntent	i need set up {caseSubject} {caseAction} bin
+CaseConfirmationIntent	to set up {caseSubject} {caseAction} bin
+CaseConfirmationIntent	i need report a {caseSubject} {caseAction} bin
+CaseConfirmationIntent	to report a {caseSubject} {caseAction} bin
+CaseConfirmationIntent	i need help with a {caseSubject} {caseAction} bin
+CaseConfirmationIntent	to help with a {caseSubject} {caseAction} bin
+CaseConfirmationIntent	i need schedule a {caseSubject} {caseAction} bin
+CaseConfirmationIntent	to schedule a {caseSubject} {caseAction} bin
+CaseConfirmationIntent	i need set up a {caseSubject} {caseAction} bin
+CaseConfirmationIntent	to set up a {caseSubject} {caseAction} bin
+CaseConfirmationIntent	i need report an {caseSubject} {caseAction} bin
+CaseConfirmationIntent	to report an {caseSubject} {caseAction} bin
+CaseConfirmationIntent	i need help with an {caseSubject} {caseAction} bin
+CaseConfirmationIntent	to help with an {caseSubject} {caseAction} bin
+CaseConfirmationIntent	i need schedule an {caseSubject} {caseAction} bin
+CaseConfirmationIntent	to schedule an {caseSubject} {caseAction} bin
+CaseConfirmationIntent	i need set up an {caseSubject} {caseAction} bin
+CaseConfirmationIntent	to set up an {caseSubject} {caseAction} bin
+CaseConfirmationIntent	i need report {caseSubject} {caseAction} cart
+CaseConfirmationIntent	to report {caseSubject} {caseAction} cart
+CaseConfirmationIntent	i need help with {caseSubject} {caseAction} cart
+CaseConfirmationIntent	to help with {caseSubject} {caseAction} cart
+CaseConfirmationIntent	i need schedule {caseSubject} {caseAction} cart
+CaseConfirmationIntent	to schedule {caseSubject} {caseAction} cart
+CaseConfirmationIntent	i need set up {caseSubject} {caseAction} cart
+CaseConfirmationIntent	to set up {caseSubject} {caseAction} cart
+CaseConfirmationIntent	i need report a {caseSubject} {caseAction} cart
+CaseConfirmationIntent	to report a {caseSubject} {caseAction} cart
+CaseConfirmationIntent	i need help with a {caseSubject} {caseAction} cart
+CaseConfirmationIntent	to help with a {caseSubject} {caseAction} cart
+CaseConfirmationIntent	i need schedule a {caseSubject} {caseAction} cart
+CaseConfirmationIntent	to schedule a {caseSubject} {caseAction} cart
+CaseConfirmationIntent	i need set up a {caseSubject} {caseAction} cart
+CaseConfirmationIntent	to set up a {caseSubject} {caseAction} cart
+CaseConfirmationIntent	i need report an {caseSubject} {caseAction} cart
+CaseConfirmationIntent	to report an {caseSubject} {caseAction} cart
+CaseConfirmationIntent	i need help with an {caseSubject} {caseAction} cart
+CaseConfirmationIntent	to help with an {caseSubject} {caseAction} cart
+CaseConfirmationIntent	i need schedule an {caseSubject} {caseAction} cart
+CaseConfirmationIntent	to schedule an {caseSubject} {caseAction} cart
+CaseConfirmationIntent	i need set up an {caseSubject} {caseAction} cart
+CaseConfirmationIntent	to set up an {caseSubject} {caseAction} cart
+CaseConfirmationIntent	I need to report {caseSubject} {caseAction}
+CaseConfirmationIntent	I need to arrange {caseSubject} {caseAction}
+CaseConfirmationIntent	I need to schedule {caseSubject} {caseAction}
+CaseConfirmationIntent	I need to set up {caseSubject} {caseAction}
+CaseConfirmationIntent	I need to reserve {caseSubject} {caseAction}
+CaseConfirmationIntent	I need to report a {caseSubject} {caseAction}
+CaseConfirmationIntent	I need to arrange a {caseSubject} {caseAction}
+CaseConfirmationIntent	I need to schedule a {caseSubject} {caseAction}
+CaseConfirmationIntent	I need to set up a {caseSubject} {caseAction}
+CaseConfirmationIntent	I need to reserve a {caseSubject} {caseAction}
+CaseConfirmationIntent	I need to report an {caseSubject} {caseAction}
+CaseConfirmationIntent	I need to arrange an {caseSubject} {caseAction}
+CaseConfirmationIntent	I need to schedule an {caseSubject} {caseAction}
+CaseConfirmationIntent	I need to set up an {caseSubject} {caseAction}
+CaseConfirmationIntent	I need to reserve an {caseSubject} {caseAction}
+CaseConfirmationIntent	I need to report {caseSubject} {caseAction} bin
+CaseConfirmationIntent	I need to arrange {caseSubject} {caseAction} bin
+CaseConfirmationIntent	I need to schedule {caseSubject} {caseAction} bin
+CaseConfirmationIntent	I need to set up {caseSubject} {caseAction} bin
+CaseConfirmationIntent	I need to reserve {caseSubject} {caseAction} bin
+CaseConfirmationIntent	I need to report a {caseSubject} {caseAction} bin
+CaseConfirmationIntent	I need to arrange a {caseSubject} {caseAction} bin
+CaseConfirmationIntent	I need to schedule a {caseSubject} {caseAction} bin
+CaseConfirmationIntent	I need to set up a {caseSubject} {caseAction} bin
+CaseConfirmationIntent	I need to reserve a {caseSubject} {caseAction} bin
+CaseConfirmationIntent	I need to report an {caseSubject} {caseAction} bin
+CaseConfirmationIntent	I need to arrange an {caseSubject} {caseAction} bin
+CaseConfirmationIntent	I need to schedule an {caseSubject} {caseAction} bin
+CaseConfirmationIntent	I need to set up an {caseSubject} {caseAction} bin
+CaseConfirmationIntent	I need to reserve an {caseSubject} {caseAction} bin
+CaseConfirmationIntent	I need to report {caseSubject} {caseAction} cart
+CaseConfirmationIntent	I need to arrange {caseSubject} {caseAction} cart
+CaseConfirmationIntent	I need to schedule {caseSubject} {caseAction} cart
+CaseConfirmationIntent	I need to set up {caseSubject} {caseAction} cart
+CaseConfirmationIntent	I need to reserve {caseSubject} {caseAction} cart
+CaseConfirmationIntent	I need to report a {caseSubject} {caseAction} cart
+CaseConfirmationIntent	I need to arrange a {caseSubject} {caseAction} cart
+CaseConfirmationIntent	I need to schedule a {caseSubject} {caseAction} cart
+CaseConfirmationIntent	I need to set up a {caseSubject} {caseAction} cart
+CaseConfirmationIntent	I need to reserve a {caseSubject} {caseAction} cart
+CaseConfirmationIntent	I need to report an {caseSubject} {caseAction} cart
+CaseConfirmationIntent	I need to arrange an {caseSubject} {caseAction} cart
+CaseConfirmationIntent	I need to schedule an {caseSubject} {caseAction} cart
+CaseConfirmationIntent	I need to set up an {caseSubject} {caseAction} cart
+CaseConfirmationIntent	I need to reserve an {caseSubject} {caseAction} cart
+CaseConfirmationIntent	you missed my {caseSubject}
+CaseConfirmationIntent	missed my {caseSubject}
+CaseConfirmationIntent	you forgot my {caseSubject}
+CaseConfirmationIntent	forgot my {caseSubject}
+CaseConfirmationIntent	i need report {caseSubject}
+CaseConfirmationIntent	to report {caseSubject}
+CaseConfirmationIntent	i need help with {caseSubject}
+CaseConfirmationIntent	to help with {caseSubject}
+CaseConfirmationIntent	i need schedule {caseSubject}
+CaseConfirmationIntent	to schedule {caseSubject}
+CaseConfirmationIntent	i need set up {caseSubject}
+CaseConfirmationIntent	to set up {caseSubject}
+CaseConfirmationIntent	i need report a {caseSubject}
+CaseConfirmationIntent	to report a {caseSubject}
+CaseConfirmationIntent	i need help with a {caseSubject}
+CaseConfirmationIntent	to help with a {caseSubject}
+CaseConfirmationIntent	i need schedule a {caseSubject}
+CaseConfirmationIntent	to schedule a {caseSubject}
+CaseConfirmationIntent	i need set up a {caseSubject}
+CaseConfirmationIntent	to set up a {caseSubject}
+CaseConfirmationIntent	i need report an {caseSubject}
+CaseConfirmationIntent	to report an {caseSubject}
+CaseConfirmationIntent	i need help with an {caseSubject}
+CaseConfirmationIntent	to help with an {caseSubject}
+CaseConfirmationIntent	i need schedule an {caseSubject}
+CaseConfirmationIntent	to schedule an {caseSubject}
+CaseConfirmationIntent	i need set up an {caseSubject}
+CaseConfirmationIntent	to set up an {caseSubject}
+CaseConfirmationIntent	I need to report {caseSubject}
+CaseConfirmationIntent	I need to arrange {caseSubject}
+CaseConfirmationIntent	I need to schedule {caseSubject}
+CaseConfirmationIntent	I need to set up {caseSubject}
+CaseConfirmationIntent	I need to reserve {caseSubject}
+CaseConfirmationIntent	I need to report a {caseSubject}
+CaseConfirmationIntent	I need to arrange a {caseSubject}
+CaseConfirmationIntent	I need to schedule a {caseSubject}
+CaseConfirmationIntent	I need to set up a {caseSubject}
+CaseConfirmationIntent	I need to reserve a {caseSubject}
+CaseConfirmationIntent	I need to report an {caseSubject}
+CaseConfirmationIntent	I need to arrange an {caseSubject}
+CaseConfirmationIntent	I need to schedule an {caseSubject}
+CaseConfirmationIntent	I need to set up an {caseSubject}
+CaseConfirmationIntent	I need to reserve an {caseSubject}
+CaseConfirmationIntent	i need report {caseSubject}
+CaseConfirmationIntent	to report {caseSubject}
+CaseConfirmationIntent	i need help with {caseSubject}
+CaseConfirmationIntent	to help with {caseSubject}
+CaseConfirmationIntent	i need schedule {caseSubject}
+CaseConfirmationIntent	to schedule {caseSubject}
+CaseConfirmationIntent	i need set up {caseSubject}
+CaseConfirmationIntent	to set up {caseSubject}
+CaseConfirmationIntent	i need report a {caseSubject}
+CaseConfirmationIntent	to report a {caseSubject}
+CaseConfirmationIntent	i need help with a {caseSubject}
+CaseConfirmationIntent	to help with a {caseSubject}
+CaseConfirmationIntent	i need schedule a {caseSubject}
+CaseConfirmationIntent	to schedule a {caseSubject}
+CaseConfirmationIntent	i need set up a {caseSubject}
+CaseConfirmationIntent	to set up a {caseSubject}
+CaseConfirmationIntent	i need report an {caseSubject}
+CaseConfirmationIntent	to report an {caseSubject}
+CaseConfirmationIntent	i need help with an {caseSubject}
+CaseConfirmationIntent	to help with an {caseSubject}
+CaseConfirmationIntent	i need schedule an {caseSubject}
+CaseConfirmationIntent	to schedule an {caseSubject}
+CaseConfirmationIntent	i need set up an {caseSubject}
+CaseConfirmationIntent	to set up an {caseSubject}
+CaseConfirmationIntent	I need to report {caseSubject}
+CaseConfirmationIntent	I need to arrange {caseSubject}
+CaseConfirmationIntent	I need to schedule {caseSubject}
+CaseConfirmationIntent	I need to set up {caseSubject}
+CaseConfirmationIntent	I need to reserve {caseSubject}
+CaseConfirmationIntent	I need to report a {caseSubject}
+CaseConfirmationIntent	I need to arrange a {caseSubject}
+CaseConfirmationIntent	I need to schedule a {caseSubject}
+CaseConfirmationIntent	I need to set up a {caseSubject}
+CaseConfirmationIntent	I need to reserve a {caseSubject}
+CaseConfirmationIntent	I need to report an {caseSubject}
+CaseConfirmationIntent	I need to arrange an {caseSubject}
+CaseConfirmationIntent	I need to schedule an {caseSubject}
+CaseConfirmationIntent	I need to set up an {caseSubject}
+CaseConfirmationIntent	I need to reserve an {caseSubject}
+
+GetCaryFactsIntent	tell me a fact about cary
+GetCaryFactsIntent	what is a fact about cary
+GetCaryFactsIntent	tell me a cary fact
+GetCaryFactsIntent	what is a cary fact
+GetCaryFactsIntent	about cary
+GetCaryFactsIntent	about cary facts
+
+TownHallHoursIntent	what are hours for town hall {Date}
+TownHallHoursIntent	what are the hours for town hall {Date}
+TownHallHoursIntent	what are town hall hours {Date}
+TownHallHoursIntent	what are the town hall hours {Date}
+TownHallHoursIntent	what are hours for town hall on {Date}
+TownHallHoursIntent	what are the hours for town hall on {Date}
+TownHallHoursIntent	what are town hall hours on {Date}
+TownHallHoursIntent	what are the town hall hours on {Date}
+TownHallHoursIntent	is town hall closed {Date}
+TownHallHoursIntent	when is town hall closed {Date}
+TownHallHoursIntent	is the town hall closed {Date}
+TownHallHoursIntent	when is the town hall closed {Date}
+TownHallHoursIntent	is town hall open {Date}
+TownHallHoursIntent	when is town hall open {Date}
+TownHallHoursIntent	is the town hall open {Date}
+TownHallHoursIntent	when is the town hall open {Date}
+TownHallHoursIntent	is town hall closed on {Date}
+TownHallHoursIntent	when is town hall closed on {Date}
+TownHallHoursIntent	is the town hall closed on {Date}
+TownHallHoursIntent	when is the town hall closed on {Date}
+TownHallHoursIntent	is town hall open on {Date}
+TownHallHoursIntent	when is town hall open on {Date}
+TownHallHoursIntent	is the town hall open on {Date}
+TownHallHoursIntent	when is the town hall open on {Date}
+TownHallHoursIntent	what are hours for town hall
+TownHallHoursIntent	what are the hours for town hall
+TownHallHoursIntent	what are town hall hours
+TownHallHoursIntent	what are the town hall hours
+TownHallHoursIntent	is town hall closed
+TownHallHoursIntent	when is town hall closed
+TownHallHoursIntent	is the town hall closed
+TownHallHoursIntent	when is the town hall closed
+TownHallHoursIntent	is town hall open
+TownHallHoursIntent	when is town hall open
+TownHallHoursIntent	is the town hall open
+TownHallHoursIntent	when is the town hall open
+
+
+TrashDayIntent	when is my trash day
+TrashDayIntent	what day is my trash day
+TrashDayIntent	when is my next trash day
+TrashDayIntent	what day is my next trash day
+TrashDayIntent	when is my recycle day
+TrashDayIntent	what day is my recycle day
+TrashDayIntent	when is my next recycle day
+TrashDayIntent	what day is my next recycle day
+TrashDayIntent	when is my garbage day
+TrashDayIntent	what day is my garbage day
+TrashDayIntent	when is my next garbage day
+TrashDayIntent	what day is my next garbage day
+TrashDayIntent	when is my trash pickup
+TrashDayIntent	what day is my trash pickup
+TrashDayIntent	when is my next trash pickup
+TrashDayIntent	what day is my next trash pickup
+TrashDayIntent	when is my recycle pickup
+TrashDayIntent	what day is my recycle pickup
+TrashDayIntent	when is my next recycle pickup
+TrashDayIntent	what day is my next recycle pickup
+TrashDayIntent	when is my garbage pickup
+TrashDayIntent	what day is my garbage pickup
+TrashDayIntent	when is my next garbage pickup
+TrashDayIntent	what day is my next garbage pickup
+TrashDayIntent	when is my trash collection
+TrashDayIntent	what day is my trash collection
+TrashDayIntent	when is my next trash collection
+TrashDayIntent	what day is my next trash collection
+TrashDayIntent	when is my recycle collection
+TrashDayIntent	what day is my recycle collection
+TrashDayIntent	when is my next recycle collection
+TrashDayIntent	what day is my next recycle collection
+TrashDayIntent	when is my garbage collection
+TrashDayIntent	what day is my garbage collection
+TrashDayIntent	when is my next garbage collection
+TrashDayIntent	what day is my next garbage collection
+TrashDayIntent	when is my trash date
+TrashDayIntent	what day is my trash date
+TrashDayIntent	when is my next trash date
+TrashDayIntent	what day is my next trash date
+TrashDayIntent	when is my recycle date
+TrashDayIntent	what day is my recycle date
+TrashDayIntent	when is my next recycle date
+TrashDayIntent	what day is my next recycle date
+TrashDayIntent	when is my garbage date
+TrashDayIntent	what day is my garbage date
+TrashDayIntent	when is my next garbage date
+TrashDayIntent	what day is my next garbage date
+TrashDayIntent	is my trash day this week
+TrashDayIntent	is my recycle day this week
+TrashDayIntent	is my garbage day this week
+TrashDayIntent	is my trash pickup this week
+TrashDayIntent	is my recycle pickup this week
+TrashDayIntent	is my garbage pickup this week
+TrashDayIntent	is my trash collection this week
+TrashDayIntent	is my recycle collection this week
+TrashDayIntent	is my garbage collection this week
+TrashDayIntent	is my trash date this week
+TrashDayIntent	is my recycle date this week
+TrashDayIntent	is my garbage date this week
+
+FieldStatusIntent	what is the field status at {park}
+FieldStatusIntent	what is the status of {park}
+FieldStatusIntent	are the fields open at {park}
+FieldStatusIntent	are the fields closed at {park}
+FieldStatusIntent	are the fields shut down at {park}
+FieldStatusIntent	Is {park} open
+FieldStatusIntent	Is {park} closed
+FieldStatusIntent	Is {park} shut down
+FieldStatusIntent	Is {park} open today
+FieldStatusIntent	Is {park} closed today
+FieldStatusIntent	Is {park} shut down today
+FieldStatusIntent	Are games at {park} on for
+FieldStatusIntent	Are games at {park} canceled
+FieldStatusIntent	Are games at {park} postponed
+FieldStatusIntent	Are games at {park} being played
+FieldStatusIntent	Are games at {park} on for today
+FieldStatusIntent	Are games at {park} canceled today
+FieldStatusIntent	Are games at {park} postponed today
+FieldStatusIntent	Are games at {park} being played today
+FieldStatusIntent	Are games on at {park}
+FieldStatusIntent	Are games canceled at {park}
+FieldStatusIntent	Are games postponed at {park}
+FieldStatusIntent	Are games being played at {park}
+FieldStatusIntent	Are games on at {park} today
+FieldStatusIntent	Are games canceled at {park} today
+FieldStatusIntent	Are games postponed at {park} today
+FieldStatusIntent	Are games being played at {park} today
+
+RSSFeedIntent what is the latest Cary news
+RSSFeedIntent what is the latest Cary update
+RSSFeedIntent what is the latest flash briefing
+RSSFeedIntent what is the latest news
+RSSFeedIntent what is the latest news feed
+RSSFeedIntent what is the latest news update
+RSSFeedIntent what is the latest rss feed
+RSSFeedIntent what is the latest syndication feed
+RSSFeedIntent what is the latest town news
+RSSFeedIntent what is the latest town update
+RSSFeedIntent what is the latest update
+RSSFeedIntent what is the flash briefing
+RSSFeedIntent what is the news
+
+UpcomingCaryEventsIntent What is happening in cary {Date}
+
+
+AMAZON.YesIntent that is correct
+
+Strings used to generate utterances:
+'{what|when} are the open gym {|times} {|on|for} {-|Date}', 'How many open gym {|times} are {|there} on {-|Date}', '{what|when} are the open gym {|times} {|on|for} {-|Date} at {-|location} {|community center}', '{what|when} are the open gym {|times} at {-|location} {|community center} {|on|for} {-|Date}', 'How many open gym {|times} are {|there} on {-|Date} at {-|location} {|community center}', 'How many open gym {|times} are {|there} at {-|location} {|community center} on {-|Date}', 'How many open gym {|times} are {|there} at {-|location} {|community center}', '{what|when} are the open gym {|times} at {-|location} {|community center}'
+
+'what {|public} parks are {|there} {near|near me|nearby}', 'are there {|any} {|public} parks {near|near me|nearby}'
+
+to {create|submit|help with} a {|new} {case|service request|request|problem|work order|issue}'
+
+'{-|caseAction} {-|caseSubject} {|bin|cart}', '{-|caseSubject} {-|caseAction} {|bin|cart}', '{i need|to} {report|help with|schedule|set up} {|a|an} {-|caseAction} {-|caseSubject} {|bin|cart}', '{I need} to {report|arrange|schedule|set up|reserve} {|a|an} {-|caseAction} {-|caseSubject} {|bin|cart}', '{i need|to} {report|help with|schedule|set up} {|a|an} {-|caseSubject} {-|caseAction} {|bin|cart}', '{I need} to {report|arrange|schedule|set up|reserve} {|a|an} {-|caseSubject} {-|caseAction} {|bin|cart}', '{you|} {missed|forgot} my {-|caseSubject}', '{i need|to} {report|help with|schedule|set up} {|a|an} {-|caseSubject}', '{I need} to {report|arrange|schedule|set up|reserve} {|a|an} {-|caseSubject}', '{i need|to} {report|help with|schedule|set up} {|a|an} {-|caseSubject}', '{I need} to {report|arrange|schedule|set up|reserve} {|a|an} {-|caseSubject}'
+
+'what is my {problem|case} {|condition|status}', 'what is the {|current} status of my {case|problem}', '{|to} lookup the {|current} {condition|status} of my {problem|case}', 'what is the {|current} status of {|my} {-|caseAction} {-|caseSubject} {|bin|cart}', 'what is my {-|caseAction} {-|caseSubject} {|bin|cart} {|current} {condition|status}', 'what is the {|current} status of {|my} {-|caseSubject} {-|caseAction} {|bin|cart}', 'what is my {-|caseSubject} {-|caseAction} {|bin|cart} {|current} {condition|status}'
+
+'{lookup|what is} the {|current} {status|condition} of {|the} {|case|case number} {-|CaseNumber}'
+
+'what are {|the} {hours for town hall|town hall hours} {|on} {-|Date}', '{|when} is {|the} town hall {closed|open} {|on} {-|Date}', 'what are {|the} {hours for town hall|town hall hours}', '{|when} is {|the} town hall {closed|open}'
+
+'{when|what day} is my {|next} {trash|recycle|garbage} {day|pickup|collection|date}', 'is my {trash|recycle|garbage} {day|pickup|collection|date} this week'
+
+'what is the {field status at|status of} {-|park}', 'are the fileds {open|closed|shut down} at {-|park}', 'Is {-|park} {open|closed|shut down} {|today}', 'Are games at {-|park} {on for|canceled|postponed|being played} {|today}', 'Are games {on|canceled|postponed|being played} at {-|park} {|today}'
+
+MyCaseStatusIntent	what is my problem
+MyCaseStatusIntent	what is my case
+MyCaseStatusIntent	what is my problem condition
+MyCaseStatusIntent	what is my case condition
+MyCaseStatusIntent	what is my problem status
+MyCaseStatusIntent	what is my case status
+MyCaseStatusIntent	what is the status of my case
+MyCaseStatusIntent	what is the current status of my case
+MyCaseStatusIntent	what is the status of my problem
+MyCaseStatusIntent	what is the current status of my problem
+MyCaseStatusIntent	lookup the condition of my problem
+MyCaseStatusIntent	to lookup the condition of my problem
+MyCaseStatusIntent	lookup the current condition of my problem
+MyCaseStatusIntent	to lookup the current condition of my problem
+MyCaseStatusIntent	lookup the status of my problem
+MyCaseStatusIntent	to lookup the status of my problem
+MyCaseStatusIntent	lookup the current status of my problem
+MyCaseStatusIntent	to lookup the current status of my problem
+MyCaseStatusIntent	lookup the condition of my case
+MyCaseStatusIntent	to lookup the condition of my case
+MyCaseStatusIntent	lookup the current condition of my case
+MyCaseStatusIntent	to lookup the current condition of my case
+MyCaseStatusIntent	lookup the status of my case
+MyCaseStatusIntent	to lookup the status of my case
+MyCaseStatusIntent	lookup the current status of my case
+MyCaseStatusIntent	to lookup the current status of my case
+MyCaseStatusIntent	what is the status of {caseAction} {caseSubject}
+MyCaseStatusIntent	what is the current status of {caseAction} {caseSubject}
+MyCaseStatusIntent	what is the status of my {caseAction} {caseSubject}
+MyCaseStatusIntent	what is the current status of my {caseAction} {caseSubject}
+MyCaseStatusIntent	what is the status of {caseAction} {caseSubject} bin
+MyCaseStatusIntent	what is the current status of {caseAction} {caseSubject} bin
+MyCaseStatusIntent	what is the status of my {caseAction} {caseSubject} bin
+MyCaseStatusIntent	what is the current status of my {caseAction} {caseSubject} bin
+MyCaseStatusIntent	what is the status of {caseAction} {caseSubject} cart
+MyCaseStatusIntent	what is the current status of {caseAction} {caseSubject} cart
+MyCaseStatusIntent	what is the status of my {caseAction} {caseSubject} cart
+MyCaseStatusIntent	what is the current status of my {caseAction} {caseSubject} cart
+MyCaseStatusIntent	what is my {caseAction} {caseSubject} condition
+MyCaseStatusIntent	what is my {caseAction} {caseSubject} bin condition
+MyCaseStatusIntent	what is my {caseAction} {caseSubject} cart condition
+MyCaseStatusIntent	what is my {caseAction} {caseSubject} current condition
+MyCaseStatusIntent	what is my {caseAction} {caseSubject} bin current condition
+MyCaseStatusIntent	what is my {caseAction} {caseSubject} cart current condition
+MyCaseStatusIntent	what is my {caseAction} {caseSubject} status
+MyCaseStatusIntent	what is my {caseAction} {caseSubject} bin status
+MyCaseStatusIntent	what is my {caseAction} {caseSubject} cart status
+MyCaseStatusIntent	what is my {caseAction} {caseSubject} current status
+MyCaseStatusIntent	what is my {caseAction} {caseSubject} bin current status
+MyCaseStatusIntent	what is my {caseAction} {caseSubject} cart current status
+MyCaseStatusIntent	what is the status of {caseSubject} {caseAction}
+MyCaseStatusIntent	what is the current status of {caseSubject} {caseAction}
+MyCaseStatusIntent	what is the status of my {caseSubject} {caseAction}
+MyCaseStatusIntent	what is the current status of my {caseSubject} {caseAction}
+MyCaseStatusIntent	what is the status of {caseSubject} {caseAction} bin
+MyCaseStatusIntent	what is the current status of {caseSubject} {caseAction} bin
+MyCaseStatusIntent	what is the status of my {caseSubject} {caseAction} bin
+MyCaseStatusIntent	what is the current status of my {caseSubject} {caseAction} bin
+MyCaseStatusIntent	what is the status of {caseSubject} {caseAction} cart
+MyCaseStatusIntent	what is the current status of {caseSubject} {caseAction} cart
+MyCaseStatusIntent	what is the status of my {caseSubject} {caseAction} cart
+MyCaseStatusIntent	what is the current status of my {caseSubject} {caseAction} cart
+MyCaseStatusIntent	what is my {caseSubject} {caseAction} condition
+MyCaseStatusIntent	what is my {caseSubject} {caseAction} bin condition
+MyCaseStatusIntent	what is my {caseSubject} {caseAction} cart condition
+MyCaseStatusIntent	what is my {caseSubject} {caseAction} current condition
+MyCaseStatusIntent	what is my {caseSubject} {caseAction} bin current condition
+MyCaseStatusIntent	what is my {caseSubject} {caseAction} cart current condition
+MyCaseStatusIntent	what is my {caseSubject} {caseAction} status
+MyCaseStatusIntent	what is my {caseSubject} {caseAction} bin status
+MyCaseStatusIntent	what is my {caseSubject} {caseAction} cart status
+MyCaseStatusIntent	what is my {caseSubject} {caseAction} current status
+MyCaseStatusIntent	what is my {caseSubject} {caseAction} bin current status
+MyCaseStatusIntent	what is my {caseSubject} {caseAction} cart current status
+
+CaseStatusIntent	lookup the status of {CaseNumber}
+CaseStatusIntent	what is the status of {CaseNumber}
+CaseStatusIntent	lookup the current status of {CaseNumber}
+CaseStatusIntent	what is the current status of {CaseNumber}
+CaseStatusIntent	lookup the condition of {CaseNumber}
+CaseStatusIntent	what is the condition of {CaseNumber}
+CaseStatusIntent	lookup the current condition of {CaseNumber}
+CaseStatusIntent	what is the current condition of {CaseNumber}
+CaseStatusIntent	lookup the status of the {CaseNumber}
+CaseStatusIntent	what is the status of the {CaseNumber}
+CaseStatusIntent	lookup the current status of the {CaseNumber}
+CaseStatusIntent	what is the current status of the {CaseNumber}
+CaseStatusIntent	lookup the condition of the {CaseNumber}
+CaseStatusIntent	what is the condition of the {CaseNumber}
+CaseStatusIntent	lookup the current condition of the {CaseNumber}
+CaseStatusIntent	what is the current condition of the {CaseNumber}
+CaseStatusIntent	lookup the status of case {CaseNumber}
+CaseStatusIntent	what is the status of case {CaseNumber}
+CaseStatusIntent	lookup the current status of case {CaseNumber}
+CaseStatusIntent	what is the current status of case {CaseNumber}
+CaseStatusIntent	lookup the condition of case {CaseNumber}
+CaseStatusIntent	what is the condition of case {CaseNumber}
+CaseStatusIntent	lookup the current condition of case {CaseNumber}
+CaseStatusIntent	what is the current condition of case {CaseNumber}
+CaseStatusIntent	lookup the status of the case {CaseNumber}
+CaseStatusIntent	what is the status of the case {CaseNumber}
+CaseStatusIntent	lookup the current status of the case {CaseNumber}
+CaseStatusIntent	what is the current status of the case {CaseNumber}
+CaseStatusIntent	lookup the condition of the case {CaseNumber}
+CaseStatusIntent	what is the condition of the case {CaseNumber}
+CaseStatusIntent	lookup the current condition of the case {CaseNumber}
+CaseStatusIntent	what is the current condition of the case {CaseNumber}
+CaseStatusIntent	lookup the status of case number {CaseNumber}
+CaseStatusIntent	what is the status of case number {CaseNumber}
+CaseStatusIntent	lookup the current status of case number {CaseNumber}
+CaseStatusIntent	what is the current status of case number {CaseNumber}
+CaseStatusIntent	lookup the condition of case number {CaseNumber}
+CaseStatusIntent	what is the condition of case number {CaseNumber}
+CaseStatusIntent	lookup the current condition of case number {CaseNumber}
+CaseStatusIntent	what is the current condition of case number {CaseNumber}
+CaseStatusIntent	lookup the status of the case number {CaseNumber}
+CaseStatusIntent	what is the status of the case number {CaseNumber}
+CaseStatusIntent	lookup the current status of the case number {CaseNumber}
+CaseStatusIntent	what is the current status of the case number {CaseNumber}
+CaseStatusIntent	lookup the condition of the case number {CaseNumber}
+CaseStatusIntent	what is the condition of the case number {CaseNumber}
+CaseStatusIntent	lookup the current condition of the case number {CaseNumber}
+CaseStatusIntent	what is the current condition of the case number {CaseNumber}
