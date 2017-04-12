@@ -99,9 +99,13 @@ OpenDataHelper.prototype.formatNextStudioTime = function(studioTimes) {
   var helperClass = new HelperClass();
   var response = '';
   if(studioTimes.records.length >= 1){
-    response = _.template('The next open studio time is on ${date} at ${gym}.')({
+    var startTime = new Date(studioTimes.records[0].fields.open_gym_start);
+    var endTime = new Date(studioTimes.records[0].fields.open_gym_end);
+    response = _.template('The next open studio time is on ${date} at ${gym} from ${startTime} to ${endTime}.')({
       date: helperClass.formatDate(Date.parse(studioTimes.records[0].fields.date_scanned)),
-      gym: helperClass.FIELDNAMEPAIRINGS[studioTimes.records[0].fields.facility_title.toUpperCase()]
+      gym: helperClass.FIELDNAMEPAIRINGS[studioTimes.records[0].fields.facility_title.toUpperCase()],
+      startTime: helperClass.formatTimeString(startTime),
+      endTime: helperClass.formatTimeString(endTime),
     });
   } else {
     response = "There is a problem with the connection to the open dates.  Please try again later."
