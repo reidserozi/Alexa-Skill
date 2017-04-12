@@ -16,6 +16,11 @@ var sampleReturnWithEvents =
 }
 ];
 
+var sampleBlankReturn =
+[
+
+]
+
 describe('RSSFeedHelper', function() {
   var subject = new RSSFeedHelper();
   describe('#requestRSSFeed', function() {
@@ -27,6 +32,7 @@ describe('RSSFeedHelper', function() {
         });
       });
     });
+
   });
   describe('#formatRSSFeed', function() {
     context('with valid utterance from user', function() {
@@ -35,5 +41,11 @@ describe('RSSFeedHelper', function() {
         expect(value).to.include('The latest Town of Cary News today:');
       });
     });
+    // context('with a blank rss feed response', function() {
+    //   it('returns no new items to report', function() {
+    //     var value = subject.formatRSSFeed()
+    //     expect(value).to.include('There are no news items to report at this time.');
+    //   });
+    // });
   });
 });

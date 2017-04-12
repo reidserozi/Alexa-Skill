@@ -9,7 +9,7 @@
   "author": "brian yarsawich",
   "license": "ISC",
   "dependencies": {
-    "alexa-sdk": "^1.0.6",
+    "alexa-sdk": "^1.0.8",
     "bluebird": "^3.5.0",
     "chai": "^3.5.0",
     "chai-as-promised": "^6.0.0",
