@@ -137,7 +137,7 @@ var newSessionHandlers = {
     var self = this;
     var prompt = '';
     var openDataHelper = new OpenDataHelper();
-
+    var studioTimeDate = new Date().toString('yyyy-MM-ddTHH:mm:ss');
     var uri = OPENDATAENDPOINT + 'dataset=open-gym&q=open_gym_start>=' + studioTimeDate + '&facet=community_center&rows=1&sort=-date_scanned&timezone=America/New_York&refine.community_center=CAC';
     openDataHelper.requestOpenData(uri).then(function(studioTimeStatus) {
       console.log(studioTimeStatus.records);
