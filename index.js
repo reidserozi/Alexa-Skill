@@ -365,7 +365,7 @@ var newSessionHandlers = {
       intentTrackingID.event("Success","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
       self.emit(':tell', response);
     }).catch(function(err){
-      prompt = 'System down, please try again.';
+      prompt = 'I\'m sorry, there seems to be a problem with the connection right now.';
       console.log(err);
       intentTrackingID.event("Failure","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)).send();
       self.emit(':tell', prompt);
