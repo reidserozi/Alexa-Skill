@@ -160,7 +160,7 @@ describe('EsriDataHelper', function() {
       };
     context('one council member', function() {
       it('formats the status as expected', function() {
-        expect(subject.formatMyCouncilMember(status)).to.eq('You belong to District B, and your Council Member is Don Frantz. Your at large council members are Lori Bush, and Ed Yerha.');
+        expect(subject.formatMyCouncilMember(status)).to.eq('You belong to District B, and your Council Member is Don Frantz. Your at large council members are Lori Bush, and Ed Yerha. The mayor is Harold Weinbrecht.');
       });
     });
   });

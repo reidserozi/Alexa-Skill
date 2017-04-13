@@ -131,6 +131,10 @@ HelperClass.prototype.getWeekendData = function (res) {
     }
 }
 
+HelperClass.prototype.getPrepostion = function(len) {
+  return len > 1 ? 'are' : 'is';
+}
+
 var w2date = function (year, wn, dayNb) {
     var day = 86400000;
 

@@ -7,7 +7,8 @@ var HelperClass = require('./helper_functions.js');
 var ESRIENDPOINT = 'https://maps.townofcary.org/arcgis1/rest/services/';
 require('datejs');
 //salesforce community login URL
-var INSTANCE_URL = 'https://311test-onecary.cs44.force.com/OneCary';
+//var INSTANCE_URL = 'https://311test-onecary.cs44.force.com/OneCary';
+var INSTANCE_URL = 'https://stage-carync.cs53.force.com/CaryNC';
 
 function SalesforceHelper() { }
 
@@ -118,6 +119,7 @@ SalesforceHelper.prototype.formatNewCaseStatus = function(caseInfo) {
 };
 
 SalesforceHelper.prototype.getUserAddress = function(userToken) {
+	console.log(INSTANCE_URL);
 	var conn = new jsforce.Connection({
 		instanceUrl : INSTANCE_URL,
 		accessToken : userToken

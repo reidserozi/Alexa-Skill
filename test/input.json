@@ -1,0 +1,25 @@
+{
+  "session": {
+    "sessionId": "SessionId.97d3486d-b946-4a1b-b6e3-1b63f56f3274",
+    "application": {
+      "applicationId": "amzn1.ask.skill.681e2159-bf16-4253-94e8-4a6369e860b0"
+    },
+    "attributes": {},
+    "user": {
+      "userId": "amzn1.ask.account.AGHS4BZOYN2S24SUXTOBTJBTD25URLYXIZXDDIZ4ETISJWY73FEVMVJZQPFXBMFZ2RMMX3B5INMS3JT6V73K7YNWXNSJBAU5VVXJJV6S4EDG3UK5ZHOPYMIFFMISP3BBFKLNGNJWNYYLDF624NRVJPR3YSUCVN2Y4C2S4PM5P2TV3GBVHW5PRYU7HNAXE5GDPPLPLFEZMIR55CI",
+      "accessToken": "00D0j0000000PpF!ARIAQLGcCE2aJGo01FPTGsIyOjSHOOiV88mjzEf.cAIarNBp3LqXggnsWsYLwH17J1ekzPGkilzkw62Q__KQ2XO3XEZWnomp"
+    },
+    "new": true
+  },
+  "request": {
+    "type": "IntentRequest",
+    "requestId": "EdwRequestId.f733b94f-f10f-48f2-a15c-d281f20213e4",
+    "locale": "en-US",
+    "timestamp": "2017-04-13T19:46:37Z",
+    "intent": {
+      "name": "MyCouncilMemberIntent",
+      "slots": {}
+    }
+  },
+  "version": "1.0"
+}

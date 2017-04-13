@@ -50,7 +50,7 @@ var helpMessageReprompt = 'What can I help you with today?';
 var helpMesssageCard = 'Sample questions:\nCases: What is my case status?\nWhat is the status of case {case number}?\nI need to create a case.\nI need help with {case issue}\nInformation: Tell me a fact about Cary.\nWho is my council member?\nWho is on the city council?\nWho is the mayor?\nWhat are the open gym times for {day}\nWhat parks are nearby?\nWhat public art is nearby?';
 
 var CASEISSUES = ['Broken Recycling', 'Broken Trash', 'Cardboard Collection', 'Leaf Collection', 'Missed Recycling', 'Missed Trash', 'Missed Yard Waste', 'Oil Collection', 'Upgrade Recycling', 'Upgrade Trash'];
-var GYMLOCATIONS = {'bond park': 'BPCC', 'herbert young': 'HYCC', 'herb young': 'HYCC', 'herbert c. young': 'HYCC', 'middle creek': 'MCCC', 'cary arts': 'CAC', 'cary arts center': 'CAC'};
+var GYMLOCATIONS = {'bond park': 'BPCC', 'herbert young': 'HYCC', 'herb young': 'HYCC', 'herbert c. young': 'HYCC', 'middle creek': 'MCCC'};
 
 exports.handler = function(event, context, callback) {
   var alexa = Alexa.handler(event, context);
@@ -88,7 +88,7 @@ var newSessionHandlers = {
     } else {
       q = 'open_gym_start==' + gymTimeDate + ' AND community_center==' + GYMLOCATIONS[location];
     }
-    var uri = OPENDATAENDPOINT + 'dataset=open-gym&q=' + q + '&facet=facility_title&facet=pass_type&facet=community_center&facet=open_gym&facet=group&facet=date_scanned&timezone=UTC';
+    var uri = OPENDATAENDPOINT + 'dataset=open-gym&q=' + q + '&facet=community_center&timezone=America/New_York&exclude.community_center=CAC';
     openDataHelper.requestOpenData(uri).then(function(gymTimeStatus) {
       console.log(gymTimeStatus.records);
       return openDataHelper.formatGymTimes(gymTimeStatus);
@@ -99,6 +99,56 @@ var newSessionHandlers = {
       prompt = 'I didn\'t have data for gym times on ' + gymTimeDate;
       console.log(err);
       intentTrackingID.event("OpenGymTimesIntent","Failure","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)  + " Err: " + err).send();
+      self.emit(':tell', prompt);
+    });
+  },
+
+  'OpenStudioTimesIntent': function () {
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.BASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
+    var self = this;
+    var studioTimeDate = this.event.request.intent.slots.Date.value || Date.yyyymmdd(Date.today());
+    var prompt = '';
+
+    if(studioTimeDate.search(/^\d{4}-\d{2}-\d{2}$/) == -1){
+      prompt = 'Please choose a single day for open studio times.';
+      intentTrackingID.event("OpenStudioTimesIntent","Wrong Input","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)  + " Err: " + err).send();
+      self.emit(':ask', prompt);
+      return;
+    }
+    var openDataHelper = new OpenDataHelper();
+
+    var uri = OPENDATAENDPOINT + 'dataset=open-gym&q=open_gym_start==' + studioTimeDate + '&facet=community_center&timezone=America/New_York&refine.community_center=CAC';
+    openDataHelper.requestOpenData(uri).then(function(studioTimeStatus) {
+      console.log(studioTimeStatus.records);
+      return openDataHelper.formatStudioTimes(studioTimeStatus);
+    }).then(function(response){
+      intentTrackingID.event("OpenStudioTimesIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+      self.emit(':tell', response);
+    }).catch(function(err) {
+      prompt = 'I didn\'t have data for studio times on ' + studioTimeDate;
+      console.log(err);
+      intentTrackingID.event("OpenStudioTimesIntent","Failure","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)  + " Err: " + err).send();
+      self.emit(':tell', prompt);
+    });
+  },
+
+  'NextOpenStudioIntent': function () {
+    var intentTrackingID = ua(GOOGLE_STATE_IDS.BASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
+    var self = this;
+    var prompt = '';
+    var openDataHelper = new OpenDataHelper();
+    var studioTimeDate = new Date().toString('yyyy-MM-ddTHH:mm:ss');
+    var uri = OPENDATAENDPOINT + 'dataset=open-gym&q=open_gym_start>=' + studioTimeDate + '&facet=community_center&rows=1&sort=-date_scanned&timezone=America/New_York&refine.community_center=CAC';
+    openDataHelper.requestOpenData(uri).then(function(studioTimeStatus) {
+      console.log(studioTimeStatus.records);
+      return openDataHelper.formatNextStudioTime(studioTimeStatus);
+    }).then(function(response){
+      intentTrackingID.event("NextOpenStudioIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+      self.emit(':tell', response);
+    }).catch(function(err) {
+      prompt = 'I didn\'t have data for studio times on ' + studioTimeDate;
+      console.log(err);
+      intentTrackingID.event("NextOpenStudioIntent","Failure","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)  + " Err: " + err).send();
       self.emit(':tell', prompt);
     });
   },
@@ -163,12 +213,12 @@ var newSessionHandlers = {
     openDataHelper.requestOpenData(uri).then(function(response) {
        return openDataHelper.formatAtLargeCouncilMembers(response);
     }).then(function(response){
-      intentTrackingID.event("RSSFeedIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+      intentTrackingID.event("AtLargeCouncilMembersIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
       self.emit(':tell', response);
     }).catch(function(err) {
       prompt = 'There seems to be a problem with the connection right now.  Please try again later';
       console.log(err);
-      intentTrackingID.event("Failure","Slots: " + JSON.stringify(self.event.request.intent.slots) + " Attributes: " + JSON.stringify(self.attributes)  + " Err: " + err).send();
+      intentTrackingID.event('AtLargeCouncilMembersIntent', "Failure","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)  + " Err: " + err).send();
       self.emit(':tell', prompt);
     });
   },
@@ -896,7 +946,7 @@ function getUserAddress(userToken, state, intent, self){
   }).finally(function(){
     if(self.attributes["address"] == undefined || self.attributes["address"] == null){
       self.handler.state = state;
-      var prompt = 'Please tell me your address so I can look up your requested information';
+      var prompt = 'Please tell me your street address so I can look up your requested information';
       self.emit(':ask', prompt, prompt);
     }
   });

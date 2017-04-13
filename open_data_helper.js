@@ -6,13 +6,12 @@ var HelperClass = require('./helper_functions.js');
 function OpenDataHelper() { }
 
 OpenDataHelper.prototype.requestOpenData = function(uri) {
-  return this.getOpenData(uri).then(
-    function(response) {
-      return response.body;
-    }, function (error) {
-        console.log('error in the promise');
-    }
-  ).catch(console.log.bind(console));
+  return this.getOpenData(uri).then(function(response) {
+    return response.body;
+  }).catch(function (error) {
+    console.log(error);
+    console.log('error in the promise');
+  });
 };
 
 OpenDataHelper.prototype.getOpenData = function(uri) {
@@ -39,8 +38,9 @@ OpenDataHelper.prototype.formatGymTimes = function(gymTimes) {
   });
   for (var key in sortedGyms) {
     if (sortedGyms.hasOwnProperty(key)) {
-      times += _.template(' At ${park} the times are:')({
-        park: key
+      times += _.template(' At ${park} the times ${prep}:')({
+        park: key,
+        prep: helperClass.getPrepostion(sortedGyms[key].length)
       });
       sortedGyms[key].forEach(function(item){
         var startTime = new Date(item.open_gym_start);
@@ -54,8 +54,9 @@ OpenDataHelper.prototype.formatGymTimes = function(gymTimes) {
     }
   }
   if(gymTimes.records.length > 0) {
-    var response = _.template('There are ${numTimes} open gym times on ${date}.${times}');
+    var response = _.template('There ${prep} ${numTimes} open gym times on ${date}.${times}');
     return response({
+      prep: helperClass.getPrepostion(gymTimes.records.length),
       numTimes: gymTimes.records.length,
       date: helperClass.formatDate(Date.parse(gymTimes.records[0].fields.date_scanned)),
       times: times
@@ -64,6 +65,52 @@ OpenDataHelper.prototype.formatGymTimes = function(gymTimes) {
     var response = 'There are no open gym times for that date.';
     return response
   }
+};
+
+OpenDataHelper.prototype.formatStudioTimes = function(studioTimes) {
+  var times = '';
+  var helperClass = new HelperClass();
+  studioTimes.records.forEach(function(item, index){
+    var startTime = new Date(item.fields.open_gym_start);
+    var endTime = new Date(item.fields.open_gym_end);
+    times += _.template(' ${startTime} to ${endTime}${sentanceEnd}')({
+      startTime: helperClass.formatTimeString(startTime),
+      endTime: helperClass.formatTimeString(endTime),
+      sentanceEnd: (index === studioTimes.records.length - 1) ? "." : " and,"
+    });
+
+  });
+  if(studioTimes.records.length > 0) {
+    var response = _.template('There ${prep} ${numTimes} open studio times on ${date} from${times}');
+    return response({
+      prep:  helperClass.getPrepostion(studioTimes.records.length),
+      numTimes: studioTimes.records.length,
+      date: helperClass.formatDate(Date.parse(studioTimes.records[0].fields.date_scanned)),
+      times: times
+    });
+  } else {
+    var response = 'There are no open studio times for that date.';
+    return response
+  }
+};
+
+OpenDataHelper.prototype.formatNextStudioTime = function(studioTimes) {
+  var times = '';
+  var helperClass = new HelperClass();
+  var response = '';
+  if(studioTimes.records.length >= 1){
+    var startTime = new Date(studioTimes.records[0].fields.open_gym_start);
+    var endTime = new Date(studioTimes.records[0].fields.open_gym_end);
+    response = _.template('The next open studio time is on ${date} at ${gym} from ${startTime} to ${endTime}.')({
+      date: helperClass.formatDate(Date.parse(studioTimes.records[0].fields.date_scanned)),
+      gym: helperClass.FIELDNAMEPAIRINGS[studioTimes.records[0].fields.facility_title.toUpperCase()],
+      startTime: helperClass.formatTimeString(startTime),
+      endTime: helperClass.formatTimeString(endTime),
+    });
+  } else {
+    response = "There is a problem with the connection to the open dates.  Please try again later."
+  }
+  return response;
 };
 
 OpenDataHelper.prototype.formatMayor = function(cityInfo) {
