@@ -1,0 +1,33 @@
+{
+  "session": {
+    "sessionId": "SessionId.ff73641e-55b1-40d5-aac9-3b16e8d1c647",
+    "application": {
+      "applicationId": "amzn1.ask.skill.c50db383-27e7-4631-a60b-644afbd1e134"
+    },
+    "attributes": {},
+    "user": {
+      "userId": "amzn1.ask.account.AETCXBEVDRTZ5AFOU6DS6E7SSQQMVOIQIP2WUI5KQQWH44SOJJMHVR4WTIKWQDMJ32LZELWGWGOMS2WXTDGW4TOCR2C5JEG7COCDA2PN56IUR7QBALTLLVKDDZPBHU6NDPZJK6ZGYAV2TV7ODHNR3B4YK6Q5IK7B77JDXQHX6VZ22ML5G4WYDUZPXBZFBOL6G7HOMLI65S3DRFY",
+      "accessToken": "00D7A0000000P0o!AQMAQCx0XMB31p4pq4ULGMzO1yQjtQ37XS.48kdHmD.K.ssPw.ykpVuH_ITE0neNZovRh4v3cCDCUYNy0qWj3K4IXWkXe5np"
+    },
+    "new": true
+  },
+  "request": {
+    "type": "IntentRequest",
+    "requestId": "EdwRequestId.10d53d8f-bd8a-4209-9bd2-af4e4e516e9f",
+    "locale": "en-US",
+    "timestamp": "2017-04-07T20:02:26Z",
+    "intent": {
+      "name": "OpenGymTimesIntent",
+      "slots": {
+        "location": {
+          "name": "location"
+        },
+        "Date": {
+          "name": "Date",
+          "value": "2017-04-07"
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}

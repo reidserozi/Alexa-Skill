@@ -84,7 +84,8 @@ EventDataHelper.prototype.promiseWhile = function(uri, results, i) {
     results.PagingList.Content[i].Location = json.Event.Categories[0].Name
     return counter(i)
   }).then(function(response) {
-    return (response >= results.PagingList.Content.length) ? results : self.promiseWhile(uri, results, response)
+    //using a hard stop of 6 here until the vision api is updated to include the location
+    return (response >= results.PagingList.Content.length || response >= 5) ? results : self.promiseWhile(uri, results, response)
   }).catch(function(err){
     console.log('error on get api call');
     console.log(err);
