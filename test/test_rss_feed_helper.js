@@ -13,7 +13,8 @@ var sampleReturnWithEvents =
     guid: 'http://www.townofcary.org/Home/Components/News/News/13048/?date=20170329024251',
     author: null,
     comments: null
-}
+},
+{ title: 'test title'}
 ];
 
 var sampleBlankReturn =
@@ -38,6 +39,8 @@ describe('RSSFeedHelper', function() {
     context('with valid utterance from user', function() {
       it('returns the latest RSS feed', function() {
         var value = subject.formatRSSFeed(sampleReturnWithEvents)
+        // console.log(sampleReturnWithEvents[0].title);
+        console.log(value);
         expect(value).to.include('The latest Town of Cary News today:');
       });
     });
