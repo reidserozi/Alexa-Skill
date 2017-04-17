@@ -50,7 +50,7 @@ var helpMessageReprompt = 'What can I help you with today?';
 var helpMesssageCard = 'Sample questions:\nCases: What is my case status?\nWhat is the status of case {case number}?\nI need to create a case.\nI need help with {case issue}\nInformation: Tell me a fact about Cary.\nWho is my council member?\nWho is on the city council?\nWho is the mayor?\nWhat are the open gym times for {day}\nWhat parks are nearby?\nWhat public art is nearby?';
 
 var CASEISSUES = ['Broken Recycling', 'Broken Trash', 'Cardboard Collection', 'Leaf Collection', 'Missed Recycling', 'Missed Trash', 'Missed Yard Waste', 'Oil Collection', 'Upgrade Recycling', 'Upgrade Trash'];
-var GYMLOCATIONS = {'bond park': 'BPCC', 'herbert young': 'HYCC', 'herb young': 'HYCC', 'herbert c. young': 'HYCC', 'middle creek': 'MCCC'};
+var GYMLOCATIONS = {'BOND PARK': 'BPCC', 'HERBERT YOUNG': 'HYCC', 'HERB YOUNG': 'HYCC', 'HERBERT C. YOUNG': 'HYCC', 'MIDDLE CREEK': 'MCCC'};
 
 exports.handler = function(event, context, callback) {
   var alexa = Alexa.handler(event, context);
@@ -72,6 +72,9 @@ var newSessionHandlers = {
     var self = this;
     var gymTimeDate = this.event.request.intent.slots.Date.value || Date.yyyymmdd(Date.today());
     var location = this.event.request.intent.slots.location.value;
+    if(location !== undefined){
+      location = location.toUpperCase();
+    }
     var prompt = '';
 
     if(gymTimeDate.search(/^\d{4}-\d{2}-\d{2}$/) == -1){

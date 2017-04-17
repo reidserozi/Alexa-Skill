@@ -12,13 +12,22 @@
     "new": true
   },
   "request": {
-    "type": "IntentRequest",
-    "requestId": "EdwRequestId.f733b94f-f10f-48f2-a15c-d281f20213e4",
-    "locale": "en-US",
-    "timestamp": "2017-04-13T19:46:37Z",
+    "type":"IntentRequest",
+    "requestId":"amzn1.echo-api.request.37a65f64-418e-4f8e-a2e5-cd0febb73776",
+    "timestamp":"2017-04-17T12:51:02Z",
+    "locale":"en-US",
     "intent": {
-      "name": "MyCouncilMemberIntent",
-      "slots": {}
+      "name":"OpenGymTimesIntent",
+      "slots": {
+        "location": {
+          "name":"location",
+          "value":"Herbert young"
+        },
+        "Date": {
+          "name":"Date",
+          "value":"2017-04-19"
+        }
+      }
     }
   },
   "version": "1.0"

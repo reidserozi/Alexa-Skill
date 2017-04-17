@@ -702,6 +702,8 @@ RSSFeedIntent	give me the update
 RSSFeedIntent	to give me the update
 RSSFeedIntent	give me my update
 RSSFeedIntent	to give me my update
+RSSFeedIntent	for my news
+RSSFeedIntent	for my flash briefing
 
 UpcomingCaryEventsIntent	What is happening in cary {Date}
 UpcomingCaryEventsIntent	What is going on in cary {Date}
