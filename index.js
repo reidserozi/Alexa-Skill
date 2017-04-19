@@ -10,6 +10,7 @@ var FieldStatusHelper = require('./field_status_helper');
 var HelperClass = require('./helper_functions.js');
 var EventDataHelper = require('./event_data_helper');
 var ua = require('universal-analytics');
+var rp = require('request-promise');
 var RSSFeedHelper = require('./rss_feed_helper');
 require('./jsDate.js')();
 var facts = require('./cary_facts');
@@ -27,7 +28,6 @@ var ACCOUNT_LINKING_REQUIRED = true;
 var APP_STATES = {
   COUNCIL: '_COUNCIL', // Asking for users address
   PARKS: '_PARKS',
-  HELP: '_HELPMODE',
   ART: '_ART',
   CASE: '_CASE',
   TRASH: '_TRASH'
@@ -47,10 +47,10 @@ var welcomeReprompt = 'If you need help with your options please say help.  What
 
 var helpMessage = 'To report a case to the town you can say something like I need help with leaf collection or I need help with missed trash.  For information you can ask for open gym times for a date, what parks are nearby, who is your council member or a fact about cary.  For a full list please check the card sent to your alexa app. What can I help you with today?';
 var helpMessageReprompt = 'What can I help you with today?';
-var helpMesssageCard = 'Sample questions:\nCases: What is my case status?\nWhat is the status of case {case number}?\nI need to create a case.\nI need help with {case issue}\nInformation: Tell me a fact about Cary.\nWho is my council member?\nWho is on the city council?\nWho is the mayor?\nWhat are the open gym times for {day}\nWhat parks are nearby?\nWhat public art is nearby?';
+var helpMesssageCard = 'Sample questions:\nCases: What is my case status?\nI need to create a case.\nI need help with {case issue}\nInformation: Tell me a fact about Cary.\nWhat is the latest news?\nWhat is happening in Cary on {day}?\nWhat are the Town Hall hours for {day}?\nWhat is the field status at {park}?\nWho is my council member?\nWho is on the city council?\nWho is the mayor?\nWhat are the open gym times for {day}\nWhen is the next Open Studio?\nWhat are the open Studio times for {day}?\nWhat parks are nearby?\n';
 
 var CASEISSUES = ['Broken Recycling', 'Broken Trash', 'Cardboard Collection', 'Leaf Collection', 'Missed Recycling', 'Missed Trash', 'Missed Yard Waste', 'Oil Collection', 'Upgrade Recycling', 'Upgrade Trash'];
-var GYMLOCATIONS = {'bond park': 'BPCC', 'herbert young': 'HYCC', 'herb young': 'HYCC', 'herbert c. young': 'HYCC', 'middle creek': 'MCCC'};
+var GYMLOCATIONS = {'BOND PARK': 'BPCC', 'HERBERT YOUNG': 'HYCC', 'HERB YOUNG': 'HYCC', 'HERBERT C. YOUNG': 'HYCC', 'MIDDLE CREEK': 'MCCC'};
 
 exports.handler = function(event, context, callback) {
   var alexa = Alexa.handler(event, context);
@@ -63,7 +63,8 @@ exports.handler = function(event, context, callback) {
 var newSessionHandlers = {
   'LaunchRequest': function () {
     var intentTrackingID = ua(GOOGLE_STATE_IDS.BASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
-    intentTrackingID.event("LaunchIntent","Success", this.event.session).send();
+    intentTrackingID.event("LaunchIntent","Success", JSON.stringify(this.event.session)).send();
+    console.log(this.event.context.System);
     this.emit(':ask', welcomeMessage, welcomeReprompt);
   },
 
@@ -72,6 +73,9 @@ var newSessionHandlers = {
     var self = this;
     var gymTimeDate = this.event.request.intent.slots.Date.value || Date.yyyymmdd(Date.today());
     var location = this.event.request.intent.slots.location.value;
+    if(location !== undefined){
+      location = location.toUpperCase();
+    }
     var prompt = '';
 
     if(gymTimeDate.search(/^\d{4}-\d{2}-\d{2}$/) == -1){
@@ -137,7 +141,7 @@ var newSessionHandlers = {
     var self = this;
     var prompt = '';
     var openDataHelper = new OpenDataHelper();
-
+    var studioTimeDate = new Date().toString('yyyy-MM-ddTHH:mm:ss');
     var uri = OPENDATAENDPOINT + 'dataset=open-gym&q=open_gym_start>=' + studioTimeDate + '&facet=community_center&rows=1&sort=-date_scanned&timezone=America/New_York&refine.community_center=CAC';
     openDataHelper.requestOpenData(uri).then(function(studioTimeStatus) {
       console.log(studioTimeStatus.records);
@@ -932,7 +936,37 @@ var trashHandlers = Alexa.CreateStateHandler(APP_STATES.TRASH, {
 });
 
 function getUserAddress(userToken, state, intent, self){
+  if(self.event.context.System.user.permissions.consentToken !== undefined){
+    var deviceId = self.event.context.System.device.deviceId;
+    var consentToken = self.event.context.System.user.permissions.consentToken;
+    var apiEndPoint = self.event.context.System.apiEndpoint + '/v1/devices/' + deviceId + '/settings/address';
+
+    getAmazonAddress(apiEndPoint, consentToken).then(function(response){
+      if(response.statusCode == 200 && response.body.addressLine1 !== undefined && response.body.addressLine1 != ''){
+        var esriDataHelper = new EsriDataHelper();
+  			esriDataHelper.requestAddressInformation(response.body.addressLine1).then(function(response) {
+  				self.attributes["address"] = {"x": response.candidates[0].location.x, "y": response.candidates[0].location.y};
+          self.handler.state = state;
+          self.emitWithState(intent, true);
+  			}).catch(function(err){
+  				console.log('Error in geocoding address');
+  		    console.log(err);
+  			});
+      } else {
+        salesForceAddress(userToken, state, intent, self);
+      }
+    }).catch(function(err){
+      console.log(err);
+      salesForceAddress(userToken, state, intent, self);
+    });
+  } else {
+    salesForceAddress(userToken, state, intent, self);
+  }
+}
+
+function salesForceAddress(userToken, state, intent, self){
   var salesforceHelper = new SalesforceHelper();
+
   salesforceHelper.getUserAddress(userToken).then(function(results){
     self.attributes["address"] = results;
     console.log(results);
@@ -950,6 +984,22 @@ function getUserAddress(userToken, state, intent, self){
       self.emit(':ask', prompt, prompt);
     }
   });
+}
+
+function getAmazonAddress(apiEndpoint, userToken){
+  var options = {
+    //uri: INSTANCE_URL + '/services/data/v29.0/connect/communities/' + COMMUNITY_ID + '/chatter/users/me/',
+		uri: apiEndpoint,
+    qs: {}, //Query string data
+    method: 'GET', //Specify the method
+    json: true,
+    timeout: 3000,
+    resolveWithFullResponse: true,
+    headers: { //We can define headers too
+      'Authorization': 'Bearer ' + userToken
+    }
+  };
+  return rp(options);
 }
 
 function checkCaseIssue(caseIssue){

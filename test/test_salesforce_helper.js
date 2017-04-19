@@ -1,19 +1,24 @@
 'use strict';
 var chai = require('chai');
 var chaiAsPromised = require('chai-as-promised');
+var jsforce = require('jsforce');
 chai.use(chaiAsPromised);
 var expect = chai.expect;
 var SalesforceHelper = require('../salesforce_helper');
 require('../salesforce_helper.js');
 chai.config.includeStack = true;
+/*
+setTimeout(function(){
+  var accessToken =  getAccessToken();
 
 describe('SalesforceHelper', function() {
   var subject = new SalesforceHelper();
-  var accessToken = '00D7A0000000P0o!AQMAQM.ZfRj0u8MabtK1efLbNM19ZZn7YgQn9XfUl_I5MlxOTYpeRb9aie1Rend3ge9luAtUTPrqm60Mo68Y2z2X5UQfzZq.';
+
   var address = { x: -78.78019524656116, y: 35.7892128286608 };
   describe('#getUserAddress', function() {
     context('with a user access token', function() {
       it('returns users street address', function() {
+        console.log(accessToken);
         var value = subject.getUserAddress(accessToken).then(function(results){
           return results.x;
         }).catch(function(err){
@@ -64,4 +69,27 @@ describe('SalesforceHelper', function() {
       });
     });
   });
+
+  run();
 });
+}, 6000);
+
+function getAccessToken(){
+  var apiEndpoint =  process.env.SALESFORCEURL; //'https://test.salesforce.com';
+  var accessToken = '';
+  var conn = new jsforce.Connection({
+    loginUrl : apiEndpoint,
+  });
+  var password =  process.env.SALESFORCE_PASSWORD_311TEST + process.env.SALESFORCE_SECUIRTY_TOKEN_311TEST;
+  conn.login(process.env.SALESFORCE_LOGIN_311TEST, password, function(err, userInfo) {
+    if (err) {
+      return console.error(err);
+    }
+    // Now you can get the access token and instance URL information.
+    // Save them to establish connection next time.\
+    accessToken = conn.accessToken;
+    console.log(accessToken);
+  });
+  return accessToken
+}
+*/

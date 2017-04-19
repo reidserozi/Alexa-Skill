@@ -357,7 +357,7 @@ describe('OpenDataHelper', function() {
       ]
     };
     context('return call from open data', function() {
-      var responseText = 'The next open studio time is on Tue Apr 18 at CARY ARTS CENTER.'
+      var responseText = 'The next open studio time is on Tue Apr 18 at CARY ARTS CENTER from 05:00:00 PM to 09:00:00 PM.'
       it('formats the status as expected', function() {
         expect(subject.formatNextStudioTime(response)).to.eq(responseText);
       });

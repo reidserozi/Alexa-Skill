@@ -670,21 +670,55 @@ FieldStatusIntent	Are games canceled at {park} today
 FieldStatusIntent	Are games postponed at {park} today
 FieldStatusIntent	Are games being played at {park} today
 
-RSSFeedIntent what is the latest Cary news
-RSSFeedIntent what is the latest Cary update
-RSSFeedIntent what is the latest flash briefing
-RSSFeedIntent what is the latest news
-RSSFeedIntent what is the latest news feed
-RSSFeedIntent what is the latest news update
-RSSFeedIntent what is the latest rss feed
-RSSFeedIntent what is the latest syndication feed
-RSSFeedIntent what is the latest town news
-RSSFeedIntent what is the latest town update
-RSSFeedIntent what is the latest update
-RSSFeedIntent what is the flash briefing
-RSSFeedIntent what is the news
+RSSFeedIntent	what is the update
+RSSFeedIntent	what is the latest update
+RSSFeedIntent	what is the town update
+RSSFeedIntent	what is the latest town update
+RSSFeedIntent	what is the Cary update
+RSSFeedIntent	what is the latest Cary update
+RSSFeedIntent	what is the news
+RSSFeedIntent	what is the latest news
+RSSFeedIntent	what is the town news
+RSSFeedIntent	what is the latest town news
+RSSFeedIntent	what is the Cary news
+RSSFeedIntent	what is the latest Cary news
+RSSFeedIntent	what is the flash breifing
+RSSFeedIntent	what is the latest flash breifing
+RSSFeedIntent	what is the town flash breifing
+RSSFeedIntent	what is the latest town flash breifing
+RSSFeedIntent	what is the Cary flash breifing
+RSSFeedIntent	what is the latest Cary flash breifing
+RSSFeedIntent	what is my flash brefing
+RSSFeedIntent	what is the flash brefing
+RSSFeedIntent	give me the news
+RSSFeedIntent	to give me the news
+RSSFeedIntent	give me my news
+RSSFeedIntent	to give me my news
+RSSFeedIntent	give me the flash breifing
+RSSFeedIntent	to give me the flash breifing
+RSSFeedIntent	give me my flash breifing
+RSSFeedIntent	to give me my flash breifing
+RSSFeedIntent	give me the update
+RSSFeedIntent	to give me the update
+RSSFeedIntent	give me my update
+RSSFeedIntent	to give me my update
+RSSFeedIntent	for my news
+RSSFeedIntent	for my flash briefing
 
-UpcomingCaryEventsIntent What is happening in cary {Date}
+UpcomingCaryEventsIntent	What is happening in cary {Date}
+UpcomingCaryEventsIntent	What is going on in cary {Date}
+UpcomingCaryEventsIntent	What is happening in cary on {Date}
+UpcomingCaryEventsIntent	What is going on in cary on {Date}
+UpcomingCaryEventsIntent	what events are happening in cary {Date}
+UpcomingCaryEventsIntent	what events are there in cary {Date}
+UpcomingCaryEventsIntent	what events are happening in cary on {Date}
+UpcomingCaryEventsIntent	what events are there in cary on {Date}
+UpcomingCaryEventsIntent	is there anything fun in cary {Date}
+UpcomingCaryEventsIntent	is there anything interesting in cary {Date}
+UpcomingCaryEventsIntent	is there anything happening in cary {Date}
+UpcomingCaryEventsIntent	is there anything fun in cary on {Date}
+UpcomingCaryEventsIntent	is there anything interesting in cary on {Date}
+UpcomingCaryEventsIntent	is there anything happening in cary on {Date}
 
 
 AMAZON.YesIntent that is correct
@@ -708,6 +742,10 @@ to {create|submit|help with} a {|new} {case|service request|request|problem|work
 '{when|what day} is my {|next} {trash|recycle|garbage} {day|pickup|collection|date}', 'is my {trash|recycle|garbage} {day|pickup|collection|date} this week'
 
 'what is the {field status at|status of} {-|park}', 'are the fileds {open|closed|shut down} at {-|park}', 'Is {-|park} {open|closed|shut down} {|today}', 'Are games at {-|park} {on for|canceled|postponed|being played} {|today}', 'Are games {on|canceled|postponed|being played} at {-|park} {|today}'
+
+'what is the {|latest} {|town|Cary} {update|news|flash breifing}', 'what is {my|the} flash brefing', '{|to} give me {the|my} {news|flash breifing|update}'
+
+'What is {happening|going on} in cary {|on} {-|Date}', 'what events are {happening|there} in cary {|on} {-|Date}', 'is there anything {fun|interesting|happening} in cary {|on} {-|Date}'
 
 MyCaseStatusIntent	what is my problem
 MyCaseStatusIntent	what is my case

@@ -48,7 +48,7 @@ describe('EsriDataHelper', function() {
     });
     context('with an address', function() {
       it('gets geolocation from ESRI and then gets all parks in 1 mile radius', function() {
-        var value = subject.requestAddressInformation(address).then(function(obj){
+        return subject.requestAddressInformation(address).then(function(obj){
           return subject.requestInformationByRadius(obj.candidates[0].location.x, obj.candidates[0].location.y, DISTANCE, uri).then(function(obj){
             expect(obj.features[0].attributes["NAME"]).to.eq("Heater Park");
           });
