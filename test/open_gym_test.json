@@ -1,30 +1,31 @@
 {
   "session": {
-    "sessionId": "SessionId.ff73641e-55b1-40d5-aac9-3b16e8d1c647",
+    "sessionId": "SessionId.97d3486d-b946-4a1b-b6e3-1b63f56f3274",
     "application": {
-      "applicationId": "amzn1.ask.skill.c50db383-27e7-4631-a60b-644afbd1e134"
+      "applicationId": "amzn1.ask.skill.681e2159-bf16-4253-94e8-4a6369e860b0"
     },
     "attributes": {},
     "user": {
-      "userId": "amzn1.ask.account.AETCXBEVDRTZ5AFOU6DS6E7SSQQMVOIQIP2WUI5KQQWH44SOJJMHVR4WTIKWQDMJ32LZELWGWGOMS2WXTDGW4TOCR2C5JEG7COCDA2PN56IUR7QBALTLLVKDDZPBHU6NDPZJK6ZGYAV2TV7ODHNR3B4YK6Q5IK7B77JDXQHX6VZ22ML5G4WYDUZPXBZFBOL6G7HOMLI65S3DRFY",
-      "accessToken": "00D7A0000000P0o!AQMAQCx0XMB31p4pq4ULGMzO1yQjtQ37XS.48kdHmD.K.ssPw.ykpVuH_ITE0neNZovRh4v3cCDCUYNy0qWj3K4IXWkXe5np"
+      "userId": "amzn1.ask.account.AGHS4BZOYN2S24SUXTOBTJBTD25URLYXIZXDDIZ4ETISJWY73FEVMVJZQPFXBMFZ2RMMX3B5INMS3JT6V73K7YNWXNSJBAU5VVXJJV6S4EDG3UK5ZHOPYMIFFMISP3BBFKLNGNJWNYYLDF624NRVJPR3YSUCVN2Y4C2S4PM5P2TV3GBVHW5PRYU7HNAXE5GDPPLPLFEZMIR55CI",
+      "accessToken": "00D0j0000000PpF!ARIAQLGcCE2aJGo01FPTGsIyOjSHOOiV88mjzEf.cAIarNBp3LqXggnsWsYLwH17J1ekzPGkilzkw62Q__KQ2XO3XEZWnomp"
     },
     "new": true
   },
   "request": {
-    "type": "IntentRequest",
-    "requestId": "EdwRequestId.10d53d8f-bd8a-4209-9bd2-af4e4e516e9f",
-    "locale": "en-US",
-    "timestamp": "2017-04-07T20:02:26Z",
+    "type":"IntentRequest",
+    "requestId":"amzn1.echo-api.request.37a65f64-418e-4f8e-a2e5-cd0febb73776",
+    "timestamp":"2017-04-17T12:51:02Z",
+    "locale":"en-US",
     "intent": {
-      "name": "OpenGymTimesIntent",
+      "name":"OpenGymTimesIntent",
       "slots": {
         "location": {
-          "name": "location"
+          "name":"location",
+          "value":"Herbert young"
         },
         "Date": {
-          "name": "Date",
-          "value": "2017-04-07"
+          "name":"Date",
+          "value":"2017-04-19"
         }
       }
     }
