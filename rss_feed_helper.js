@@ -14,15 +14,14 @@ function dateFilter(value) {
 }
 
 RSSFeedHelper.prototype.requestRSSFeed = function() {
-  var feedData = '';
+  var feedData = [];
   return feedparser.parse(encodeURI(url)).then( (items) => {
     feedData = items.filter(dateFilter);
 
     if(feedData[0] == undefined) {
-      return feedData = items[0];
-    } else {
-      return feedData;
+      feedData.push(items[0]);
     }
+    return feedData;
 
   }).catch( (error) => {
     console.log('error: ', error);

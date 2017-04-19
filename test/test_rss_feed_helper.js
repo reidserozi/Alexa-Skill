@@ -40,7 +40,7 @@ describe('RSSFeedHelper', function() {
       it('returns the latest RSS feed', function() {
         var value = subject.formatRSSFeed(sampleReturnWithEvents)
         // console.log(sampleReturnWithEvents[0].title);
-        console.log(value);
+        // console.log(value);
         expect(value).to.include('The latest Town of Cary News today:');
       });
     });
