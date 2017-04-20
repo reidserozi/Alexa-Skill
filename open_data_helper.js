@@ -38,8 +38,9 @@ OpenDataHelper.prototype.formatGymTimes = function(gymTimes) {
   });
   for (var key in sortedGyms) {
     if (sortedGyms.hasOwnProperty(key)) {
-      times += _.template(' At ${park} the times ${prep}:')({
+      times += _.template(' At ${park} the ${time} ${prep}:')({
         park: key,
+        time: sortedGyms[key].length >= 2 ? 'times' : 'time',
         prep: helperClass.getPrepostion(sortedGyms[key].length)
       });
       sortedGyms[key].forEach(function(item){
@@ -58,7 +59,7 @@ OpenDataHelper.prototype.formatGymTimes = function(gymTimes) {
     return response({
       prep: helperClass.getPrepostion(gymTimes.records.length),
       numTimes: gymTimes.records.length,
-      time: studioTimes.records.length >= 2 ? 'times' : 'time',
+      time: gymTimes.records.length >= 2 ? 'times' : 'time',
       date: helperClass.formatDate(Date.parse(gymTimes.records[0].fields.date_scanned)),
       times: times
     });
