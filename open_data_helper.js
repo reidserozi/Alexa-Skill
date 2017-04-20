@@ -54,10 +54,11 @@ OpenDataHelper.prototype.formatGymTimes = function(gymTimes) {
     }
   }
   if(gymTimes.records.length > 0) {
-    var response = _.template('There ${prep} ${numTimes} open gym times on ${date}.${times}');
+    var response = _.template('There ${prep} ${numTimes} open gym ${time} on ${date}.${times}');
     return response({
       prep: helperClass.getPrepostion(gymTimes.records.length),
       numTimes: gymTimes.records.length,
+      time: studioTimes.records.length >= 2 ? 'times' : 'time',
       date: helperClass.formatDate(Date.parse(gymTimes.records[0].fields.date_scanned)),
       times: times
     });
@@ -81,10 +82,11 @@ OpenDataHelper.prototype.formatStudioTimes = function(studioTimes) {
 
   });
   if(studioTimes.records.length > 0) {
-    var response = _.template('There ${prep} ${numTimes} open studio times on ${date} from${times}');
+    var response = _.template('There ${prep} ${numTimes} open studio ${time} on ${date} from${times}');
     return response({
       prep:  helperClass.getPrepostion(studioTimes.records.length),
       numTimes: studioTimes.records.length,
+      time: studioTimes.records.length >= 2 ? 'times' : 'time',
       date: helperClass.formatDate(Date.parse(studioTimes.records[0].fields.date_scanned)),
       times: times
     });

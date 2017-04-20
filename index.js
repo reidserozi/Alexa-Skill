@@ -90,7 +90,7 @@ var newSessionHandlers = {
     if(location === undefined){
       q = 'open_gym_start==' + gymTimeDate;
     } else {
-      q = 'open_gym_start==' + gymTimeDate + ' AND community_center==' + GYMLOCATIONS[location];
+      q = 'open_gym_start==' + gymTimeDate + ' AND community_center==' + GYMLOCATIONS[location.toUpperCase()];
     }
     var uri = OPENDATAENDPOINT + 'dataset=open-gym&q=' + q + '&facet=community_center&timezone=America/New_York&exclude.community_center=CAC';
     openDataHelper.requestOpenData(uri).then(function(gymTimeStatus) {
@@ -247,6 +247,8 @@ var newSessionHandlers = {
   },
 
   'CaseStartIntent': function() {
+    console.log(this.event.request.intent);
+    console.log(this.attributes);
     var intentTrackingID = ua(GOOGLE_STATE_IDS.BASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
     var self = this;
     if(ACCOUNT_LINKING_REQUIRED == true && self.event.session.user.accessToken == undefined) {
@@ -263,6 +265,8 @@ var newSessionHandlers = {
   },
 
   'CaseConfirmationIntent': function() {
+    console.log(this.event.request.intent);
+    console.log(this.attributes);
     var intentTrackingID = ua(GOOGLE_STATE_IDS.BASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
     var helperClass = new HelperClass();
     var self = this;
@@ -401,10 +405,10 @@ var newSessionHandlers = {
   'FieldStatusIntent': function() {
     var intentTrackingID = ua(GOOGLE_STATE_IDS.BASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
     var helperClass = new HelperClass();
-    var parkName = this.event.request.intent.slots.park.value.toUpperCase();
+    var parkName = this.event.request.intent.slots.park.value;
     var prompt = '';
     var self = this;
-    if(helperClass.FIELDNAMEPAIRINGS[parkName] === undefined){
+    if(parkname === undefined || helperClass.FIELDNAMEPAIRINGS[parkName.toUpperCase()] === undefined){
       prompt = 'I\'m sorry I did not recognize that field name.';
       intentTrackingID.event("FieldStatusIntent", "Wrong Input","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
       self.emit(':tell', prompt);
@@ -759,6 +763,8 @@ var artHandlers = Alexa.CreateStateHandler(APP_STATES.ART, {
 
 var caseHandlers = Alexa.CreateStateHandler(APP_STATES.CASE, {
   'CreateCaseIntent': function () {
+    console.log(this.event.request.intent);
+    console.log(this.attributes);
     var intentTrackingID = ua(GOOGLE_STATE_IDS.CASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
     var userToken = this.event.session.user.accessToken;
     var salesforceHelper = new SalesforceHelper();
@@ -767,7 +773,7 @@ var caseHandlers = Alexa.CreateStateHandler(APP_STATES.CASE, {
     var self = this;
     salesforceHelper.createCaseInSalesforce(userToken, caseIssue).then(function(response){
       self.attributes['case'] = response;
-      self.attributes['caseIssue'] = response.CaseIssue__r.Name;
+      self.attributes['caseIssue'] = response.Case_Issue_Name__c;
       return salesforceHelper.formatNewCaseStatus(response);
     }).then(function(response){
       intentTrackingID.event("CreateCaseIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
@@ -781,6 +787,8 @@ var caseHandlers = Alexa.CreateStateHandler(APP_STATES.CASE, {
   },
 
   'CaseConfirmationIntent': function () {
+    console.log(this.event.request.intent);
+    console.log(this.attributes);
     var intentTrackingID = ua(GOOGLE_STATE_IDS.CASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
     var helperClass = new HelperClass();
     var caseIssue = this.attributes["caseIssue"];
@@ -798,6 +806,8 @@ var caseHandlers = Alexa.CreateStateHandler(APP_STATES.CASE, {
   },
 
   'AMAZON.YesIntent': function() {
+    console.log(this.event.request.intent);
+    console.log(this.attributes);
     var intentTrackingID = ua(GOOGLE_STATE_IDS.CASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
     intentTrackingID.event("AMAZON.YesIntent","Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
     //I'm not sure if the attributes will be maintaned between Intents so reassigning it just incase.
@@ -836,6 +846,8 @@ var caseHandlers = Alexa.CreateStateHandler(APP_STATES.CASE, {
   },
 
   'Unhandled': function () {
+    console.log(this.event.request.intent);
+    console.log(this.attributes);
     var intentTrackingID = ua(GOOGLE_STATE_IDS.CASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
     intentTrackingID.event("Unhandled","Success", this.event.session).send();
     var prompt = 'I\'m sorry.  I didn\'t catch that.  Can you please repeat your problem.';

@@ -110,9 +110,11 @@ EventDataHelper.prototype.formatEventData = function(sampleReturn) {
         eventLocation: item.Location
       });
     });
-    response = _.template('On ${date} there are ${count} events: ${eventData}')({
+    response = _.template('On ${date} there ${prep} ${count} event${s}: ${eventData}')({
       date: helperClass.formatDate(Date.parse(eventContent[0].StartDate)),
+      prep:  helperClass.getPrepostion(eventCount),
       count: eventCount,
+      s: eventCount >= 2 ? 's' : '',
       eventData: eventData
     });
 
