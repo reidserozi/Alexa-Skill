@@ -18,6 +18,8 @@ EventDataHelper.prototype.requestEventData = function(uri, startDate, endDate) {
     //   item.Location = helperClass.EVENTLOCATIONS[item.CategoryID];
     // });
     // return json;
+    console.log(response);
+    console.log(json);
     return self.promiseWhile(uri, json, 0);
   }).catch(function(err) {
     console.log('Error in api call');

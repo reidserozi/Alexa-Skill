@@ -2,9 +2,7 @@
 var promise = require('bluebird');
 var RECYCLEYELLOWSTART = '2017-01-01';
 var RECYCLEBLUESTART = '2017-01-08';
-var TRASHCASES = {'trash': 'trash', 'garbage': 'trash', 'rubbish': 'trash', 'waste': 'trash'};
-var LEAFCASES = {'leaf': 'leaf', 'leaves': 'leaf'};
-var CASESUBJECTPAIRINGS = {'yard waste': 'collection', 'oil': 'collection', 'cardboard': 'collection', 'leaf': 'collection', 'trash': 'missed', 'recycling': 'missed'};
+var CASESUBJECTPAIRINGS = {'YARD WASTE': 'COLLECTION', 'OIL': 'COLLECTION', 'CARDBOARD': 'COLLECTION', 'LEAF': 'COLLECTION', 'TRASH': 'MISSED', 'RECYCLING': 'MISSED', 'GARBAGE': 'MISSED', 'RUBBISH': 'MISSED', 'WASTE': 'MISSED', 'LEAVES': 'COLLECTION'};
 
 function HelperClass() { }
 
@@ -81,17 +79,12 @@ HelperClass.prototype.addLeadZeros =  function (caseNumber, caseNumberLength) {
   return results.valueOf();
 };
 
-HelperClass.prototype.formatCaseSubject = function(caseSubject){
-  var tempSubject = TRASHCASES[caseSubject] || LEAFCASES[caseSubject];
-  if (tempSubject === undefined) {
-    return caseSubject;
-  } else {
-    return tempSubject;
-  }
-};
-
 HelperClass.prototype.addCaseAction = function (caseSubject){
-  return CASESUBJECTPAIRINGS[caseSubject];
+  if(caseSubject !== undefined){
+    return CASESUBJECTPAIRINGS[caseSubject.toUpperCase()];
+  } else {
+    return caseSubject;
+  }
 };
 
 HelperClass.prototype.addFieldResults = promise.method(function (body, results) {

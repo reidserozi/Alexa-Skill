@@ -1,21 +1,21 @@
 CASE_ACTION:
-pickup
-upgrade
-collection
-broken
-missed
+PICKUP
+UPGRADE
+COLLECTION
+BROKEN
+MISSED
 
 CASE_SUBJECT:
-yard waste
-trash
-garbage
-rubbish
-waste
-recycling
-oil
-cardboard
-leaf
-leaves
+YARD WASTE
+TRASH
+GARBAGE
+RUBBISH
+WASTE
+RECYCLING
+OIL
+CARDBOARD
+LEAF
+LEAVES
 
 GYM_NAME:
 bond park
