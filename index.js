@@ -936,7 +936,7 @@ var trashHandlers = Alexa.CreateStateHandler(APP_STATES.TRASH, {
 });
 
 function getUserAddress(userToken, state, intent, self){
-  if(self.event.context.System.user.permissions.consentToken !== undefined){
+  if(self.event.context !== undefined && self.event.context.System.user.permissions.consentToken !== undefined){
     var deviceId = self.event.context.System.device.deviceId;
     var consentToken = self.event.context.System.user.permissions.consentToken;
     var apiEndPoint = self.event.context.System.apiEndpoint + '/v1/devices/' + deviceId + '/settings/address';
