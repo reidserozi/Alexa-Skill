@@ -12,7 +12,7 @@ var INSTANCE_URL = process.env.SALESFORCEURL;
 function SalesforceHelper() { }
 
 SalesforceHelper.prototype.createCaseInSalesforce = function(userToken, caseIssue) {
-	var obj = {Subject: 'Alexa Case'};
+	var obj = {Subject: caseIssue};
 	obj.Origin = 'Alexa';
 	var conn = new jsforce.Connection({
 		instanceUrl : INSTANCE_URL,
@@ -31,8 +31,10 @@ SalesforceHelper.prototype.createCaseInSalesforce = function(userToken, caseIssu
     obj.RecordTypeId = recordType.Id;
     return conn.sobject("Case").create(obj);
 	}).then(function(results){
-    return conn.query("Select Id, CaseNumber, Status, Expected_Completion_Date__c, LastModifiedDate, CaseIssue__r.Name from Case where Id = '" + results.id + "'");
+		console.log(results);
+    return conn.query("Select Id, CaseNumber, Status,LastModifiedDate, Case_Issue_Name__c from Case where Id = '" + results.id + "'");
 	}).then(function(results) {
+		console.log(results);
     return results.records[0];
   }).catch(function(err) {
     console.log('Error in case creation');
@@ -51,10 +53,10 @@ SalesforceHelper.prototype.findLatestCaseStatus = function(userToken, caseIssue)
 		if(caseIssue == undefined){
 			q = "ContactId = '" + results + "'";
 		} else {
-			q = "ContactId = '" + results + "' AND CaseIssue__r.Name LIKE '%" + caseIssue + "%'";
+			q = "ContactId = '" + results + "' AND Case_Issue_Name__c LIKE '%" + caseIssue + "%'";
 		}
 		console.log(q);
-		return conn.query("Select Status, CaseNumber, Expected_Completion_Date__c, CreatedDate, ClosedDate, LastModifiedDate, CaseIssue__r.Name from Case where " +  q + " order by createdDate DESC Limit 1");
+		return conn.query("Select Status, CaseNumber, Expected_Completion_Date__c, CreatedDate, ClosedDate, LastModifiedDate, Case_Issue_Name__c from Case where " +  q + " order by createdDate DESC Limit 1");
 	}).then(function(results){
 			return results.records;
 	}).catch(function(err) {
@@ -69,7 +71,7 @@ SalesforceHelper.prototype.findCaseStatus = function(userToken, caseNumber) {
 		accessToken : userToken,
 		version:'39.0'
 	});
-	return conn.query("Select Status, CaseNumber, ClosedDate, CreatedDate, Expected_Completion_Date__c, LastModifiedDate, CaseIssue__r.Name from Case where CaseNumber = '" + caseNumber + "' order by createdDate DESC Limit 1").then(function(results){
+	return conn.query("Select Status, CaseNumber, ClosedDate, CreatedDate, Expected_Completion_Date__c, LastModifiedDate, Case_Issue_Name__c from Case where CaseNumber = '" + caseNumber + "' order by createdDate DESC Limit 1").then(function(results){
 			return results.records;
 	}).catch(function(err) {
     console.log('Error in case lookup');
@@ -89,7 +91,7 @@ SalesforceHelper.prototype.formatExistingCase = function(caseInfo) {
 		});
 		var card = _.template('Your case for ${caseIssue} has a case number of ${caseNumber}'); //  an expected completion date of ${finishDate}
 		response.card = card({
-			caseIssue: caseInfo[0].CaseIssue__r.Name,
+			caseIssue: caseInfo[0].Case_Issue_Name__c,
 			caseNumber: caseInfo[0].CaseNumber,
 			finishDate: helperClass.formatDateTime(Date.parse(caseInfo[0].Expected_Completion_Date__c))
 		});
@@ -105,12 +107,12 @@ SalesforceHelper.prototype.formatNewCaseStatus = function(caseInfo) {
 	var helperClass = new HelperClass();
   var prompt = _.template('I\'ve created a new case for ${caseIssue}.  The case number is ${caseNumber}. You can view the case on your Alexa App.');
 	response.prompt = prompt({
-		caseIssue: caseInfo.CaseIssue__r.Name,
+		caseIssue: caseInfo.Case_Issue_Name__c,
 		caseNumber: caseInfo.CaseNumber
 	});
 	var card = _.template('Your new case for ${caseIssue} has a case number of ${caseNumber}'); // an expected completion date of ${finishDate}
 	response.card = card({
-		caseIssue: caseInfo.CaseIssue__r.Name,
+		caseIssue: caseInfo.Case_Issue_Name__c,
 		caseNumber: caseInfo.CaseNumber,
 		finishDate: helperClass.formatDateTime(caseInfo.Expected_Completion_Date__c)
 	});
