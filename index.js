@@ -14,6 +14,7 @@ var rp = require('request-promise');
 var RSSFeedHelper = require('./rss_feed_helper');
 require('./jsDate.js')();
 var facts = require('./cary_facts');
+var issues = require('./case_issues');
 var ESRIENDPOINT = 'https://maps.townofcary.org/arcgis1/rest/services/';
 var ARCGISENDPOINT = 'https://services2.arcgis.com/l4TwMwwoiuEVRPw9/ArcGIS/rest/services/';
 var OPENDATAENDPOINT = 'https://data.townofcary.org/api/records/1.0/search/?';
@@ -49,7 +50,7 @@ var helpMessage = 'To report a case to the town you can say something like I nee
 var helpMessageReprompt = 'What can I help you with today?';
 var helpMesssageCard = 'Sample questions:\nCases: What is my case status?\nI need to create a case.\nI need help with {case issue}\nInformation: Tell me a fact about Cary.\nWhat is the latest news?\nWhat is happening in Cary on {day}?\nWhat are the Town Hall hours for {day}?\nWhat is the field status at {park}?\nWho is my council member?\nWho is on the city council?\nWho is the mayor?\nWhat are the open gym times for {day}\nWhen is the next Open Studio?\nWhat are the open Studio times for {day}?\nWhat parks are nearby?\n';
 
-var CASEISSUES = ['Broken Recycling', 'Broken Trash', 'Cardboard Collection', 'Leaf Collection', 'Missed Recycling', 'Missed Trash', 'Missed Yard Waste', 'Oil Collection', 'Upgrade Recycling', 'Upgrade Trash'];
+var CASEISSUES = ['Broken Recycling', 'Broken Trash', 'Cardboard Collection', 'Leaf Collection', 'Missed Recycling', 'Missed Trash', 'Missed Yard Waste', 'Oil Collection', 'Upgrade Recycling', 'Upgrade Trash', 'Yard Waste Collection'];
 var GYMLOCATIONS = {'BOND PARK': 'BPCC', 'HERBERT YOUNG': 'HYCC', 'HERB YOUNG': 'HYCC', 'HERBERT C. YOUNG': 'HYCC', 'MIDDLE CREEK': 'MCCC'};
 
 exports.handler = function(event, context, callback) {
@@ -90,7 +91,7 @@ var newSessionHandlers = {
     if(location === undefined){
       q = 'open_gym_start==' + gymTimeDate;
     } else {
-      q = 'open_gym_start==' + gymTimeDate + ' AND community_center==' + GYMLOCATIONS[location];
+      q = 'open_gym_start==' + gymTimeDate + ' AND community_center==' + GYMLOCATIONS[location.toUpperCase()];
     }
     var uri = OPENDATAENDPOINT + 'dataset=open-gym&q=' + q + '&facet=community_center&timezone=America/New_York&exclude.community_center=CAC';
     openDataHelper.requestOpenData(uri).then(function(gymTimeStatus) {
@@ -247,9 +248,11 @@ var newSessionHandlers = {
   },
 
   'CaseStartIntent': function() {
+    console.log(this.event.request.intent);
+    console.log(this.attributes);
     var intentTrackingID = ua(GOOGLE_STATE_IDS.BASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
     var self = this;
-    if(ACCOUNT_LINKING_REQUIRED == true && self.event.session.user.accessToken == undefined) {
+    if(ACCOUNT_LINKING_REQUIRED === true && self.event.session.user.accessToken === undefined) {
   		var speechOutput = "You must link your account before accessing this skill.";
       intentTrackingID.event("CaseStartIntent","Account Not Linked","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
   		self.emit(':tellWithLinkAccountCard', speechOutput);
@@ -263,20 +266,27 @@ var newSessionHandlers = {
   },
 
   'CaseConfirmationIntent': function() {
+    console.log(this.event.request.intent);
+    console.log(this.attributes);
     var intentTrackingID = ua(GOOGLE_STATE_IDS.BASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
     var helperClass = new HelperClass();
     var self = this;
-    if(ACCOUNT_LINKING_REQUIRED == true && self.event.session.user.accessToken == undefined) {
+    if(ACCOUNT_LINKING_REQUIRED === true && self.event.session.user.accessToken === undefined) {
   		var speechOutput = "You must link your account before accessing this skill.";
       intentTrackingID.event("CaseConfirmationIntent","Account Not Linked","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
   		self.emit(':tellWithLinkAccountCard', speechOutput);
   	} else {
       intentTrackingID.event("CaseConfirmationIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
-      var caseSubject = helperClass.formatCaseSubject(self.event.request.intent.slots.caseSubject.value);
+      var caseSubject = self.event.request.intent.slots.caseSubject.value;
       var caseAction = self.event.request.intent.slots.caseAction.value || helperClass.addCaseAction(caseSubject);
-      self.attributes['caseIssue'] = CASEISSUES.find(checkCaseIssue, {"caseSubject": caseSubject, "caseAction": caseAction}) || CASEISSUES.find(checkCaseIssue, {"caseSubject": caseSubject, "caseAction": helperClass.addCaseAction(caseSubject)});
-      self.handler.state = APP_STATES.CASE;
-      self.emitWithState('CaseConfirmationIntent', true);
+      if(caseSubject === undefined || caseAction === undefined){
+        self.handler.state = APP_STATES.CASE;
+        self.emitWithState('Unhandled', true);
+      } else {
+        self.attributes['caseIssue'] = issues[caseSubject.toUpperCase() + ' ' + caseAction.toUpperCase()];
+        self.handler.state = APP_STATES.CASE;
+        self.emitWithState('CaseConfirmationIntent', true);
+      }
     }
   },
 
@@ -284,7 +294,7 @@ var newSessionHandlers = {
     var intentTrackingID = ua(GOOGLE_STATE_IDS.BASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
     var self = this;
     var helperClass = new HelperClass();
-    if(ACCOUNT_LINKING_REQUIRED == true && this.event.session.user.accessToken == undefined) {
+    if(ACCOUNT_LINKING_REQUIRED === true && this.event.session.user.accessToken === undefined) {
   		var speechOutput = "You must link your account before accessing this skill.";
       intentTrackingID.event("MyCaseStatusIntent","Account Not Linked","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
   		self.emit(':tellWithLinkAccountCard', speechOutput);
@@ -312,7 +322,7 @@ var newSessionHandlers = {
   'CaseStatusIntent': function() {
     var intentTrackingID = ua(GOOGLE_STATE_IDS.BASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
     var self = this;
-    if(ACCOUNT_LINKING_REQUIRED == true && this.event.session.user.accessToken == undefined) {
+    if(ACCOUNT_LINKING_REQUIRED === true && this.event.session.user.accessToken === undefined) {
   		var speechOutput = "You must link your account before accessing this skill.";
       intentTrackingID.event("CaseStatusIntent","Account Not Linked","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
   		self.emit(':tellWithLinkAccountCard', speechOutput);
@@ -388,6 +398,7 @@ var newSessionHandlers = {
       return eventDataHelper.formatEventData(response);
     }).then(function(response){
       intentTrackingID.event("UpcomingCaryEventsIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
+      response = response.replace('&', 'and');
       self.emit(':tell', response);
     }).catch(function(err){
       console.log('error in events retrieval');
@@ -401,10 +412,11 @@ var newSessionHandlers = {
   'FieldStatusIntent': function() {
     var intentTrackingID = ua(GOOGLE_STATE_IDS.BASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
     var helperClass = new HelperClass();
-    var parkName = this.event.request.intent.slots.park.value.toUpperCase();
+    var parkName = this.event.request.intent.slots.park.value;
     var prompt = '';
     var self = this;
-    if(helperClass.FIELDNAMEPAIRINGS[parkName] === undefined){
+    console.log(this.event.request.intent);
+    if(parkName === undefined || helperClass.FIELDNAMEPAIRINGS[parkName.toUpperCase()] === undefined){
       prompt = 'I\'m sorry I did not recognize that field name.';
       intentTrackingID.event("FieldStatusIntent", "Wrong Input","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
       self.emit(':tell', prompt);
@@ -759,6 +771,8 @@ var artHandlers = Alexa.CreateStateHandler(APP_STATES.ART, {
 
 var caseHandlers = Alexa.CreateStateHandler(APP_STATES.CASE, {
   'CreateCaseIntent': function () {
+    console.log(this.event.request.intent);
+    console.log(this.attributes);
     var intentTrackingID = ua(GOOGLE_STATE_IDS.CASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
     var userToken = this.event.session.user.accessToken;
     var salesforceHelper = new SalesforceHelper();
@@ -767,7 +781,7 @@ var caseHandlers = Alexa.CreateStateHandler(APP_STATES.CASE, {
     var self = this;
     salesforceHelper.createCaseInSalesforce(userToken, caseIssue).then(function(response){
       self.attributes['case'] = response;
-      self.attributes['caseIssue'] = response.CaseIssue__r.Name;
+      self.attributes['caseIssue'] = response.Case_Issue_Name__c;
       return salesforceHelper.formatNewCaseStatus(response);
     }).then(function(response){
       intentTrackingID.event("CreateCaseIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
@@ -781,23 +795,38 @@ var caseHandlers = Alexa.CreateStateHandler(APP_STATES.CASE, {
   },
 
   'CaseConfirmationIntent': function () {
+    console.log(this.event.request.intent);
+    console.log(this.attributes);
     var intentTrackingID = ua(GOOGLE_STATE_IDS.CASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
     var helperClass = new HelperClass();
     var caseIssue = this.attributes["caseIssue"];
     if(caseIssue === undefined){
-      var caseSubject = helperClass.formatCaseSubject(this.event.request.intent.slots.caseSubject.value);
+      var caseSubject = this.event.request.intent.slots.caseSubject.value;
       var caseAction = this.event.request.intent.slots.caseAction.value || helperClass.addCaseAction(caseSubject);
-      this.attributes['caseIssue'] = CASEISSUES.find(checkCaseIssue, {"caseSubject": caseSubject, "caseAction": caseAction});
-      caseIssue = this.attributes["caseIssue"];
+      if(caseSubject === undefined || caseAction === undefined){
+        intentTrackingID.event("CaseConfirmationIntent","Wrong Input","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
+        this.emitWithState('Unhandled', true);
+      } else {
+        this.attributes['caseIssue'] = issues[caseSubject.toUpperCase() + ' ' + caseAction.toUpperCase()];
+        caseIssue = this.attributes['caseIssue'];
+        var prompt = _.template('You wish to create a new case for ${caseIssue}.  Is that correct?')({
+          caseIssue: caseIssue
+        });
+        intentTrackingID.event("CaseConfirmationIntent","Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
+        this.emit(':ask', prompt, prompt);
+      }
+    } else {
+      var prompt = _.template('You wish to create a new case for ${caseIssue}.  Is that correct?')({
+        caseIssue: caseIssue
+      });
+      intentTrackingID.event("CaseConfirmationIntent","Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
+      this.emit(':ask', prompt, prompt);
     }
-    var prompt = _.template('You wish to create a new case for ${caseIssue}.  Is that correct?')({
-      caseIssue: caseIssue
-    });
-    intentTrackingID.event("CaseConfirmationIntent","Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
-    this.emit(':ask', prompt, prompt);
   },
 
   'AMAZON.YesIntent': function() {
+    console.log(this.event.request.intent);
+    console.log(this.attributes);
     var intentTrackingID = ua(GOOGLE_STATE_IDS.CASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
     intentTrackingID.event("AMAZON.YesIntent","Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
     //I'm not sure if the attributes will be maintaned between Intents so reassigning it just incase.
@@ -819,7 +848,7 @@ var caseHandlers = Alexa.CreateStateHandler(APP_STATES.CASE, {
     intentTrackingID.event('AMAZON.HelpIntent',"Success","Request: " + JSON.stringify(this.event.request) + " Attributes: " + JSON.stringify(this.attributes)).send();
     var prompt = 'To create a new case you can say I need help with a problem.  For a full list of current cases please check the card in your alexa app.  What can I help you with today?';
     var reprompt = 'What can I help you with today?';
-    var cardMessage = 'Current case types you can submit to the Town of Cary:\nBroken Recycling Cart\nBroken Trash Cart\nCardboard Collection\nLeaf Collection\nMissed Recycling\nMissed Trash\nMissed Yard Waste\nOil Collection\nUpgrade Recycling Cart\nUpgrade Trash Cart';
+    var cardMessage = 'Current case types you can submit to the Town of Cary:\nBroken Recycling Cart\nBroken Trash Cart\nCardboard Collection\nLeaf Collection\nYard Waste Collection\nMissed Recycling\nMissed Trash\nMissed Yard Waste\nOil Collection\nUpgrade Recycling Cart\nUpgrade Trash Cart';
     this.emit(':askWithCard', prompt, prompt, 'Town of Cary Case Help', cardMessage);
   },
 
@@ -836,6 +865,8 @@ var caseHandlers = Alexa.CreateStateHandler(APP_STATES.CASE, {
   },
 
   'Unhandled': function () {
+    console.log(this.event.request.intent);
+    console.log(this.attributes);
     var intentTrackingID = ua(GOOGLE_STATE_IDS.CASE, this.event.session.user.userId, {strictCidFormat: false, https: true});
     intentTrackingID.event("Unhandled","Success", this.event.session).send();
     var prompt = 'I\'m sorry.  I didn\'t catch that.  Can you please repeat your problem.';
@@ -936,7 +967,7 @@ var trashHandlers = Alexa.CreateStateHandler(APP_STATES.TRASH, {
 });
 
 function getUserAddress(userToken, state, intent, self){
-  if(self.event.context.System.user.permissions.consentToken !== undefined){
+  if(self.event.context !== undefined && self.event.context.System.user.permissions.consentToken !== undefined){
     var deviceId = self.event.context.System.device.deviceId;
     var consentToken = self.event.context.System.user.permissions.consentToken;
     var apiEndPoint = self.event.context.System.apiEndpoint + '/v1/devices/' + deviceId + '/settings/address';
